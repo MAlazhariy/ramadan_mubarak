@@ -7,13 +7,14 @@ import 'package:timezone/data/latest.dart' as tz;
 class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
 
-  static Future notificationDetails() async {
+  static Future _notificationDetails() async {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         'CHANNEL_ID',
         'CHANNEL_NAME',
         channelDescription: 'CHANNEL_DESCRIPTION',
         importance: Importance.max,
+        fullScreenIntent: true,
         icon: 'ic_stat_name',
       ),
     );
@@ -21,18 +22,22 @@ class NotificationApi {
 
   static Future init([bool initScheduled = false]) async {
     const _android = AndroidInitializationSettings('ic_stat_name');
-    const ios = IOSInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
-    );
+    // const ios = IOSInitializationSettings(
+    //   requestSoundPermission: false,
+    //   requestBadgePermission: false,
+    //   requestAlertPermission: false,
+    // );
 
-    // tz.initializeTimeZones();
+    /// when app is closed
+    final details = await _notifications.getNotificationAppLaunchDetails();
+    if(details != null && details.didNotificationLaunchApp){
+
+    }
 
     await _notifications.initialize(
       const InitializationSettings(
         android: _android,
-        iOS: ios,
+        // iOS: ios,
       ),
     );
 
@@ -53,7 +58,7 @@ class NotificationApi {
       id,
       title,
       body,
-      await notificationDetails(),
+      await _notificationDetails(),
       payload: payload,
     );
   }
@@ -72,7 +77,7 @@ class NotificationApi {
       title,
       body,
       _scheduleDaily(time , repeatDuration),
-      await notificationDetails(),
+      await _notificationDetails(),
       payload: payload,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:

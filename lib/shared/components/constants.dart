@@ -9,19 +9,23 @@ import 'components/network_check.dart';
 List localData = [];
 
 Future<void> getInitData() async {
+  final bool connected = await hasNetwork();
 
-  if(Cache.isLogin){
-    final bool connected = await hasNetwork();
-
+  if(Cache.isLogin) {
     if (connected) {
-      // أنا مش عايز أستريم !
-      // streamSnapData = FirebaseFirestore.instance.collection('users').orderBy('time').snapshots();
-
       List mydata = await getFirebaseData();
       Cache.saveData(mydata);
     }
 
-    localData = Cache.getData();
+  } else {
+    /// this is the first time using the application
+    if(connected){
+      List mydata = await getFirebaseData();
+      Cache.saveData(mydata);
+    }
   }
+
+  // get data from local
+  localData = Cache.getData();
 
 }

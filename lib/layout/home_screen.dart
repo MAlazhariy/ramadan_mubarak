@@ -22,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // Stream<QuerySnapshot> streamSnapData;
-  // List localData = []; // todo:
   String name = '';
   String doaa = '';
   int counter = 0;
@@ -81,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+  // شلتها عشان استدعيتها في main.dart
   // Future<void> getInitData() async {
   //   final bool connected = await hasNetwork();
   //
@@ -273,8 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         color: offWhiteColor,
                         width: 100.w,
-                        height: 600.h,
-                        // todo: remove before line
+                        // height: 600.h, // todo: remove line
                         margin: EdgeInsets.only(
                           top: 21.h,
                         ),
@@ -313,10 +312,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // next
+                                  // previous
                                   MaterialButton(
                                     onPressed: () {
-                                      next();
+                                      previous();
                                     },
                                     shape: const CircleBorder(),
                                     padding: EdgeInsets.all(2.sp),
@@ -328,9 +327,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     hoverElevation: 0,
                                     disabledElevation: 0,
                                     child: Icon(
-                                      Icons.navigate_next,
+                                      Icons.navigate_before,
                                       size: 16.sp,
-                                      textDirection: TextDirection.ltr,
                                       color: offWhiteColor,
                                     ),
                                   ),
@@ -369,10 +367,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                   ),
-                                  // previous
+                                  // next
                                   MaterialButton(
                                     onPressed: () {
-                                      previous();
+                                      next();
                                     },
                                     shape: const CircleBorder(),
                                     padding: EdgeInsets.all(2.sp),
@@ -384,9 +382,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     hoverElevation: 0,
                                     disabledElevation: 0,
                                     child: Icon(
-                                      Icons.navigate_before,
+                                      Icons.navigate_next,
                                       size: 16.sp,
-                                      textDirection: TextDirection.ltr,
                                       color: offWhiteColor,
                                     ),
                                   ),
@@ -400,15 +397,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  // next
+                                  // previous
                                   Expanded(
                                     child: MaterialButton(
                                       onPressed: () {
-                                        next();
+                                        previous();
                                       },
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(8.sp),
+                                        BorderRadius.circular(8.sp),
                                       ),
                                       padding: EdgeInsets.symmetric(
                                         vertical: 8.sp,
@@ -423,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: SizedBox(
                                         width: 30.w,
                                         child: Text(
-                                          'التالي',
+                                          'السابق',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 12.sp,
@@ -468,15 +465,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   SizedBox(width: 5.sp),
-                                  // previous
+                                  // next
                                   Expanded(
                                     child: MaterialButton(
                                       onPressed: () {
-                                        previous();
+                                        next();
                                       },
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(8.sp),
+                                        BorderRadius.circular(8.sp),
                                       ),
                                       padding: EdgeInsets.symmetric(
                                         vertical: 8.sp,
@@ -491,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: SizedBox(
                                         width: 30.w,
                                         child: Text(
-                                          'السابق',
+                                          'التالي',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 12.sp,
@@ -521,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 20.sp,
                             ),
-
+                            // فضل الدعاء للغير
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 15.sp,
@@ -559,24 +556,48 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                            // لا تنسونا
+                            // // لا تنسونا
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //     horizontal: 15.sp,
+                            //   ),
+                            //   child: Align(
+                            //     alignment: Alignment.center,
+                            //     child: Text(
+                            //       'لا تنسونا من صالح دعاءكم 💙',
+                            //       style: TextStyle(
+                            //         fontSize: 11.sp,
+                            //         fontWeight: FontWeight.w600,
+                            //         height: 1.5,
+                            //         color: greyColor,
+                            //       ),
+                            //       textAlign: TextAlign.center,
+                            //     ),
+                            //   ),
+                            // ),
+                            SizedBox(
+                              height: 40.sp,
+                            ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 15.sp,
+                                horizontal: 35.sp,
                               ),
                               child: Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  'لا تنسونا من صالح دعاءكم 💙',
+                                  'هناك بعض الميزات المهمة قيد التعديل حالياً؛ لذلك يرجى تحديث التطبيق فور توفره على المتجر.',
                                   style: TextStyle(
                                     fontSize: 11.sp,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                     height: 1.5,
-                                    color: greyColor,
+                                    color: Colors.red,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
+                            ),
+                            SizedBox(
+                              height: 30.sp,
                             ),
                           ],
                         ),
@@ -590,42 +611,42 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // NotificationApi.showNotification(
-          //   title: 'دعاء',
-          //   body: 'hi there!',
-          //   payload: 'sarah.abc',
-          //   // date: DateTime.now().add(const Duration(seconds: 5)),
-          // );
-
-          print('FAB pressed');
-
-          int index = counter;
-
-          int len = Cache.getLength();
-          String nname = '';
-          String ndoaa = '';
-
-          if(len != 0) {
-            Cache.setCounter(counter);
-            index = (counter+1) % len;
-
-            nname = Cache.getName(index);
-            ndoaa = Cache.getDoaa(index);
-          }
-          DateTime now = DateTime.now().toUtc();
-          print('now = $now');
-
-          NotificationApi.showScheduledNotification(
-            title: 'هيا ندعي لـ $nname',
-            body: ndoaa,
-            time: Time(now.hour, now.minute, now.second,),
-            repeatDuration: const Duration(seconds: 10),
-            id: 0,
-          );
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // NotificationApi.showNotification(
+      //     //   title: 'دعاء',
+      //     //   body: 'hi there!',
+      //     //   payload: 'sarah.abc',
+      //     //   // date: DateTime.now().add(const Duration(seconds: 5)),
+      //     // );
+      //
+      //     print('FAB pressed');
+      //
+      //     int index = counter;
+      //
+      //     int len = Cache.getLength();
+      //     String nname = '';
+      //     String ndoaa = '';
+      //
+      //     if(len != 0) {
+      //       Cache.setCounter(counter);
+      //       index = (counter+1) % len;
+      //
+      //       nname = Cache.getName(index);
+      //       ndoaa = Cache.getDoaa(index);
+      //     }
+      //     DateTime now = DateTime.now().toUtc();
+      //     print('now = $now');
+      //
+      //     NotificationApi.showScheduledNotification(
+      //       title: 'هيا ندعي لـ $nname',
+      //       body: ndoaa,
+      //       time: Time(now.hour, now.minute, now.second,),
+      //       repeatDuration: const Duration(seconds: 20),
+      //       id: 0,
+      //     );
+      //   },
+      // ),
     );
   }
 }
