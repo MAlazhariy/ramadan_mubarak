@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'name': name,
       'doaa': doaa,
       'device id': id,
-      'time': DateTime.now().microsecondsSinceEpoch,
+      'time': DateTime.now().toUtc().microsecondsSinceEpoch,
     }).then((value) {
       setState(() {
         loading = false;
