@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    NotificationApi.init();
+    NotificationApi.init(true);
 
     counter = Cache.getCounter();
     int index = counter;
@@ -614,11 +614,14 @@ class _HomeScreenState extends State<HomeScreen> {
             nname = Cache.getName(index);
             ndoaa = Cache.getDoaa(index);
           }
+          DateTime now = DateTime.now().toUtc();
+          print('now = $now');
 
           NotificationApi.showScheduledNotification(
             title: 'هيا ندعي لـ $nname',
             body: ndoaa,
-            date: DateTime.now().add(Duration(seconds: 12)),
+            time: Time(now.hour, now.minute, now.second,),
+            repeatDuration: const Duration(seconds: 10),
             id: 0,
           );
         },

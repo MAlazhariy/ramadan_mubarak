@@ -36,6 +36,7 @@ dependencies:
   sizer: ^2.0.15
   platform_device_id: ^1.0.1
   flutter_local_notifications: ^9.4.0
+  flutter_native_timezone: ^2.0.0
 #  timezone: ^0.8.0
 
 #  firebase
