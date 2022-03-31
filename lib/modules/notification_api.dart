@@ -90,7 +90,7 @@ class NotificationApi {
     Time time,
     Duration repeatDuration,
   ) {
-    final now = tz.TZDateTime.now(tz.local);
+    final now = tz.TZDateTime.now(tz.local).toUtc();
     final scheduledDate = tz.TZDateTime(
       tz.local,
       now.year,
@@ -106,10 +106,9 @@ class NotificationApi {
       print('will show at ${now.add(repeatDuration)}');
       return now.add(repeatDuration);
     }
-    print('time zone now = $now');
-    print('now typedef = ${now.runtimeType}');
-    print('scheduledDate = $scheduledDate');
     print(scheduledDate.isBefore(now));
+    print('time zone now = $now');
+    print('scheduledDate = $scheduledDate');
     print('will show at $scheduledDate');
     return scheduledDate;
   }
