@@ -4,9 +4,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+<!--    alarm manager -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- For apps with targetSDK=31 (Android 12) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+
+
+
 <!--notification x-code permissions -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
 
 <!--location permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -54,7 +62,22 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    <!--       local notification-->
+    <!--       alarm manager -->
+       <service
+           android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmService"
+           android:permission="android.permission.BIND_JOB_SERVICE"
+           android:exported="false"/>
+       <receiver
+           android:name="dev.fluttercommunity.plus.androidalarmmanager.AlarmBroadcastReceiver"
+           android:exported="false"/>
+       <receiver
+           android:name="dev.fluttercommunity.plus.androidalarmmanager.RebootBroadcastReceiver"
+           android:enabled="false"
+           android:exported="false">
+           <intent-filter>
+               <action android:name="android.intent.action.BOOT_COMPLETED" />
+           </intent-filter>
+       </receiver>
 
 
     </application>
