@@ -342,6 +342,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontWeight: FontWeight.w800,
                                         ),
                                       ),
+                                      SizedBox(height: 5.sp),
                                       Text(
                                         doaaCtrl.text,
                                         style: TextStyle(

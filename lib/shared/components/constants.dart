@@ -2,30 +2,34 @@
 //   MALE, FEMALE,
 // }
 
+import 'dart:math';
+
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/cache_helper/firebase_funcs.dart';
+import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'components/network_check.dart';
 
 List localData = [];
 
-Future<void> getInitData() async {
+Future<void> initGetAndSaveData() async {
+
   final bool connected = await hasNetwork();
 
-  if(Cache.isLogin) {
-    if (connected) {
-      List mydata = await getFirebaseData();
-      Cache.saveData(mydata);
-    }
-
-  } else {
-    /// this is the first time using the application
-    if(connected){
-      List mydata = await getFirebaseData();
-      Cache.saveData(mydata);
-    }
+  if (connected) {
+    List mydata = await getFirebaseData();
+    Cache.saveData(mydata);
   }
 
   // get data from local
   localData = Cache.getData();
+}
+
+
+int getRandomIndex(){
+  try{
+    return Random().nextInt(Cache.getLength());
+  } catch(e){
+    return 0;
+  }
 
 }

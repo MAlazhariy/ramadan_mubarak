@@ -1,14 +1,19 @@
 import 'dart:developer' as dev;
 import 'dart:math';
+import 'package:adhan/adhan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
+import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/cache_helper/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/components/components/network_check.dart';
+import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
+import 'package:ramadan_kareem/shared/components/constants.dart';
 import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -50,35 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void random() {
     setState(() {
-      int _r = Random().nextInt(Cache.getLength());
+      int _r = getRandomIndex();
+      // todo: I think you maybe delete this method in future
+      Cache.setCounter(_r);
 
       name = Cache.getName(_r);
       doaa = Cache.getDoaa(_r);
     });
   }
-
-
-
-  // Future<void> setAlarm() async {
-  //   dev.log('Alarm started at ${DateTime.now()}');
-  //   var date = DateTime.now().add(const Duration(seconds: 5));
-  //   int alarmID = 6;
-  //
-  //   await AndroidAlarmManager.oneShot(Duration(seconds: 10), alarmID,test);
-  // }
-  //
-  // void test(){
-  //   dev.log('finished at ${DateTime.now()}');
-  //   print('hi there');
-  //   name = 'test';
-  //   doaa = 'test bardo';
-  //   setState(() {
-  //
-  //   });
-  // }
-
-
-
 
   // شلتها عشان استدعيتها في main.dart
   // Future<void> getInitData() async {
@@ -96,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
   //   });
   // }
 
+
   Future<void> getData() async {
     final bool connected = await hasNetwork();
 
@@ -109,21 +94,48 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    NotificationApi.init(true);
-
-    counter = Cache.getCounter();
-    int index = counter;
-
-    int len = Cache.getLength();
-
-    if(len != 0) {
-      counter++;
-      Cache.setCounter(counter);
-      index = counter % len;
-
-      name = Cache.getName(index);
-      doaa = Cache.getDoaa(index);
+    if(!Cache.isNotificationsDone()){
+      readyShowScheduledNotification(context);
     }
+
+    /// if it's first time set a random value to counter
+    /// and save counter .. then set isFirstTime to false
+    if(Cache.isFirstTime()){
+      // get counter random value
+      int index = getRandomIndex();
+      counter = index;
+      // save new counter value to cache
+      Cache.setCounter(counter);
+
+      // get name & doaa
+      name = Cache.getName(counter);
+      doaa = Cache.getDoaa(counter);
+
+      // set IsFirstTime to false
+      Cache.setIsFirstTime(false);
+    } else {
+      int len = Cache.getLength();
+
+      if(len != 0) {
+        // get counter from cache plus one
+        counter = Cache.getCounter() +1;
+        // set index value
+        int index = counter;
+
+        Cache.setCounter(counter);
+        index = counter % len;
+
+        name = Cache.getName(index);
+        doaa = Cache.getDoaa(index);
+      }
+    }
+
+
+
+
+
+
+
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //
@@ -134,9 +146,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     super.dispose();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getData();
-    });
+    // todo: you maybe uncomment this code at future
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   getData();
+    // });
   }
 
   @override
@@ -273,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         color: offWhiteColor,
                         width: 100.w,
-                        // height: 600.h, // todo: remove line
+                        // height: 600.h,
                         margin: EdgeInsets.only(
                           top: 21.h,
                         ),
@@ -392,45 +405,46 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 14.sp,
+                                // horizontal: 14.sp,
+                                horizontal: 8.w,
                                 vertical: 4.sp,
                               ),
                               child: Row(
                                 children: [
                                   // previous
-                                  Expanded(
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        previous();
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(8.sp),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.sp,
-                                      ),
-                                      // minWidth: 6.w,
-                                      color: pinkColor.withAlpha(10),
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      highlightElevation: 0,
-                                      hoverElevation: 0,
-                                      disabledElevation: 0,
-                                      child: SizedBox(
-                                        width: 30.w,
-                                        child: Text(
-                                          'السابق',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: pinkColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 5.sp),
+                                  // Expanded(
+                                  //   child: MaterialButton(
+                                  //     onPressed: () {
+                                  //       previous();
+                                  //     },
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius:
+                                  //       BorderRadius.circular(8.sp),
+                                  //     ),
+                                  //     padding: EdgeInsets.symmetric(
+                                  //       vertical: 8.sp,
+                                  //     ),
+                                  //     // minWidth: 6.w,
+                                  //     color: pinkColor.withAlpha(10),
+                                  //     elevation: 0,
+                                  //     focusElevation: 0,
+                                  //     highlightElevation: 0,
+                                  //     hoverElevation: 0,
+                                  //     disabledElevation: 0,
+                                  //     child: SizedBox(
+                                  //       width: 30.w,
+                                  //       child: Text(
+                                  //         'السابق',
+                                  //         textAlign: TextAlign.center,
+                                  //         style: TextStyle(
+                                  //           fontSize: 12.sp,
+                                  //           color: pinkColor,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // SizedBox(width: 5.sp),
                                   // random
                                   Expanded(
                                     child: MaterialButton(
@@ -452,9 +466,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       hoverElevation: 0,
                                       disabledElevation: 0,
                                       child: SizedBox(
-                                        width: 30.w,
+                                        // width: 30.w,
                                         child: Text(
-                                          'عشوائي',
+                                          'اختيار عشوائي',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontSize: 12.sp,
@@ -464,40 +478,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 5.sp),
-                                  // next
-                                  Expanded(
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        next();
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(8.sp),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.sp,
-                                      ),
-                                      // minWidth: 6.w,
-                                      color: pinkColor.withAlpha(10),
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      highlightElevation: 0,
-                                      hoverElevation: 0,
-                                      disabledElevation: 0,
-                                      child: SizedBox(
-                                        width: 30.w,
-                                        child: Text(
-                                          'التالي',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: pinkColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  // SizedBox(width: 5.sp),
+                                  // // next
+                                  // Expanded(
+                                  //   child: MaterialButton(
+                                  //     onPressed: () {
+                                  //       next();
+                                  //     },
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius:
+                                  //       BorderRadius.circular(8.sp),
+                                  //     ),
+                                  //     padding: EdgeInsets.symmetric(
+                                  //       vertical: 8.sp,
+                                  //     ),
+                                  //     // minWidth: 6.w,
+                                  //     color: pinkColor.withAlpha(10),
+                                  //     elevation: 0,
+                                  //     focusElevation: 0,
+                                  //     highlightElevation: 0,
+                                  //     hoverElevation: 0,
+                                  //     disabledElevation: 0,
+                                  //     child: SizedBox(
+                                  //       width: 30.w,
+                                  //       child: Text(
+                                  //         'التالي',
+                                  //         textAlign: TextAlign.center,
+                                  //         style: TextStyle(
+                                  //           fontSize: 12.sp,
+                                  //           color: pinkColor,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -611,42 +625,63 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // NotificationApi.showNotification(
-      //     //   title: 'دعاء',
-      //     //   body: 'hi there!',
-      //     //   payload: 'sarah.abc',
-      //     //   // date: DateTime.now().add(const Duration(seconds: 5)),
-      //     // );
-      //
-      //     print('FAB pressed');
-      //
-      //     int index = counter;
-      //
-      //     int len = Cache.getLength();
-      //     String nname = '';
-      //     String ndoaa = '';
-      //
-      //     if(len != 0) {
-      //       Cache.setCounter(counter);
-      //       index = (counter+1) % len;
-      //
-      //       nname = Cache.getName(index);
-      //       ndoaa = Cache.getDoaa(index);
-      //     }
-      //     DateTime now = DateTime.now().toUtc();
-      //     print('now = $now');
-      //
-      //     NotificationApi.showScheduledNotification(
-      //       title: 'هيا ندعي لـ $nname',
-      //       body: ndoaa,
-      //       time: Time(now.hour, now.minute, now.second,),
-      //       repeatDuration: const Duration(seconds: 20),
-      //       id: 0,
-      //     );
-      //   },
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+
+          // Position position = await _determinePosition();
+          // final coordinates = Coordinates(position.latitude, position.longitude);
+          // final date = DateComponents(2022, 04, 03);
+          // final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
+          // calculationParameters.madhab = Madhab.hanafi;
+          // final prayerTimes = PrayerTimes(coordinates, date, calculationParameters);
+
+          dev.log('FAB pressed');
+
+          // readyShowScheduledNotification(context);
+
+
+        },
+        child: const Icon(Icons.settings),
+      ),
     );
   }
 }
+
+
+// Future<Position> _determinePosition() async {
+//   bool serviceEnabled;
+//   LocationPermission permission;
+//
+//   // Test if location services are enabled.
+//   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+//   if (!serviceEnabled) {
+//     // Location services are not enabled don't continue
+//     // accessing the position and request users of the
+//     // App to enable the location services.
+//     await Geolocator.openLocationSettings();
+//     return Future.error('Location services are disabled.');
+//   }
+//
+//   permission = await Geolocator.checkPermission();
+//   if (permission == LocationPermission.denied) {
+//     permission = await Geolocator.requestPermission();
+//     if (permission == LocationPermission.denied) {
+//       // Permissions are denied, next time you could try
+//       // requesting permissions again (this is also where
+//       // Android's shouldShowRequestPermissionRationale
+//       // returned true. According to Android guidelines
+//       // your App should show an explanatory UI now.
+//       return Future.error('Location permissions are denied');
+//     }
+//   }
+//
+//   if (permission == LocationPermission.deniedForever) {
+//     // Permissions are denied forever, handle appropriately.
+//     return Future.error(
+//         'Location permissions are permanently denied, we cannot request permissions.');
+//   }
+//
+//   // When we reach here, permissions are granted and we can
+//   // continue accessing the position of the device.
+//   return await Geolocator.getCurrentPosition();
+// }

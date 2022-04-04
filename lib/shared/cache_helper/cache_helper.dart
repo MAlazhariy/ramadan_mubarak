@@ -33,6 +33,15 @@ class Cache {
     return info['name'];
   }
 
+  /// set if it is the first time that user using the app
+  static void setIsFirstTime([bool value = false]){
+    box.put('firstTime', value);
+  }
+
+  static bool isFirstTime(){
+    return box.get('firstTime', defaultValue: true);
+  }
+
 
 
   /// counter
@@ -69,6 +78,17 @@ class Cache {
   static String getDoaa(int index){
     List data = getData();
     return data[index]['doaa'];
+  }
+
+
+
+  /// notifications
+  static void notificationsDone([value = true]){
+    box.put('notifications', value);
+  }
+
+  static bool isNotificationsDone(){
+    return box.get('notifications', defaultValue: false);
   }
 
 

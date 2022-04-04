@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -10,12 +12,18 @@ class NotificationApi {
   static Future _notificationDetails() async {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
-        'CHANNEL_ID',
-        'CHANNEL_NAME',
-        channelDescription: 'CHANNEL_DESCRIPTION',
+        // todo: handle notification screen showTime
+        'CHANNEL_ID 2',
+        'doaa reminder 2', // channel name
+        channelDescription: 'CHANNEL_DESCRIPTION 1',
         importance: Importance.max,
+        styleInformation: BigTextStyleInformation(''),
+        visibility: NotificationVisibility.public,
+        enableVibration: true,
         fullScreenIntent: true,
         icon: 'ic_stat_name',
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound('notification_audio'),
       ),
     );
   }
@@ -28,11 +36,11 @@ class NotificationApi {
     //   requestAlertPermission: false,
     // );
 
-    /// when app is closed
-    final details = await _notifications.getNotificationAppLaunchDetails();
-    if(details != null && details.didNotificationLaunchApp){
-
-    }
+    // /// when app is closed
+    // final details = await _notifications.getNotificationAppLaunchDetails();
+    // if(details != null && details.didNotificationLaunchApp){
+    //
+    // }
 
     await _notifications.initialize(
       const InitializationSettings(
@@ -68,48 +76,50 @@ class NotificationApi {
     @required String title,
     @required String body,
     String payload = '',
-    // DateTime date,
-    @required Time time,
+    @required DateTime date,
+    // @required Time time,
     Duration repeatDuration = const Duration(days: 1),
   }) async {
     return _notifications.zonedSchedule(
       id,
       title,
       body,
-      _scheduleDaily(time , repeatDuration),
+      // _scheduleDaily(date , repeatDuration),
+      tz.TZDateTime.from(date, tz.local),
       await _notificationDetails(),
       payload: payload,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
+      /// method if you want to daily schedule notifications
+      // matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
   static tz.TZDateTime _scheduleDaily(
-    Time time,
-    Duration repeatDuration,
+      DateTime date,
+      // Time time,
+      Duration repeatDuration,
   ) {
     final now = tz.TZDateTime.now(tz.local).toUtc();
     final scheduledDate = tz.TZDateTime(
       tz.local,
-      now.year,
-      now.month,
-      now.day,
-      time.hour,
-      time.minute,
-      time.second,
+      date.year,
+      date.month,
+      date.day,
+      date.hour,
+      date.minute,
+      date.second,
     );
 
+    // todo: remove print mehods
     if (scheduledDate.isBefore(now)) {
-      print('will show after $repeatDuration');
-      print('will show at ${now.add(repeatDuration)}');
+      // log('will show after $repeatDuration');
+      log('date is before now .. will show at ${now.add(repeatDuration)}');
       return now.add(repeatDuration);
     }
-    print(scheduledDate.isBefore(now));
-    print('time zone now = $now');
-    print('scheduledDate = $scheduledDate');
-    print('will show at $scheduledDate');
+    // log('time zone now = $now');
+    log('will show at $scheduledDate');
     return scheduledDate;
   }
 }
