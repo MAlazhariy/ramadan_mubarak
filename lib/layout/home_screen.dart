@@ -625,24 +625,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-
-          // Position position = await _determinePosition();
-          // final coordinates = Coordinates(position.latitude, position.longitude);
-          // final date = DateComponents(2022, 04, 03);
-          // final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
-          // calculationParameters.madhab = Madhab.hanafi;
-          // final prayerTimes = PrayerTimes(coordinates, date, calculationParameters);
-
-          dev.log('FAB pressed');
-
-          // readyShowScheduledNotification(context);
-
-
-        },
-        child: const Icon(Icons.settings),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //
+      //     // Position position = await _determinePosition();
+      //     // final coordinates = Coordinates(position.latitude, position.longitude);
+      //     // final date = DateComponents(2022, 04, 03);
+      //     // final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
+      //     // calculationParameters.madhab = Madhab.hanafi;
+      //     // final prayerTimes = PrayerTimes(coordinates, date, calculationParameters);
+      //
+      //     dev.log('FAB pressed');
+      //
+      //     // readyShowScheduledNotification(context);
+      //
+      //
+      //   },
+      //   child: const Icon(Icons.settings),
+      // ),
     );
   }
 }

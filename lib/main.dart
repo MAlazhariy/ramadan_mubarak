@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ramadan_kareem/layout/home_screen.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
 import 'package:sizer/sizer.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
           home: const Directionality(
             textDirection: TextDirection.rtl,
             child: LoginScreen(),
+            // child: HomeScreen(),
           ),
         );
       },
