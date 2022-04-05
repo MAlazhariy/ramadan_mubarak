@@ -27,7 +27,7 @@ void main() async {
   await Hive.openBox('box');
 
   // init Notification
-  NotificationApi.init(true);
+  await NotificationApi.init(true);
 
   // init TimeZone
   tz.initializeTimeZones();

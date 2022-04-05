@@ -56,6 +56,7 @@ class NotificationApi {
     }
   }
 
+
   static Future showNotification({
     int id = 0,
     @required String title,

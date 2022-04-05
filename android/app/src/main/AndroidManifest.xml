@@ -40,15 +40,10 @@
             </intent-filter>
         </activity>
 
-<!--       methods on alarmed notifications X-code methods-->
-       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
-           <intent-filter>
-               <action android:name="android.intent.action.BOOT_COMPLETED"/>
-               <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
-           </intent-filter>
-       </receiver>
-       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
-
+<!--       fix firebase issue-->
+       <meta-data
+           android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+           android:value="ocr" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
