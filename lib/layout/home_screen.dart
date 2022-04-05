@@ -55,12 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void random() {
     setState(() {
-      int _r = getRandomIndex();
+      counter = getRandomIndex();
       // todo: I think you maybe delete this method in future
-      Cache.setCounter(_r);
+      Cache.setCounter(counter);
 
-      name = Cache.getName(_r);
-      doaa = Cache.getDoaa(_r);
+      name = Cache.getName(counter);
+      doaa = Cache.getDoaa(counter);
     });
   }
 

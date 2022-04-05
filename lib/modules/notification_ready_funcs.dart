@@ -19,6 +19,7 @@ void readyShowScheduledNotification(BuildContext context) async {
   final calculationParameters =
       CalculationMethod.muslim_world_league.getParameters();
   calculationParameters.madhab = Madhab.shafi;
+  final DateTime now = DateTime.now();
 
   for (int i = 0; i < 30; i++) {
     DateTime date = DateTime.now().add(Duration(days: i));
@@ -47,7 +48,7 @@ void readyShowScheduledNotification(BuildContext context) async {
       date.month,
       date.day,
       prayerTimes.maghrib.hour,
-      prayerTimes.maghrib.minute - 10,
+      prayerTimes.maghrib.minute - 15,
       prayerTimes.maghrib.second,
     ).toLocal();
 
@@ -55,14 +56,21 @@ void readyShowScheduledNotification(BuildContext context) async {
     log('scheduledDate = $scheduledDate');
     // log('--------');
 
+    if(scheduledDate.isBefore(now)){
+      log('scheduledDate is before now');
+      continue;
+    }
+
     NotificationApi.showScheduledNotification(
-      title: '$hijriDayInt اقترب موعد استجابة الدعاء',
+      title: 'اقترب موعد استجابة الدعاء',
       body: 'هيا ندعي لـ $notifiName\n$notifiDoaa',
       date: scheduledDate,
       // todo: edit to time of maghreb pray time
       repeatDuration: Duration(seconds: 5 * (i + 1)),
       id: hijriDayInt,
     );
+
+    log('done $hijriDayInt');
   }
 }
 
