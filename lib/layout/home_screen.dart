@@ -56,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void random() {
     setState(() {
       counter = getRandomIndex();
-      // todo: I think you maybe delete this method in future
       Cache.setCounter(counter);
 
       name = Cache.getName(counter);
@@ -64,29 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // شلتها عشان استدعيتها في main.dart
-  // Future<void> getInitData() async {
-  //   final bool connected = await hasNetwork();
-  //
-  //   if (connected) {
-  //     // أنا مش عايز أستريم !
-  //     // streamSnapData = FirebaseFirestore.instance.collection('users').orderBy('time').snapshots();
-  //
-  //     List mydata = await getFirebaseData();
-  //     Cache.saveData(mydata);
-  //   }
-  //   setState(() {
-  //     localData = Cache.getData();
-  //   });
-  // }
-
-
   Future<void> getData() async {
     final bool connected = await hasNetwork();
 
     if (connected) {
-      List mydata = await getFirebaseData();
-      Cache.saveData(mydata);
+      List data = await getFirebaseData();
+      Cache.saveData(data);
     }
   }
 
@@ -94,13 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    if(!Cache.isNotificationsDone()){
+    if (!Cache.isNotificationsDone()) {
       readyShowScheduledNotification(context);
     }
 
     /// if it's first time set a random value to counter
     /// and save counter .. then set isFirstTime to false
-    if(Cache.isFirstTime()){
+    if (Cache.isFirstTime()) {
       // get counter random value
       int index = getRandomIndex();
       counter = index;
@@ -116,9 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       int len = Cache.getLength();
 
-      if(len != 0) {
+      if (len != 0) {
         // get counter from cache plus one
-        counter = Cache.getCounter() +1;
+        counter = Cache.getCounter() + 1;
         // set index value
         int index = counter;
 
@@ -130,13 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-
-
-
-
-
-
-
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //
     // });
@@ -145,41 +120,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     super.dispose();
-
-    // todo: you maybe uncomment this code at future
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   getData();
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    var hijriDay = HijriCalendar.fromDate(DateTime.now()).toFormat('dd').padLeft(2,'٠');
+    var hijriDay =
+        HijriCalendar.fromDate(DateTime.now()).toFormat('dd').padLeft(2, '٠');
     var hijriMY = HijriCalendar.fromDate(DateTime.now()).toFormat('MMMM yyyy');
 
     return Scaffold(
-      // body: StreamBuilder<QuerySnapshot>(
-      //   stream: users,
-      //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      //     if (snapshot.hasError) {
-      //       return Text('عذرا حدث خطأ، يرجى إبلاغ المبرمج، رمز الخطأ: ${snapshot.error.toString()}');
-      //     }else if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return const CircularProgressIndicator();
-      //     }
-      //
-      //     final data = snapshot.requireData;
-      //
-      //     return ListView.builder(
-      //       itemCount: data.size,
-      //       itemBuilder: (context, index) {
-      //         final String name = data.docs[index]['name'];
-      //
-      //         return Text(name);
-      //       },
-      //     );
-      //   },
-      // ),
-
       body: Stack(
         alignment: AlignmentDirectional.topCenter,
         textDirection: TextDirection.rtl,
@@ -624,29 +573,30 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Position position = await _determinePosition();
+          // final coordinates = Coordinates(position.latitude, position.longitude);
+          // final date = DateComponents(2022, 04, 03);
+          // final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
+          // calculationParameters.madhab = Madhab.hanafi;
+          // final prayerTimes = PrayerTimes(coordinates, date, calculationParameters);
 
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //
-      //     // Position position = await _determinePosition();
-      //     // final coordinates = Coordinates(position.latitude, position.longitude);
-      //     // final date = DateComponents(2022, 04, 03);
-      //     // final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
-      //     // calculationParameters.madhab = Madhab.hanafi;
-      //     // final prayerTimes = PrayerTimes(coordinates, date, calculationParameters);
-      //
-      //     dev.log('FAB pressed');
-      //
-      //     // readyShowScheduledNotification(context);
-      //
-      //
-      //   },
-      //   child: const Icon(Icons.settings),
-      // ),
+          dev.log('FAB pressed');
+
+          NotificationApi.showNotification(
+            title: 'test notification',
+            body: 'this is a test notification !\n'
+                '${DateTime.now()}',
+          );
+
+          // readyShowScheduledNotification(context);
+        },
+        child: const Icon(Icons.settings),
+      ),
     );
   }
 }
-
 
 // Future<Position> _determinePosition() async {
 //   bool serviceEnabled;

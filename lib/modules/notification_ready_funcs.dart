@@ -28,7 +28,7 @@ void readyShowScheduledNotification(BuildContext context) async {
 
     if (hijriMonthInt != 9) {
       // todo: remove this line
-      snkbar(context, 'تم ضبط الإشعارات بنجاح 💙');
+      snkbar(context, 'تم ضبط الإشعارات بنجاح.');
       Cache.notificationsDone();
       break;
     }

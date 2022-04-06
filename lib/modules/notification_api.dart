@@ -13,23 +13,23 @@ class NotificationApi {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         // todo: handle notification screen showTime
-        'CHANNEL_ID 2',
-        'doaa reminder 2', // channel name
-        channelDescription: 'CHANNEL_DESCRIPTION 1',
-        importance: Importance.max,
+        'CHANNEL_ID 5',
+        'doaa reminder 5', // channel name
+        channelDescription: 'CHANNEL_DESCRIPTION 4',
+        importance: Importance.high,
         styleInformation: BigTextStyleInformation(''),
-        visibility: NotificationVisibility.public,
         enableVibration: true,
         fullScreenIntent: true,
-        icon: 'ic_stat_name',
+        icon: 'notification_icon',
         playSound: true,
+        autoCancel: true,
         sound: RawResourceAndroidNotificationSound('notification_audio'),
       ),
     );
   }
 
   static Future init([bool initScheduled = false]) async {
-    const _android = AndroidInitializationSettings('ic_stat_name');
+    const _android = AndroidInitializationSettings('notification_icon');
     // const ios = IOSInitializationSettings(
     //   requestSoundPermission: false,
     //   requestBadgePermission: false,
