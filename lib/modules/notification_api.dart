@@ -13,16 +13,17 @@ class NotificationApi {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         // todo: handle notification screen showTime
-        'CHANNEL_ID 5',
-        'doaa reminder 5', // channel name
-        channelDescription: 'CHANNEL_DESCRIPTION 4',
-        importance: Importance.high,
+        'CHANNEL_ID 10',
+        'doaa reminder 10', // channel name
+        channelDescription: 'CHANNEL_DESCRIPTION 10',
+        channelShowBadge: true,
+        importance: Importance.max,
+        priority: Priority.high,
         styleInformation: BigTextStyleInformation(''),
-        enableVibration: true,
-        fullScreenIntent: true,
+        // fullScreenIntent: true,
         icon: 'notification_icon',
         playSound: true,
-        autoCancel: true,
+        enableVibration: true,
         sound: RawResourceAndroidNotificationSound('notification_audio'),
       ),
     );

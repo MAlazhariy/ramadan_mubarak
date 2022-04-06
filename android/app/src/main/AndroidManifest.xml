@@ -18,6 +18,13 @@
         android:label="رمضان مبارك"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+<!--       trying to solution for notification sound-->
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+           <intent-filter>
+               <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+           </intent-filter>
+       </receiver>
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
