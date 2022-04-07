@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:adhan/adhan.dart';
@@ -13,9 +14,20 @@ import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
 
 void readyShowScheduledNotification(BuildContext context) async {
+
+  // Future.delayed(Duration(seconds: 3), (){
+  //   showCustomDialog(
+  //     context: context,
+  //     title: 'سماح بالإشعارات',
+  //     content: const Text(
+  //         'يرجى السماح للتطبيق بالوصول للموقع الجغرافي حتى يتمكن من معرفة مواقيت الصلاة في منطقتك وظهور الإشعارات في المواعيد المحددة لتذكيرك بالدعاء، أو قم برفض الصلاحيات'),
+  //   );
+  // });
+
+
   Position position = await _determinePosition(context);
   final coordinates = Coordinates(position.latitude, position.longitude);
-  // final date = DateComponents(2022, 04, 03);
+  Cache.setCoordinates(coordinates.latitude, coordinates.longitude);
   final calculationParameters =
       CalculationMethod.muslim_world_league.getParameters();
   calculationParameters.madhab = Madhab.shafi;
@@ -29,6 +41,19 @@ void readyShowScheduledNotification(BuildContext context) async {
     if (hijriMonthInt != 9) {
       // todo: remove this line
       snkbar(context, 'تم ضبط الإشعارات بنجاح.');
+
+      NotificationApi.showScheduledNotification(
+        title: 'كل عام وأنتم بخير 💙',
+        body: '',
+        date: DateTime(
+          date.year,
+          date.month,
+          date.day,
+          6,
+        ).toLocal(),
+        id: 32,
+      );
+
       Cache.notificationsDone();
       break;
     }
@@ -48,7 +73,7 @@ void readyShowScheduledNotification(BuildContext context) async {
       date.month,
       date.day,
       prayerTimes.maghrib.hour,
-      prayerTimes.maghrib.minute - 15,
+      prayerTimes.maghrib.minute - 17,
       prayerTimes.maghrib.second,
     ).toLocal();
 
@@ -56,7 +81,7 @@ void readyShowScheduledNotification(BuildContext context) async {
     log('scheduledDate = $scheduledDate');
     // log('--------');
 
-    if(scheduledDate.isBefore(now)){
+    if (scheduledDate.isBefore(now)) {
       log('scheduledDate is before now');
       continue;
     }
@@ -74,7 +99,6 @@ void readyShowScheduledNotification(BuildContext context) async {
   }
 }
 
-
 Future<Position> _determinePosition(BuildContext context) async {
   bool serviceEnabled;
   LocationPermission permission;
@@ -86,7 +110,8 @@ Future<Position> _determinePosition(BuildContext context) async {
     // Location services are not enabled don't continue
     // accessing the position and request users of the
     // App to enable the location services.
-    snkbar(context, 'يرجى فتح الموقع الجغرافي GPS للسماح للتطبيق بتحديد مواعيد الصلاة الصحيحة بناءاً على منطقتك الجغرافية');
+    snkbar(context,
+        'يرجى فتح الموقع الجغرافي GPS للسماح للتطبيق بتحديد مواعيد الصلاة الصحيحة بناءاً على منطقتك الجغرافية');
 
     // await Geolocator.openLocationSettings();
     // showCustomDialog(
@@ -121,7 +146,8 @@ Future<Position> _determinePosition(BuildContext context) async {
       // Android's shouldShowRequestPermissionRationale
       // returned true. According to Android guidelines
       // your App should show an explanatory UI now.
-      snkbar(context, 'السماح بالوصول للموقع يساعد في ظهور الإشعارات في الوقت الصحيح قبل مواعيد صلاة المغرب');
+      snkbar(context,
+          'السماح بالوصول للموقع يساعد في ظهور الإشعارات في الوقت الصحيح قبل مواعيد صلاة المغرب');
       return Future.error('Location permissions are denied');
     }
   }

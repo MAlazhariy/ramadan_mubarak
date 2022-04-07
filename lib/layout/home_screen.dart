@@ -1,5 +1,4 @@
 import 'dart:developer' as dev;
-import 'dart:math';
 import 'package:adhan/adhan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +6,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:ramadan_kareem/modules/adeya.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/cache_helper/firebase_funcs.dart';
+import 'package:ramadan_kareem/shared/components/components/description_text.dart';
+import 'package:ramadan_kareem/shared/components/components/doaa_text.dart';
+import 'package:ramadan_kareem/shared/components/components/headline_text.dart';
 import 'package:ramadan_kareem/shared/components/components/network_check.dart';
 import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
@@ -30,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String name = '';
   String doaa = '';
   int counter = 0;
+  int adeyaCounter = 0;
 
   void next() {
     setState(() {
@@ -76,10 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    if (!Cache.isNotificationsDone()) {
-      readyShowScheduledNotification(context);
-    }
-
     /// if it's first time set a random value to counter
     /// and save counter .. then set isFirstTime to false
     if (Cache.isFirstTime()) {
@@ -112,6 +112,10 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
+    if (!Cache.isNotificationsDone()) {
+      readyShowScheduledNotification(context);
+    }
+
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //
     // });
@@ -124,8 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var hijriDay =
-        HijriCalendar.fromDate(DateTime.now()).toFormat('dd').padLeft(2, '٠');
+    // var hijriDay = HijriCalendar.fromDate(DateTime.now()).toFormat('dd').padLeft(2, '٠');
+    var hijriDay = HijriCalendar.fromDate(DateTime.now()).toFormat('dd');
     var hijriMY = HijriCalendar.fromDate(DateTime.now()).toFormat('MMMM yyyy');
 
     return Scaffold(
@@ -352,122 +356,52 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
+                            // buttons
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 // horizontal: 14.sp,
                                 horizontal: 8.w,
                                 vertical: 4.sp,
                               ),
-                              child: Row(
-                                children: [
-                                  // previous
-                                  // Expanded(
-                                  //   child: MaterialButton(
-                                  //     onPressed: () {
-                                  //       previous();
-                                  //     },
-                                  //     shape: RoundedRectangleBorder(
-                                  //       borderRadius:
-                                  //       BorderRadius.circular(8.sp),
-                                  //     ),
-                                  //     padding: EdgeInsets.symmetric(
-                                  //       vertical: 8.sp,
-                                  //     ),
-                                  //     // minWidth: 6.w,
-                                  //     color: pinkColor.withAlpha(10),
-                                  //     elevation: 0,
-                                  //     focusElevation: 0,
-                                  //     highlightElevation: 0,
-                                  //     hoverElevation: 0,
-                                  //     disabledElevation: 0,
-                                  //     child: SizedBox(
-                                  //       width: 30.w,
-                                  //       child: Text(
-                                  //         'السابق',
-                                  //         textAlign: TextAlign.center,
-                                  //         style: TextStyle(
-                                  //           fontSize: 12.sp,
-                                  //           color: pinkColor,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                  // SizedBox(width: 5.sp),
-                                  // random
-                                  Expanded(
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        random();
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.sp),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.sp,
-                                      ),
-                                      // minWidth: 6.w,
-                                      color: pinkColor.withAlpha(10),
-                                      elevation: 0,
-                                      focusElevation: 0,
-                                      highlightElevation: 0,
-                                      hoverElevation: 0,
-                                      disabledElevation: 0,
-                                      child: SizedBox(
-                                        // width: 30.w,
-                                        child: Text(
-                                          'اختيار عشوائي',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: pinkColor,
-                                          ),
-                                        ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    random();
+                                  },
+                                  minWidth: 85.w,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.sp),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8.sp,
+                                  ),
+                                  // minWidth: 6.w,
+                                  color: pinkColor.withAlpha(10),
+                                  elevation: 0,
+                                  focusElevation: 0,
+                                  highlightElevation: 0,
+                                  hoverElevation: 0,
+                                  disabledElevation: 0,
+                                  child: SizedBox(
+                                    // width: 30.w,
+                                    child: Text(
+                                      'اختيار عشوائي',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: pinkColor,
                                       ),
                                     ),
                                   ),
-                                  // SizedBox(width: 5.sp),
-                                  // // next
-                                  // Expanded(
-                                  //   child: MaterialButton(
-                                  //     onPressed: () {
-                                  //       next();
-                                  //     },
-                                  //     shape: RoundedRectangleBorder(
-                                  //       borderRadius:
-                                  //       BorderRadius.circular(8.sp),
-                                  //     ),
-                                  //     padding: EdgeInsets.symmetric(
-                                  //       vertical: 8.sp,
-                                  //     ),
-                                  //     // minWidth: 6.w,
-                                  //     color: pinkColor.withAlpha(10),
-                                  //     elevation: 0,
-                                  //     focusElevation: 0,
-                                  //     highlightElevation: 0,
-                                  //     hoverElevation: 0,
-                                  //     disabledElevation: 0,
-                                  //     child: SizedBox(
-                                  //       width: 30.w,
-                                  //       child: Text(
-                                  //         'التالي',
-                                  //         textAlign: TextAlign.center,
-                                  //         style: TextStyle(
-                                  //           fontSize: 12.sp,
-                                  //           color: pinkColor,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
+                                ),
                               ),
                             ),
 
                             SizedBox(
                               height: 15.sp,
                             ),
+
                             // doaa pic
                             Align(
                               alignment: Alignment.center,
@@ -478,47 +412,70 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // color: Colors.blue,
                               ),
                             ),
+
                             SizedBox(
                               height: 20.sp,
                             ),
-                            // فضل الدعاء للغير
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15.sp,
-                              ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'فضل الدعاء للغير',
-                                  style: TextStyle(
-                                    fontSize: 13.sp,
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.5,
-                                    color: pinkColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
+                            const HeadlineText(
+                              title: 'فضل الدعاء للغير',
                             ),
-                            // hadeeth
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20.sp,
-                              ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
+                            SizedBox(height: 4.sp,),
+                            const DescriptionText(
+                              title:
                                   'إن أفضل الدعاء، دعوة غائب لغائب، فدعاء المسلم لأخيه المسلم بظهر الغيب أنفع وأرجى للإجابة للداعي وللمدعو له، كما أخبرنا النبي ﷺ.\nوقد كان بعض السلف إذا أراد أن يدعو لنفسه، يدعو لأخيه المسلم بتلك الدعوة؛ فتكون أقرب للإجابة ويحصل له مثلها بسبب تأمين الملك.',
-                                  style: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.5,
-                                    color: greyColor,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                            ),
+
+                            SizedBox(
+                              height: 20.sp,
+                            ),
+                            const HeadlineText(
+                              title: 'هيا ندعي بعض الأدعية',
+                            ),
+                            SizedBox(height: 5.sp,),
+                            const DescriptionText(
+                              title: 'قَالَ رَسُول اللَّه ﷺ: (ثَلَاثَةٌ لَا تُرَدُّ دَعْوَتُهُمْ: الصَّائِمُ حَتَّى يُفْطِرَ وَالْإِمَامُ الْعَادِلُ وَالْمَظْلُومُ).',
+                            ),
+                            SizedBox(height: 12.sp,),
+
+                            Container(
+                              height: 30.h,
+                              // width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                              ),
+                              child: ListView.separated(
+                                itemBuilder: (context, index){
+                                  return Container(
+                                    width: 80.w,
+                                    height: 30.h,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.sp,
+                                    ),
+                                    // height: 25.sp,
+                                    decoration: BoxDecoration(
+                                      color: pinkColor.withAlpha(10),
+                                      borderRadius: BorderRadius.circular(8.sp),
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: SingleChildScrollView(
+                                        physics: const BouncingScrollPhysics(),
+                                        child: DoaaText(
+                                          doaa: adeya[index],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, index){
+                                  return SizedBox(width: 4.w,);
+                                },
+                                itemCount: adeya.length,
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
                               ),
                             ),
+
                             // // لا تنسونا
                             // Padding(
                             //   padding: EdgeInsets.symmetric(
@@ -538,29 +495,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             //     ),
                             //   ),
                             // ),
+
+
+                            // SizedBox(
+                            //   height: 25.sp,
+                            // ),
+                            //
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //     horizontal: 35.sp,
+                            //   ),
+                            //   child: Align(
+                            //     alignment: Alignment.center,
+                            //     child: Text(
+                            //       'هناك بعض الميزات المهمة قيد التعديل حالياً؛ لذلك يرجى تحديث التطبيق فور توفره على المتجر.',
+                            //       style: TextStyle(
+                            //         fontSize: 11.sp,
+                            //         fontWeight: FontWeight.w500,
+                            //         height: 1.5,
+                            //         color: Colors.red,
+                            //       ),
+                            //       textAlign: TextAlign.center,
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(
-                              height: 40.sp,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 35.sp,
-                              ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'هناك بعض الميزات المهمة قيد التعديل حالياً؛ لذلك يرجى تحديث التطبيق فور توفره على المتجر.',
-                                  style: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1.5,
-                                    color: Colors.red,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30.sp,
+                              height: 35.sp,
                             ),
                           ],
                         ),
@@ -575,13 +535,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Position position = await _determinePosition();
-          // final coordinates = Coordinates(position.latitude, position.longitude);
-          // final date = DateComponents(2022, 04, 03);
-          // final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
-          // calculationParameters.madhab = Madhab.hanafi;
-          // final prayerTimes = PrayerTimes(coordinates, date, calculationParameters);
-
           dev.log('FAB pressed');
 
           NotificationApi.showNotification(
@@ -597,41 +550,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-// Future<Position> _determinePosition() async {
-//   bool serviceEnabled;
-//   LocationPermission permission;
-//
-//   // Test if location services are enabled.
-//   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-//   if (!serviceEnabled) {
-//     // Location services are not enabled don't continue
-//     // accessing the position and request users of the
-//     // App to enable the location services.
-//     await Geolocator.openLocationSettings();
-//     return Future.error('Location services are disabled.');
-//   }
-//
-//   permission = await Geolocator.checkPermission();
-//   if (permission == LocationPermission.denied) {
-//     permission = await Geolocator.requestPermission();
-//     if (permission == LocationPermission.denied) {
-//       // Permissions are denied, next time you could try
-//       // requesting permissions again (this is also where
-//       // Android's shouldShowRequestPermissionRationale
-//       // returned true. According to Android guidelines
-//       // your App should show an explanatory UI now.
-//       return Future.error('Location permissions are denied');
-//     }
-//   }
-//
-//   if (permission == LocationPermission.deniedForever) {
-//     // Permissions are denied forever, handle appropriately.
-//     return Future.error(
-//         'Location permissions are permanently denied, we cannot request permissions.');
-//   }
-//
-//   // When we reach here, permissions are granted and we can
-//   // continue accessing the position of the device.
-//   return await Geolocator.getCurrentPosition();
-// }

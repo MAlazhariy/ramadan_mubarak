@@ -6,21 +6,23 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
+
 class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
 
   static Future _notificationDetails() async {
+
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         // todo: handle notification screen showTime
-        'CHANNEL_ID 10',
-        'doaa reminder 10', // channel name
-        channelDescription: 'CHANNEL_DESCRIPTION 10',
+        'CHANNEL_ID 19',
+        'doaa reminder 19', // channel name
+        channelDescription: 'CHANNEL_DESCRIPTION 19',
         channelShowBadge: true,
         importance: Importance.max,
         priority: Priority.high,
+        visibility: NotificationVisibility.public,
         styleInformation: BigTextStyleInformation(''),
-        // fullScreenIntent: true,
         icon: 'notification_icon',
         playSound: true,
         enableVibration: true,

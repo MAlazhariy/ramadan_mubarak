@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
 class Cache {
@@ -89,6 +87,26 @@ class Cache {
 
   static bool isNotificationsDone(){
     return box.get('notifications', defaultValue: false);
+  }
+
+
+
+  /// location coordinates
+  static bool isCoordinatesSaved(){
+    return box.get('coordinates_saved', defaultValue: false);
+  }
+
+  static void _coordinatesHasSaved([bool value = true]){
+    box.put('coordinates_saved', value);
+  }
+
+  static void setCoordinates(double latitude, double longitude){
+    _coordinatesHasSaved();
+    box.put('coordinates', [latitude, longitude]);
+  }
+
+  static List<double> getCoordinates(){
+    return box.get('coordinates',);
   }
 
 
