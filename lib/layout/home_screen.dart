@@ -9,6 +9,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:ramadan_kareem/modules/adeya.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
+import 'package:ramadan_kareem/modules/settings/settings_screen.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/cache_helper/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/components/components/description_text.dart';
@@ -419,7 +420,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             const HeadlineText(
                               title: 'فضل الدعاء للغير',
                             ),
-                            SizedBox(height: 4.sp,),
+                            SizedBox(
+                              height: 4.sp,
+                            ),
                             const DescriptionText(
                               title:
                                   'إن أفضل الدعاء، دعوة غائب لغائب، فدعاء المسلم لأخيه المسلم بظهر الغيب أنفع وأرجى للإجابة للداعي وللمدعو له، كما أخبرنا النبي ﷺ.\nوقد كان بعض السلف إذا أراد أن يدعو لنفسه، يدعو لأخيه المسلم بتلك الدعوة؛ فتكون أقرب للإجابة ويحصل له مثلها بسبب تأمين الملك.',
@@ -431,11 +434,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             const HeadlineText(
                               title: 'هيا ندعي بعض الأدعية',
                             ),
-                            SizedBox(height: 5.sp,),
-                            const DescriptionText(
-                              title: 'قَالَ رَسُول اللَّه ﷺ: (ثَلَاثَةٌ لَا تُرَدُّ دَعْوَتُهُمْ: الصَّائِمُ حَتَّى يُفْطِرَ وَالْإِمَامُ الْعَادِلُ وَالْمَظْلُومُ).',
+                            SizedBox(
+                              height: 5.sp,
                             ),
-                            SizedBox(height: 12.sp,),
+                            const DescriptionText(
+                              title:
+                                  'قَالَ رَسُول اللَّه ﷺ: (ثَلَاثَةٌ لَا تُرَدُّ دَعْوَتُهُمْ: الصَّائِمُ حَتَّى يُفْطِرَ وَالْإِمَامُ الْعَادِلُ وَالْمَظْلُومُ).',
+                            ),
+                            SizedBox(
+                              height: 12.sp,
+                            ),
 
                             Container(
                               height: 30.h,
@@ -444,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 horizontal: 4.w,
                               ),
                               child: ListView.separated(
-                                itemBuilder: (context, index){
+                                itemBuilder: (context, index) {
                                   return Container(
                                     width: 80.w,
                                     height: 30.h,
@@ -467,8 +475,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   );
                                 },
-                                separatorBuilder: (context, index){
-                                  return SizedBox(width: 4.w,);
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    width: 4.w,
+                                  );
                                 },
                                 itemCount: adeya.length,
                                 scrollDirection: Axis.horizontal,
@@ -476,26 +486,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
 
-                            // // لا تنسونا
-                            // Padding(
-                            //   padding: EdgeInsets.symmetric(
-                            //     horizontal: 15.sp,
-                            //   ),
-                            //   child: Align(
-                            //     alignment: Alignment.center,
-                            //     child: Text(
-                            //       'لا تنسونا من صالح دعاءكم 💙',
-                            //       style: TextStyle(
-                            //         fontSize: 11.sp,
-                            //         fontWeight: FontWeight.w600,
-                            //         height: 1.5,
-                            //         color: greyColor,
-                            //       ),
-                            //       textAlign: TextAlign.center,
-                            //     ),
-                            //   ),
-                            // ),
-
+                            SizedBox(
+                              height: 20.sp,
+                            ),
+                            const HeadlineText(
+                              title: 'لا تنسونا من صالح دعاءكم 💙',
+                            ),
 
                             // SizedBox(
                             //   height: 25.sp,
@@ -535,15 +531,31 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          dev.log('FAB pressed');
+          String id = await getId();
 
-          NotificationApi.showNotification(
-            title: 'test notification',
-            body: 'this is a test notification !\n'
-                '${DateTime.now()}',
+          List<String> allowedDeviceIDs = [
+            'b5515f47ea9d92df', // أبو يوسف
+            'd1c4159a8fd1ac52', // آلاء عبد الفتاح
+            '5e52c61a71751b03', // فاطم رياض
+            '33df7de003ca17ad', // هدية ابراهيم
+            '027e5a15c8257dff', // أنا
+          ];
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Directionality(
+                textDirection: TextDirection.rtl,
+                child: SettingsScreen(isShareAllowed: allowedDeviceIDs.contains(id),),
+              );
+            }),
           );
 
-          // readyShowScheduledNotification(context);
+          // NotificationApi.showNotification(
+          //   title: 'test notification',
+          //   body: 'this is a test notification !\n'
+          //       '${DateTime.now()}',
+          // );
         },
         child: const Icon(Icons.settings),
       ),

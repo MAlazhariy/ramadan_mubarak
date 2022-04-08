@@ -31,6 +31,11 @@ class Cache {
     return info['name'];
   }
 
+  static int getUserLoginTime(){
+    Map info = box.get('userlogininfo', defaultValue: {});
+    return info['time'];
+  }
+
   /// set if it is the first time that user using the app
   static void setIsFirstTime([bool value = false]){
     box.put('firstTime', value);

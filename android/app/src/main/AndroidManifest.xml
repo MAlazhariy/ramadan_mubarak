@@ -14,6 +14,31 @@
     <!-- try this methods in alarm -->
     <!-- <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> -->
 
+<!--    url permissions -->
+    <queries>
+        <!-- If your app opens https URLs -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <!-- If your app makes calls -->
+<!--        <intent>-->
+<!--            <action android:name="android.intent.action.DIAL" />-->
+<!--            <data android:scheme="tel" />-->
+<!--        </intent>-->
+        <!-- If your sends SMS messages -->
+<!--        <intent>-->
+<!--            <action android:name="android.intent.action.SENDTO" />-->
+<!--            <data android:scheme="smsto" />-->
+<!--        </intent>-->
+        <!-- If your app sends emails -->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
+
+
    <application
         android:label="رمضان مبارك"
         android:name="${applicationName}"
@@ -24,6 +49,7 @@
                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
            </intent-filter>
        </receiver>
+
        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <activity
             android:name=".MainActivity"
@@ -45,7 +71,25 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <!-- share app permission -->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.SEND" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <data android:mimeType="text/plain" />-->
+<!--            </intent-filter>-->
+
         </activity>
+
+<!--       share app permission -->
+<!--       <activity android:name="ShareActivity">-->
+<!--           <intent-filter>-->
+<!--               <action android:name="android.intent.action.SEND"/>-->
+<!--               <category android:name="android.intent.category.DEFAULT"/>-->
+<!--               <data android:mimeType="text/plain"/>-->
+<!--               <data android:mimeType="image/*"/>-->
+<!--           </intent-filter>-->
+<!--       </activity>-->
 
 <!--       fix firebase issue-->
        <meta-data

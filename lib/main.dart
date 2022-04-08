@@ -9,7 +9,7 @@ import 'package:ramadan_kareem/layout/home_screen.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
 import 'package:sizer/sizer.dart';
-import 'modules/login_screen.dart';
+import 'layout/login_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
