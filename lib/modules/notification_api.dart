@@ -15,9 +15,9 @@ class NotificationApi {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
         // todo: handle notification screen showTime
-        'CHANNEL_ID 19',
-        'doaa reminder 19', // channel name
-        channelDescription: 'CHANNEL_DESCRIPTION 19',
+        'maghreb-17',
+        'doaa_reminder', // channel name
+        channelDescription: 'تذكير باقتراب موعد الدعاء',
         channelShowBadge: true,
         importance: Importance.max,
         priority: Priority.high,
