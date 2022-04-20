@@ -15,3 +15,18 @@ void pushAndFinish(
     (route) => false,
   );
 }
+
+void push(
+  BuildContext context,
+  Widget screen,
+) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) {
+      return Directionality(
+        textDirection: TextDirection.rtl,
+        child: screen,
+      );
+    }),
+  );
+}

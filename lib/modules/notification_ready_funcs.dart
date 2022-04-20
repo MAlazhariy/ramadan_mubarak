@@ -1,16 +1,12 @@
+
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hijri/hijri_calendar.dart';
-import 'package:ramadan_kareem/models/users_model.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
-import 'package:ramadan_kareem/shared/components/components/custom_dialog/custom_dialog.dart';
-import 'package:ramadan_kareem/shared/components/components/custom_dialog/dialog_buttons.dart';
 import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
 
@@ -43,7 +39,6 @@ void readyShowScheduledNotification(BuildContext context) async {
         callUser = ' يا ${users.first.name}';
       }
 
-      // todo: remove this line
       snkbar(context, 'تم ضبط الإشعارات بنجاح ✅');
 
       NotificationApi.showScheduledNotification(
@@ -94,7 +89,6 @@ void readyShowScheduledNotification(BuildContext context) async {
       title: 'اقترب موعد استجابة الدعاء',
       body: 'هيا ندعي لـ $notifiName\n$notifiDoaa',
       date: scheduledDate,
-      // todo: edit to time of maghreb pray time
       repeatDuration: Duration(seconds: 5 * (i + 1)),
       id: hijriDayInt,
     );

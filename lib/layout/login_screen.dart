@@ -9,13 +9,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:ramadan_kareem/layout/home_screen.dart';
 import 'package:ramadan_kareem/models/users_model.dart';
-import 'package:ramadan_kareem/modules/notifications_permission_screen.dart';
+import 'package:ramadan_kareem/modules/done_screen.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/components/components/custom_dialog/custom_dialog.dart';
 import 'package:ramadan_kareem/shared/components/components/custom_dialog/dialog_buttons.dart';
 import 'package:ramadan_kareem/shared/components/components/dismiss_keyboard.dart';
 import 'package:ramadan_kareem/shared/components/components/network_check.dart';
-import 'package:ramadan_kareem/shared/components/components/push_and_finish.dart';
+import 'package:ramadan_kareem/shared/components/components/push.dart';
 import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'package:ramadan_kareem/shared/components/components/white_text_form.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
@@ -40,10 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
   Field _field;
-  bool passwordIsShown = false;
-  bool loading = false;
 
-  // var doc = await FirebaseFirestore.instance.collection('users').doc(deviceId).get();
+  // bool passwordIsShown = false;
+  bool loading = false;
 
   Future<void> login({
     @required String name,
@@ -55,181 +54,78 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await hasNetwork().then((hasNetwork) async {
       if (hasNetwork) {
-        var doc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(deviceId)
-            .get();
-
         int time = DateTime.now().toUtc().microsecondsSinceEpoch;
-        log(doc.id);
 
-        // todo: remove comment
-        // doc.set({
-        //   'name': name,
-        //   'doaa': doaa,
-        //   'device id': id,
-        //   'approved': false,
-        //   'time': time,
-        //   'nameUpdate': '',
-        //   'doaaUpdate': '',
-        //   'pendingEdit': false,
-        // }).then((value) {
-        //   setState(() {
-        //     loading = false;
-        //   });
-        //
-        //   Cache.hasLoggedIn();
-        //   Cache.setUserLoginInfo(
-        //     name: name,
-        //     doaa: doaa,
-        //     time: time,
-        //     docId: doc.id,
-        //   );
-        //
-        //   pushAndFinish(context, const HomeScreen());
-        // }).catchError((error) {
-        //   setState(() {
-        //     loading = false;
-        //   });
-        //   log(error.toString());
-        //   snkbar(context, error.toString());
-        // });
+        FirebaseFirestore.instance.collection('users').doc(deviceId).set({
+          'name': name,
+          'doaa': doaa,
+          'device id': deviceId,
+          'approved': false,
+          'time': time,
+          'nameUpdate': '',
+          'doaaUpdate': '',
+          'pendingEdit': false,
+        }).then((_) {
+          setState(() {
+            loading = false;
+          });
 
+          Cache.hasLoggedIn();
+
+          Cache.setUserLoginInfo(
+            name: name,
+            doaa: doaa,
+            time: time,
+            docId: deviceId,
+          );
+
+          userModel.data.add(UserDataModel.fromMap({
+            'name': name,
+            'doaa': doaa,
+            'device id': deviceId,
+            'approved': true,
+            'time': time,
+            'nameUpdate': '',
+            'doaaUpdate': '',
+            'pendingEdit': false,
+          }));
+
+          if (!Cache.isNotificationsDone()) {
+            // Go to DoneScreen
+            pushAndFinish(context, const DoneScreen());
+          } else {
+            // Go to HomeScreen
+            pushAndFinish(context, const HomeScreen());
+          }
+
+        }).catchError((error) {
+          setState(() {
+            loading = false;
+          });
+          log(error.toString());
+          snkbar(context, error.toString());
+        });
       } else {
-        snkbar(context, 'برجاء التحقق من شبكة الإنترنت');
+        snkbar(
+          context,
+          'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
+          seconds: 4,
+          backgroundColor: Colors.red,
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        );
         loading = false;
       }
     });
   }
 
-  void changeData({
-    @required String newName,
-    @required String newDoaa,
-  }) async {
-    FirebaseFirestore.instance.collection('users').doc(deviceId).update({
-      'nameUpdate': newName,
-      'doaaUpdate': newDoaa,
-      'pendingEdit': true,
-    }).then((value) {
-      // todo: change edited in our userModel
-      // for (var element in localData) {
-      //   if (element['device id'] == deviceId) {
-      //     element.update('name', (value) => newName);
-      //     element.update('doaa', (value) => newDoaa);
-      //
-      //     log('new name : ${element['name']}');
-      //     log('new doaa : ${element['doaa']}');
-      //     break;
-      //   }
-      // }
-
-      log('change done');
-    });
-  }
-
-  void approve(UserDataModel user) async {
-    FirebaseFirestore.instance.collection('users').doc(user.id).update({
-      'name': user.nameUpdate,
-      'doaa': user.doaaUpdate,
-      'nameUpdate': '',
-      'doaaUpdate': '',
-      'pendingEdit': false,
-    }).then((value) {
-      // todo: change edited in our userModel
-      // for (var element in localData) {
-      //   if (element['device id'] == deviceId) {
-      //     element.update('name', (value) => newName);
-      //     element.update('doaa', (value) => newDoaa);
-      //
-      //     log('new name : ${element['name']}');
-      //     log('new doaa : ${element['doaa']}');
-      //     break;
-      //   }
-      // }
-
-      log('${user.nameUpdate} approved successfully');
-    });
-  }
-
-  void edit() async {
-    // var collection = await getCollection();
-    //
-    // for (var doc in collection.docs) {
-    //   FirebaseFirestore.instance.collection('users').doc(doc.id).update({
-    //     'doaaUpdate': '',
-    //     'nameUpdate': '',
-    //     'pendingEdit': false,
-    //   });
-    // }
-    List local = Cache.getData();
-    log(userModel.data[0].name);
-
-    // log(Cache.getData().toString());
-
-    // userModel.data.where((user) => user.pendingEdit).forEach((user) {
-    //   log('There\'s a user have an updates to review and these are the details..');
-    //   log('old name = ${user.name}');
-    //   log('new name = ${user.nameUpdate}');
-    //
-    //   log('old doaa = ${user.doaa}');
-    //   log('new doaa = ${user.doaaUpdate}');
-    //   log('is binding = ${user.pendingEdit}');
-    //
-    //   log('approving changes');
-    //   approve(user);
-    // });
-
-    /// 6:10
-    // FirebaseFirestore.instance.collection('users').get().then((value) {
-    //   var data = value;
-    //   log(data.docs.length.toString());
-    //   for (var data in data.docs) {
-    //     log(data.data()['name']);
-    //   }
-    // });
-
-    ///6:00
-    // FirebaseFirestore.instance
-    //     .collection('users').get().then((value) {
-    //   log(value.docs.length.toString());
-    // });
-
-    /// 5:46
-    // FirebaseFirestore.instance
-    //     .collection('users').get().then((value) {
-    //       log(value.docs.length.toString());
-    // });
-
-    // 5:41
-    // FirebaseFirestore.instance
-    //         .collection('users').get().then((value) {
-    //           log(value.docs.length.toString());
-    //     });
-
-    //     .orderBy('time')
-    //     .firestore.
-    //     .get()
-    //     .then((value) {
-    //       log(value.docs.length.toString());
-    //   for (var element in value.docs) {
-    //     log(element.data()['name'].toString());
-    //   }
-    // });
-    // log(size.toString());
-
-    // log(data.length.toString());
-    // log(data.toString());
-
-    //   for(var item in data){
-    //     final String id = item['device id'];
-    //
-    //     FirebaseFirestore.instance.collection('users').doc(id).update({
-    //       'doaaUpdate': '',
-    //       'nameUpdate': '',
-    //       'updateApproved': false,
-    //       'pendingEdit': true,
-    //     });
-    // }
+  @override
+  void initState() {
+    super.initState();
+    loading = false;
   }
 
   @override
@@ -312,7 +208,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 15.sp,
                     ),
-                    // doaa
+
+                    /// doaa
                     WhiteTextForm(
                       controller: doaaCtrl,
                       validator: (String value) {
@@ -346,118 +243,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: AlignmentDirectional.center,
                       child: RaisedButton(
-                        // todo: login button
                         onPressed: () async {
                           setState(() {});
                           dismissKeyboard(context);
 
                           if (formKey.currentState.validate()) {
-                            log('login pressed');
-
-                            // changeData(
-                            //   newName: nameCtrl.text,
-                            //   newDoaa: doaaCtrl.text,
-                            // );
-
-                            edit();
-
-                            // await login(
-                            //   name: nameCtrl.text,
-                            //   doaa: doaaCtrl.text,
-                            // );
-
-                            // todo: remove comment
-                            // if (!Cache.isNotificationsDone() || true) {
-                            //   pushAndFinish(
-                            //     context,
-                            //     const NotificationsPermissionScreen(),
-                            //   );
-                            // }
-
-                            // showCustomDialog(
-                            //   context: context,
-                            //   title:
-                            //       'سيتم إرسال طلبك للمسؤولين وحالما يتم الموافقة عليه سيظهر للمستخدمين الآخرين',
-                            //   content: Column(
-                            //     mainAxisSize: MainAxisSize.min,
-                            //     children: [
-                            //       const Text(
-                            //         'سيظهر دعاءك بهذا الشكل للمستخدمين الآخرين'
-                            //       ),
-                            //       Container(
-                            //         decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(7.sp),
-                            //           color: Colors.pink.withAlpha(13),
-                            //         ),
-                            //         width: double.maxFinite,
-                            //         padding: EdgeInsets.symmetric(
-                            //           horizontal: 15.sp,
-                            //           vertical: 20.sp,
-                            //         ),
-                            //         child: Column(
-                            //           mainAxisSize: MainAxisSize.min,
-                            //           crossAxisAlignment: CrossAxisAlignment.start,
-                            //           children: [
-                            //             Text(
-                            //               nameCtrl.text,
-                            //               style: TextStyle(
-                            //                 fontSize: 20.sp,
-                            //                 fontWeight: FontWeight.w800,
-                            //               ),
-                            //             ),
-                            //             SizedBox(height: 5.sp),
-                            //             Text(
-                            //               doaaCtrl.text,
-                            //               style: TextStyle(
-                            //                 fontSize: 15.sp,
-                            //                 fontWeight: FontWeight.w500,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            //   buttons: [
-                            //     if (!loading)
-                            //       DialogButton(
-                            //         title: 'تأكيد',
-                            //         onPressed: () async {
-                            //           await hasNetwork().then((value) async {
-                            //             if (value) {
-                            //               String id;
-                            //               try {
-                            //                 id = await PlatformDeviceId
-                            //                     .getDeviceId;
-                            //               } catch (e) {}
-                            //               ;
-                            //
-                            //               login(
-                            //                 name: nameCtrl.text,
-                            //                 doaa: doaaCtrl.text,
-                            //                 id: id,
-                            //               );
-                            //             } else {
-                            //               snkbar(context,
-                            //                   'برجاء التحقق من شبكة الإنترنت');
-                            //               loading = false;
-                            //               Navigator.pop(context);
-                            //             }
-                            //           });
-                            //         },
-                            //         isBold: true,
-                            //       ),
-                            //     if (loading) const CircularProgressIndicator(),
-                            //     if (!loading)
-                            //       DialogButton(
-                            //         title: 'رجوع',
-                            //         onPressed: () {
-                            //           Navigator.pop(context);
-                            //         },
-                            //         isBold: false,
-                            //       ),
-                            //   ],
-                            // );
+                            await login(
+                              name: nameCtrl.text,
+                              doaa: doaaCtrl.text,
+                            );
                           }
                         },
                         padding: const EdgeInsets.all(0),

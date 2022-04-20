@@ -16,7 +16,7 @@ Future<void> initGetAndSaveData() async {
 
   if (connected) {
     // get data from Firebase
-    getCollection().then((data) {
+    await getCollection().then((data) {
       userModel = UserDocsModel.fromCollection(data);
     }).catchError((error) {
       userModel = UserDocsModel.fromList(
@@ -29,7 +29,9 @@ Future<void> initGetAndSaveData() async {
   }
 
   // save data to local
-  Cache.saveData(userModel.toList());
+  if(userModel != null) {
+    Cache.saveData(userModel.toList());
+  }
 
   /// check id
   if (!Cache.isLoginChecked() && connected) {

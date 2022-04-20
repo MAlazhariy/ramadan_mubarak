@@ -11,6 +11,7 @@ import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/modules/settings/settings_screen.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
+import 'package:ramadan_kareem/shared/components/components/push.dart';
 import 'package:ramadan_kareem/shared/network/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/components/components/description_text.dart';
 import 'package:ramadan_kareem/shared/components/components/doaa_text.dart';
@@ -521,32 +522,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          String id = await getId();
+        onPressed: () {
 
-          List<String> allowedDeviceIDs = [
-            'b5515f47ea9d92df', // أبو يوسف
-            'd1c4159a8fd1ac52', // آلاء عبد الفتاح
-            '5e52c61a71751b03', // فاطم رياض
-            '33df7de003ca17ad', // هدية ابراهيم
-            '027e5a15c8257dff', // أنا
-          ];
-
-          Navigator.push(
+          push(
             context,
-            MaterialPageRoute(builder: (context) {
-              return Directionality(
-                textDirection: TextDirection.rtl,
-                child: SettingsScreen(isShareAllowed: allowedDeviceIDs.contains(id),),
-              );
-            }),
+            SettingsScreen(),
           );
-
-          // NotificationApi.showNotification(
-          //   title: 'test notification',
-          //   body: 'this is a test notification !\n'
-          //       '${DateTime.now()}',
-          // );
         },
         child: const Icon(Icons.settings),
       ),

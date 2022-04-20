@@ -78,8 +78,7 @@ class StartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // todo: important edit me
-    if(Cache.isLogin() && false) {
+    if(Cache.isLogin()) {
       return const HomeScreen();
     } else {
       return const LoginScreen();

@@ -14,7 +14,6 @@ class NotificationApi {
 
     return const NotificationDetails(
       android: AndroidNotificationDetails(
-        // todo: handle notification screen showTime
         'maghreb-17',
         'doaa_reminder', // channel name
         channelDescription: 'تذكير باقتراب موعد الدعاء',
@@ -116,7 +115,6 @@ class NotificationApi {
       date.second,
     );
 
-    // todo: remove print mehods
     if (scheduledDate.isBefore(now)) {
       // log('will show after $repeatDuration');
       log('date is before now .. will show at ${now.add(repeatDuration)}');

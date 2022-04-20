@@ -40,6 +40,7 @@ class UserDocsModel {
   }
 
   List<Map<String, dynamic>> toList(){
+    if(data.isEmpty) return [];
     return data.map((e) => e.toMap()).toList();
   }
 }

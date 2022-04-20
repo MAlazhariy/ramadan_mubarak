@@ -1,15 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/layout/home_screen.dart';
-import 'package:ramadan_kareem/layout/login_screen.dart';
-import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
-import 'package:ramadan_kareem/shared/components/components/push_and_finish.dart';
+import 'package:ramadan_kareem/shared/components/components/push.dart';
 import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
-class NotificationsPermissionScreen extends StatelessWidget {
-  const NotificationsPermissionScreen({Key key}) : super(key: key);
+class DoneScreen extends StatelessWidget {
+  const DoneScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +45,10 @@ class NotificationsPermissionScreen extends StatelessWidget {
                 indent: 20,
                 endIndent: 20,
               ),
-              SizedBox(height: 5.sp),
+              SizedBox(height: 20.sp),
               Icon(
                 Icons.location_on,
-                size: 40.sp,
+                size: 30.sp,
                 color: pinkColor,
               ),
               SizedBox(height: 5.sp),
@@ -85,23 +81,15 @@ class NotificationsPermissionScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const Spacer(),
-              TextButton(
-                  onPressed: () {
-                    pushAndFinish(
-                      context,
-                      const LoginScreen(),
-                    );
-                  },
-                  child: Text('back')),
+              // button
               Align(
                 alignment: AlignmentDirectional.center,
                 child: RaisedButton(
                   onPressed: () {
-                    log('pressed');
-                    // pushAndFinish(
-                    //   context,
-                    //   const HomeScreen(),
-                    // );
+                    pushAndFinish(
+                      context,
+                      const HomeScreen(),
+                    );
                   },
                   padding: const EdgeInsets.all(0),
                   shape: const StadiumBorder(),
