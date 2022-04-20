@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:ramadan_kareem/layout/home_screen.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
+import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/components/constants.dart';
 import 'package:sizer/sizer.dart';
 import 'layout/login_screen.dart';
@@ -31,6 +33,9 @@ void main() async {
 
   // init TimeZone
   tz.initializeTimeZones();
+
+  // set device id
+  deviceId = await PlatformDeviceId.getDeviceId;
 
   // get init data
   await initGetAndSaveData();
@@ -57,7 +62,7 @@ class MyApp extends StatelessWidget {
           ),
           home: const Directionality(
             textDirection: TextDirection.rtl,
-            child: LoginScreen(),
+            child: StartScreen(),
             // child: HomeScreen(),
           ),
         );
@@ -65,3 +70,21 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+class StartScreen extends StatelessWidget {
+  const StartScreen({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+    // todo: important edit me
+    if(Cache.isLogin() && false) {
+      return const HomeScreen();
+    } else {
+      return const LoginScreen();
+    }
+
+  }
+}
+

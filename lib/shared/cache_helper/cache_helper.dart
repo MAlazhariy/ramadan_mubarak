@@ -1,11 +1,12 @@
 import 'dart:developer';
 import 'package:hive/hive.dart';
+import 'package:ramadan_kareem/models/users_model.dart';
 
 class Cache {
   static Box box = Hive.box('box');
 
   /// login
-  static bool get isLogin {
+  static bool isLogin() {
     return box.get('login', defaultValue: false);
   }
 
@@ -17,23 +18,33 @@ class Cache {
     String name,
     String doaa,
     int time,
+    String docId,
   }) {
     final Map info = {
       'name': name,
       'doaa': doaa,
       'time': time,
+      'docId': docId,
     };
     box.put('userlogininfo', info);
   }
 
   static String getUserName(){
-    Map info = box.get('userlogininfo', defaultValue: {});
+    Map info = box.get('userlogininfo', defaultValue: '');
     return info['name'];
   }
 
   static int getUserLoginTime(){
-    Map info = box.get('userlogininfo', defaultValue: {});
+    Map info = box.get('userlogininfo', defaultValue: 0);
     return info['time'];
+  }
+
+  static void loginHasChecked([bool value = true]){
+    box.put('loginCheck', value);
+  }
+
+  static bool isLoginChecked(){
+    return box.get('loginCheck', defaultValue: false);
   }
 
   /// set if it is the first time that user using the app
@@ -59,6 +70,15 @@ class Cache {
 
 
   /// data
+  // static void saveUserData(List userModel){
+  //   box.put('userModel', userModel);
+  // }
+  //
+  // static List getUserData(){
+  //   var data = box.get('userModel');
+  //   return data;
+  // }
+
   static void saveData(List data){
     box.put('data', data);
   }
@@ -71,16 +91,6 @@ class Cache {
   static int getLength() {
     List data = getData();
     return data.length;
-  }
-
-  static String getName(int index){
-    List data = getData();
-    return data[index]['name'];
-  }
-
-  static String getDoaa(int index){
-    List data = getData();
-    return data[index]['doaa'];
   }
 
 
@@ -112,6 +122,16 @@ class Cache {
 
   static List<double> getCoordinates(){
     return box.get('coordinates',);
+  }
+
+  static double getLongitude(){
+    var list = getCoordinates();
+    return list[0];
+  }
+
+  static double getLatitude(){
+    var list = getCoordinates();
+    return list[1];
   }
 
 

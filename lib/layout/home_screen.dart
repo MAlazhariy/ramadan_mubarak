@@ -11,7 +11,7 @@ import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/modules/settings/settings_screen.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
-import 'package:ramadan_kareem/shared/cache_helper/firebase_funcs.dart';
+import 'package:ramadan_kareem/shared/network/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/components/components/description_text.dart';
 import 'package:ramadan_kareem/shared/components/components/doaa_text.dart';
 import 'package:ramadan_kareem/shared/components/components/headline_text.dart';
@@ -42,8 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Cache.setCounter(counter);
       int index = counter % Cache.getLength();
 
-      name = Cache.getName(index);
-      doaa = Cache.getDoaa(index);
+      name = userModel.data[index].name;
+      doaa = userModel.data[index].doaa;
     });
   }
 
@@ -53,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
       // Cache.setCounter(counter);
       int index = counter % Cache.getLength();
 
-      name = Cache.getName(index);
-      doaa = Cache.getDoaa(index);
+      name = userModel.data[index].name;
+      doaa = userModel.data[index].doaa;
     });
   }
 
@@ -63,18 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
       counter = getRandomIndex();
       Cache.setCounter(counter);
 
-      name = Cache.getName(counter);
-      doaa = Cache.getDoaa(counter);
+      name = userModel.data[counter].name;
+      doaa = userModel.data[counter].doaa;
     });
-  }
-
-  Future<void> getData() async {
-    final bool connected = await hasNetwork();
-
-    if (connected) {
-      List data = await getFirebaseData();
-      Cache.saveData(data);
-    }
   }
 
   @override
@@ -91,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Cache.setCounter(counter);
 
       // get name & doaa
-      name = Cache.getName(counter);
-      doaa = Cache.getDoaa(counter);
+      name = userModel.data[counter].name;
+      doaa = userModel.data[counter].doaa;
 
       // set IsFirstTime to false
       Cache.setIsFirstTime(false);
@@ -108,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Cache.setCounter(counter);
         index = counter % len;
 
-        name = Cache.getName(index);
-        doaa = Cache.getDoaa(index);
+        name = userModel.data[index].name;
+        doaa = userModel.data[index].doaa;
       }
     }
 

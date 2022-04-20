@@ -1,12 +1,16 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/components/components/custom_dialog/custom_dialog.dart';
 import 'package:ramadan_kareem/shared/components/components/custom_dialog/dialog_buttons.dart';
 import 'package:ramadan_kareem/shared/components/components/description_text.dart';
 import 'package:ramadan_kareem/shared/components/components/doaa_text.dart';
+import 'package:ramadan_kareem/shared/components/constants.dart';
+import 'package:ramadan_kareem/shared/network/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
@@ -42,21 +46,8 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     /// تعديل الدعاء أو الاسم
                     ListTile(
-                      onTap: () async {
-                        String id = await getId();
-
-                        await launch(
-                          mailUs(
-                              subject: 'تعديل الدعاء أو الاسم',
-                              body: 'سلام عليكم، '
-                                  'هذا هو الرقم التعريفي الخاص بي: $id،  '
-                                  'أنا أريد تغيير ..'
-                              // '(من فضلك لا تحذفه)\n'
-                              ),
-                        );
-                      },
                       title: Text(
-                        'تعديل الدعاء أو الاسم',
+                        'طلب تعديل الدعاء أو الاسم',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -64,13 +55,26 @@ class SettingsScreen extends StatelessWidget {
                           color: greyColor,
                         ),
                       ),
+                      onTap: () async {
+                        String id = await getId();
+
+                        await launch(
+                          mailUs(
+                              subject: 'طلب تعديل الدعاء أو الاسم',
+                              body: 'سلام عليكم، '
+                                  'هذا هو الرقم التعريفي الخاص بي: $id،  '
+                                  'أنا أريد تغيير ..'
+                            // '(من فضلك لا تحذفه)\n'
+                          ),
+                        );
+                      },
                       subtitle: Text(
                         'اضغط للتواصل مع المبرمج لتعديل الدعاء أو الاسم',
                         style: TextStyle(
-                          fontSize: 10.sp,
+                          fontSize: 9.sp,
                           fontWeight: FontWeight.w500,
                           // height: 1.5,
-                          color: greyColor.withAlpha(150),
+                          color: greyColor.withAlpha(130),
                         ),
                       ),
                       leading: const Icon(Icons.edit_outlined),
@@ -227,6 +231,60 @@ class SettingsScreen extends StatelessWidget {
                       //   ),
                       // ),
                       leading: const Icon(Icons.info_outline),
+                    ),
+
+                    /// إعادة ضبط الإشعارات
+                    ListTile(
+                      onTap: () async {
+                        readyShowScheduledNotification(context);
+                      },
+
+                      title: Text(
+                        'إعادة ضبط الإشعارات',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: greyColor,
+                        ),
+                      ),
+                      leading: const Icon(Icons.notification_important_outlined),
+                    ),
+
+                    ListTile(
+                      onTap: () async {
+
+                        // List data = await getFirebaseData();
+                        // log(data.length.toString());
+                        //
+                        // List data2 = data.where((user)=> user['device id'] != null && user['device id']!= '').toList();
+                        // log(data2.length.toString());
+                        // // log(data2.toString());
+                        //
+                        // for(var item in data2){
+                        //   final String id = item['device id'];
+                        //
+                        //   FirebaseFirestore.instance.collection('users').doc(id).update({
+                        //     'doaaUpdate': '',
+                        //     'nameUpdate': '',
+                        //     'updateApproved': false,
+                        //     'pendingEdit': true,
+                        //   });
+                        //
+                        //   log('$id updated successfully');
+                        // }
+                      },
+
+                      title: Text(
+                        'test',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: greyColor,
+                        ),
+                      ),
+                      leading: const Icon(Icons.notification_important_outlined),
                     ),
                   ],
                 ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:ramadan_kareem/models/users_model.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/shared/components/components/custom_dialog/custom_dialog.dart';
@@ -15,19 +16,16 @@ import 'package:ramadan_kareem/shared/components/constants.dart';
 
 void readyShowScheduledNotification(BuildContext context) async {
 
-  // Future.delayed(Duration(seconds: 3), (){
-  //   showCustomDialog(
-  //     context: context,
-  //     title: 'سماح بالإشعارات',
-  //     content: const Text(
-  //         'يرجى السماح للتطبيق بالوصول للموقع الجغرافي حتى يتمكن من معرفة مواقيت الصلاة في منطقتك وظهور الإشعارات في المواعيد المحددة لتذكيرك بالدعاء، أو قم برفض الصلاحيات'),
-  //   );
-  // });
+  Coordinates coordinates;
 
+  if(Cache.isCoordinatesSaved()){
+    coordinates = Coordinates(Cache.getLatitude(), Cache.getLongitude());
+  } else {
+    Position position = await _determinePosition(context);
+    coordinates = Coordinates(position.latitude, position.longitude);
+    Cache.setCoordinates(coordinates.latitude, coordinates.longitude);
+  }
 
-  Position position = await _determinePosition(context);
-  final coordinates = Coordinates(position.latitude, position.longitude);
-  Cache.setCoordinates(coordinates.latitude, coordinates.longitude);
   final calculationParameters =
       CalculationMethod.muslim_world_league.getParameters();
   calculationParameters.madhab = Madhab.shafi;
@@ -39,12 +37,18 @@ void readyShowScheduledNotification(BuildContext context) async {
     int hijriMonthInt = HijriCalendar.fromDate(date).hMonth;
 
     if (hijriMonthInt != 9) {
+      var users = userModel.data.where((element) => element.deviceId == deviceId);
+      String callUser = '';
+      if(users.isNotEmpty){
+        callUser = ' يا ${users.first.name}';
+      }
+
       // todo: remove this line
-      snkbar(context, 'تم ضبط الإشعارات بنجاح.');
+      snkbar(context, 'تم ضبط الإشعارات بنجاح ✅');
 
       NotificationApi.showScheduledNotification(
-        title: 'كل عام وأنتم بخير 💙',
-        body: '',
+        title: 'عيد سعيد 🎉🎈',
+        body: 'كل عام وأنت بخير$callUser 💙',
         date: DateTime(
           date.year,
           date.month,
@@ -65,8 +69,8 @@ void readyShowScheduledNotification(BuildContext context) async {
     );
 
     int _random = getRandomIndex();
-    String notifiName = Cache.getName(_random);
-    String notifiDoaa = Cache.getDoaa(_random);
+    String notifiName = userModel.data[_random].name;
+    String notifiDoaa = userModel.data[_random].doaa;
 
     var scheduledDate = DateTime(
       date.year,
@@ -107,11 +111,12 @@ Future<Position> _determinePosition(BuildContext context) async {
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
   if (!serviceEnabled) {
+    print('location service is not Enabled');
     // Location services are not enabled don't continue
     // accessing the position and request users of the
     // App to enable the location services.
-    snkbar(context,
-        'يرجى فتح الموقع الجغرافي GPS للسماح للتطبيق بتحديد مواعيد الصلاة الصحيحة بناءاً على منطقتك الجغرافية');
+    // snkbar(context,
+    //     'يرجى فتح الموقع الجغرافي GPS للسماح للتطبيق بتحديد مواعيد الصلاة الصحيحة بناءاً على منطقتك الجغرافية');
 
     // await Geolocator.openLocationSettings();
     // showCustomDialog(
@@ -138,18 +143,21 @@ Future<Position> _determinePosition(BuildContext context) async {
   }
 
   permission = await Geolocator.checkPermission();
+  print('check Permission..');
   if (permission == LocationPermission.denied) {
+    print('permission denied 😢');
     permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
-      snkbar(context,
-          'السماح بالوصول للموقع يساعد في ظهور الإشعارات في الوقت الصحيح قبل مواعيد صلاة المغرب');
-      return Future.error('Location permissions are denied');
-    }
+    // if (permission == LocationPermission.denied) {
+    //   // Permissions are denied, next time you could try
+    //   // requesting permissions again (this is also where
+    //   // Android's shouldShowRequestPermissionRationale
+    //   // returned true. According to Android guidelines
+    //   // your App should show an explanatory UI now.
+    //   snkbar(context,
+    //       'السماح بالوصول للموقع يساعد في ظهور الإشعارات في الوقت الصحيح قبل مواعيد صلاة المغرب');
+    //   return Future.error('Location permissions are denied');
+    // }
+    // return Future.error('Location permissions are denied');
   }
 
   if (permission == LocationPermission.deniedForever) {

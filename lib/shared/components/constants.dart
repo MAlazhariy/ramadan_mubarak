@@ -1,36 +1,63 @@
-// enum Gender{
-//   MALE, FEMALE,
-// }
-
+import 'dart:developer' as dev;
 import 'dart:math';
 
+import 'package:platform_device_id/platform_device_id.dart';
+import 'package:ramadan_kareem/models/users_model.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
-import 'package:ramadan_kareem/shared/cache_helper/firebase_funcs.dart';
+import 'package:ramadan_kareem/shared/network/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'components/network_check.dart';
 
-List localData = [];
+String deviceId;
+UserDocsModel userModel;
 
 Future<void> initGetAndSaveData() async {
-
   final bool connected = await hasNetwork();
 
   if (connected) {
-    List mydata = await getFirebaseData();
-    Cache.saveData(mydata);
+    // get data from Firebase
+    getCollection().then((data) {
+      userModel = UserDocsModel.fromCollection(data);
+    }).catchError((error) {
+      userModel = UserDocsModel.fromList(
+        Cache.getData(),
+      );
+    });
+  } else {
+    // get data from local
+    userModel = UserDocsModel.fromList(Cache.getData());
   }
 
-  // get data from local
-  localData = Cache.getData();
+  // save data to local
+  Cache.saveData(userModel.toList());
 
+  /// check id
+  if (!Cache.isLoginChecked() && connected) {
+    dev.log('started search for id');
+
+    if (deviceId != null && deviceId.isNotEmpty) {
+      // search by device id
+      var users = userModel.data.where((user) => user.deviceId == deviceId);
+      if (users.isNotEmpty) {
+        Cache.setUserLoginInfo(
+          name: users.first.name,
+          doaa: users.first.doaa,
+          time: users.first.time,
+          docId: users.first.deviceId,
+        );
+        Cache.hasLoggedIn();
+        dev.log('$deviceId logged in before 👍');
+      }
+    }
+    dev.log('checked');
+    Cache.loginHasChecked();
+  }
 }
 
-
-int getRandomIndex(){
-  try{
+int getRandomIndex() {
+  try {
     return Random().nextInt(Cache.getLength());
-  } catch(e){
+  } catch (e) {
     return 0;
   }
-
 }
