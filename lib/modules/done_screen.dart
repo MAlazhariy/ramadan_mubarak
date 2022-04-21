@@ -17,38 +17,38 @@ class DoneScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'تم التسجيل بنجاح',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  color: pinkColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const Divider(
-                height: 45,
-                thickness: 1.5,
-                indent: 20,
-                endIndent: 20,
-              ),
-              Text(
-                'تم إرسال طلبك إلى المسؤولين وحالما يتم الموافقة عليه سيظهر فوراً للمستخدمين الآخرين.',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  height: 1.4,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Divider(
-                height: 45,
-                thickness: 1.5,
-                indent: 20,
-                endIndent: 20,
-              ),
+              // Text(
+              //   'تم التسجيل بنجاح',
+              //   style: TextStyle(
+              //     fontSize: 18.sp,
+              //     color: pinkColor,
+              //     fontWeight: FontWeight.w700,
+              //   ),
+              // ),
+              // const Divider(
+              //   height: 45,
+              //   thickness: 1.5,
+              //   indent: 20,
+              //   endIndent: 20,
+              // ),
+              // Text(
+              //   'تم إرسال طلبك إلى المسؤولين وحالما يتم الموافقة عليه سيظهر فوراً للمستخدمين الآخرين.',
+              //   style: TextStyle(
+              //     fontSize: 13.sp,
+              //     height: 1.4,
+              //   ),
+              //   textAlign: TextAlign.center,
+              // ),
+              // const Divider(
+              //   height: 45,
+              //   thickness: 1.5,
+              //   indent: 20,
+              //   endIndent: 20,
+              // ),
               SizedBox(height: 20.sp),
               Icon(
                 Icons.location_on,
-                size: 30.sp,
+                size: 40.sp,
                 color: pinkColor,
               ),
               SizedBox(height: 5.sp),

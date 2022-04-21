@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ramadan_kareem/modules/settings/admin/admin_screen.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/modules/settings/update_data_screen.dart';
 import 'package:ramadan_kareem/shared/components/components/custom_dialog/custom_dialog.dart';
@@ -14,9 +15,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen({
-    Key key
-  }) : super(key: key);
+  SettingsScreen({Key key}) : super(key: key);
 
   final List<String> allowedDeviceIDs = [
     'b5515f47ea9d92df', // أبو يوسف
@@ -24,7 +23,12 @@ class SettingsScreen extends StatelessWidget {
     '5e52c61a71751b03', // فاطم رياض
     '33df7de003ca17ad', // هدية ابراهيم
     '027e5a15c8257dff', // أنا
+    // '3a9a32a9d64d9dcf', // Xiaomi أنا
+    '027e5a15c8257dff', // Xiaomi أنا
   ];
+
+  var users =
+      userModel.data.where((user) => user.deviceId == deviceId).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -45,38 +49,44 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     /// تعديل الدعاء أو الاسم
-                    ListTile(
-                      title: Text(
-                        'تعديل الاسم أو الدعاء',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          height: 1.5,
-                          // color: greyColor,
-                          color: pinkColor,
+                    if (deviceId != null && deviceId.isNotEmpty && users.isNotEmpty)
+                      ListTile(
+                        title: Text(
+                          'تعديل الاسم أو الدعاء',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            height: 1.5,
+                            color: greyColor,
+                            // color: pinkColor,
+                          ),
+                        ),
+                        // subtitle: Text(
+                        //   'اضغط لتعديل الاسم أو الدعاء',
+                        //   style: TextStyle(
+                        //     fontSize: 9.sp,
+                        //     fontWeight: FontWeight.w500,
+                        //     // height: 1.5,
+                        //     color: greyColor.withAlpha(130),
+                        //   ),
+                        // ),
+                        onTap: () {
+                          push(context, const UpdateUserDataScreen());
+                        },
+                        leading: const Icon(
+                          Icons.edit_outlined,
+                          color: greyColor,
+                          // color: pinkColor,
                         ),
                       ),
-                      // subtitle: Text(
-                      //   'اضغط لتعديل الاسم أو الدعاء',
-                      //   style: TextStyle(
-                      //     fontSize: 9.sp,
-                      //     fontWeight: FontWeight.w500,
-                      //     // height: 1.5,
-                      //     color: greyColor.withAlpha(130),
-                      //   ),
-                      // ),
-                      onTap: () {
-                        push(context, const UpdateUserDataScreen());
-                      },
-                      leading: const Icon(Icons.edit_outlined,color: pinkColor,),
-                    ),
+
+                    const Divider(thickness: 1),
 
                     /// إعادة ضبط الإشعارات
                     ListTile(
                       onTap: () async {
                         readyShowScheduledNotification(context);
                       },
-
                       title: Text(
                         'إعادة ضبط الإشعارات',
                         style: TextStyle(
@@ -86,7 +96,8 @@ class SettingsScreen extends StatelessWidget {
                           color: greyColor,
                         ),
                       ),
-                      leading: const Icon(Icons.notification_important_outlined),
+                      leading:
+                          const Icon(Icons.notification_important_outlined),
                     ),
 
                     /// التواصل مع المبرمج
@@ -174,7 +185,6 @@ class SettingsScreen extends StatelessWidget {
                               //     ),
                               //   ),
                               // ),
-
                             ],
                           ),
                           buttons: [
@@ -192,24 +202,43 @@ class SettingsScreen extends StatelessWidget {
 
                     /// مشاركة التطبيق
                     // if (allowedDeviceIDs.contains(deviceId))
+                    ListTile(
+                      title: Text(
+                        'مشاركة التطبيق',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: greyColor,
+                        ),
+                      ),
+                      onTap: () async {
+                        await Share.share(
+                          'رمضان مبارك 🌙💙\nرمضان مبارك هو تطبيق بيخلينا ندعي لبعض وبيفكرنا قبل الفطار 🤲\nلما تنزل التطبيق وتفتحه هتلاقي ناس ممكن ما تكونش عارفهم بس هتدعيلهم بظهر الغيب والملك هيرد عليك "ولك بمثل" فيكون دعاءك أقرب للإجابة ليك وللمدعو ليه، زي ما قال سيدنا النبي ﷺ 💙\nتقدر تنضم لينا وتنزل التطبيق من الرابط ده: https://play.google.com/store/apps/details?id=malazhariy.ramadan_kareem',
+                          subject: 'رمضان مبارك 🌙', // subject for emails only
+                        );
+                      },
+                      leading: const Icon(Icons.share_outlined),
+                      // leading: const Icon(Icons.favorite_border),
+                    ),
+
+                    /// صفحة الإشراف
+                    if (deviceId == '027e5a15c8257dff' || // My xiaomi
+                        deviceId == 'd592267254ebbd0e') // my emulator
                       ListTile(
                         title: Text(
-                          'مشاركة التطبيق',
+                          'صفحة الإشراف',
                           style: TextStyle(
                             fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             height: 1.5,
                             color: greyColor,
                           ),
                         ),
-                        onTap: () async {
-                          await Share.share(
-                            'رمضان مبارك 🌙💙\nرمضان مبارك هو تطبيق بيخلينا ندعي لبعض وبيفكرنا قبل الفطار 🤲\nلما تنزل التطبيق وتفتحه هتلاقي ناس ممكن ما تكونش عارفهم بس هتدعيلهم بظهر الغيب والملك هيرد عليك "ولك بمثل" فيكون دعاءك أقرب للإجابة ليك وللمدعو ليه، زي ما قال سيدنا النبي ﷺ 💙\nتقدر تنضم لينا وتنزل التطبيق من الرابط ده: https://play.google.com/store/apps/details?id=malazhariy.ramadan_kareem',
-                            subject:
-                            'رمضان مبارك 🌙', // subject for emails only
-                          );
+                        onTap: () {
+                          push(context, const AdminScreen());
                         },
-                        leading: const Icon(Icons.share_outlined),
+                        leading: const Icon(Icons.admin_panel_settings),
                       ),
                   ],
                 ),
@@ -229,14 +258,6 @@ class SettingsScreen extends StatelessWidget {
                 highlightColor: pinkColor.withAlpha(50),
                 child: Ink(
                   decoration: BoxDecoration(
-                    // gradient: const LinearGradient(
-                    //   colors: [
-                    //     Color(0XFFFF4AA3),
-                    //     Color(0XFFF8B556),
-                    //   ],
-                    //   begin: Alignment.centerRight,
-                    //   end: Alignment.centerLeft,
-                    // ),
                     color: pinkColor,
                     borderRadius: BorderRadius.circular(15.sp),
                   ),
@@ -248,14 +269,11 @@ class SettingsScreen extends StatelessWidget {
                     width: 50.w,
                     child: Text(
                       'رجوع',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline2
-                          .copyWith(
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.headline2.copyWith(
+                            color: Colors.white,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -268,7 +286,6 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
-
 
 String mailUs({
   String subject = '',

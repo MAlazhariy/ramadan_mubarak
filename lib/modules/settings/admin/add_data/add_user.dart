@@ -12,20 +12,20 @@ import 'package:ramadan_kareem/shared/components/constants.dart';
 import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
-class UpdateUserDataScreen extends StatefulWidget {
-  const UpdateUserDataScreen({Key key}) : super(key: key);
+class AddNewUserScreen extends StatefulWidget {
+  const AddNewUserScreen({
+    Key key
+  }) : super(key: key);
 
   @override
-  State<UpdateUserDataScreen> createState() => _UpdateUserDataScreenState();
+  State<AddNewUserScreen> createState() => _PendingDataScreenState();
 }
 
-class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
+class _PendingDataScreenState extends State<AddNewUserScreen> {
+
   var nameCtrl = TextEditingController();
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
-  var users =
-      userModel.data.where((user) => user.deviceId == deviceId);
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
       if (!connected) {
         snkbar(
           context,
-          'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
+          'أنت غير متصل بالإنترنت !',
           seconds: 4,
           backgroundColor: Colors.red,
           textStyle: const TextStyle(
@@ -46,23 +46,13 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
         );
       }
     });
-
-    setState(() {
-      if(users.isNotEmpty){
-        if (users.first.name.isNotEmpty) {
-          nameCtrl.text = users.first.name;
-          doaaCtrl.text = users.first.doaa;
-        }
-      }
-
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تعديل البيانات'),
+        title: const Text('إضافة مستخدم'),
       ),
 
       // makes keyboard shown over the bottom sheet
@@ -82,19 +72,6 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   'تعديل البيانات',
-                    //   style: Theme.of(context).textTheme.headline1.copyWith(
-                    //         fontWeight: FontWeight.w700,
-                    //         fontSize: 25,
-                    //         height: 1.4,
-                    //         // color: const Color(0xE639444C),
-                    //         color: Colors.black38,
-                    //         // letterSpacing: 1.2,
-                    //       ),
-                    // ),
-                    //
-                    // SizedBox(height: 10.sp),
 
                     /// name
                     WhiteTextForm(
@@ -110,7 +87,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                       },
                       keyboardType: TextInputType.name,
                       inputAction: TextInputAction.next,
-                      hintText: 'تعديل الاسم',
+                      hintText: 'الاسم',
                       prefixIcon: Icon(
                         Icons.account_circle_outlined,
                         size: 19.sp,
@@ -136,7 +113,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                       keyboardType: TextInputType.text,
                       inputAction: TextInputAction.none,
                       maxLines: 5,
-                      hintText: 'تعديل الدعاء',
+                      hintText: 'الدعاء',
                       prefixIcon: Icon(
                         Icons.article_outlined,
                         size: 19.sp,
@@ -149,8 +126,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
               const SizedBox(height: 40),
 
               // Save button
-              if (users.isEmpty || nameCtrl.text != users.first.name || doaaCtrl.text != users.first.doaa)
-                Align(
+              Align(
                   alignment: AlignmentDirectional.center,
                   // ignore: deprecated_member_use
                   child: RaisedButton(
@@ -158,12 +134,10 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                       if(formKey.currentState.validate()){
                         dismissKeyboard(context);
 
-                        await changeData(
-                          newName: nameCtrl.text,
-                          newDoaa: doaaCtrl.text,
+                        await addUser(
+                          name: nameCtrl.text,
+                          doaa: doaaCtrl.text,
                         );
-
-                        Navigator.pop(context);
                       }
                     },
                     padding: const EdgeInsets.all(0),
@@ -172,7 +146,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                     highlightColor: pinkColor.withAlpha(50),
                     child: Ink(
                       decoration: BoxDecoration(
-                        color: pinkColor,
+                        color: Colors.green,
                         borderRadius: BorderRadius.circular(15.sp),
                       ),
                       child: Container(
@@ -180,14 +154,14 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                           vertical: 15,
                           horizontal: 50,
                         ),
-                        width: 50.w,
+                        width: 80.w,
                         child: Text(
-                          'حفظ',
+                          'موافقة وحفظ',
                           style: Theme.of(context).textTheme.headline2.copyWith(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            color: Colors.white,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -208,59 +182,71 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
     );
   }
 
-  Future<void> changeData({
-    @required String newName,
-    @required String newDoaa,
+  Future<void> addUser({
+    @required String name,
+    @required String doaa,
   }) async {
     hasNetwork().then((connected){
       if (connected) {
 
-        FirebaseFirestore.instance.collection('users').doc(deviceId).update({
-          'nameUpdate': newName,
-          'doaaUpdate': newDoaa,
-          'pendingEdit': true,
+        int time = DateTime.now().toUtc().microsecondsSinceEpoch;
+
+        FirebaseFirestore.instance.collection('users').doc(deviceId).set({
+          'name': name,
+          'doaa': doaa,
+          'device id': deviceId,
+          'approved': false,
+          'time': time,
+          'nameUpdate': '',
+          'doaaUpdate': '',
+          'pendingEdit': false,
         }).then((_) {
+          // add to userModel
+          userModel.data.add(UserDataModel.fromMap({
+            'name': name,
+            'doaa': doaa,
+            'device id': '',
+            'approved': true,
+            'time': time,
+            'nameUpdate': '',
+            'doaaUpdate': '',
+            'pendingEdit': false,
+          }));
 
-          try{
-            var user =
-                userModel.data.where((user) => user.deviceId == deviceId).first;
+          // Save updates in local
+          Cache.saveData(userModel.toList());
 
-            // Save updates to variable
-            var index = userModel.data.indexOf(user);
-            userModel.data[index].name = user.nameUpdate;
-            userModel.data[index].doaa = user.doaaUpdate;
-            // Save updates in local
-            Cache.saveData(userModel.toList());
-          } catch(e){
-            log('error when edit data: ' + e.toString());
-          }
-
+          Navigator.pop(context);
 
           snkbar(
             context,
-            'تم حفظ التعديلات بنجاح، وبانتظار مراجعة المبرمج.',
-            seconds: 3,
+            '$name added',
+            seconds: 1,
             backgroundColor: Colors.green,
-            textStyle: const TextStyle(
+            textStyle: TextStyle(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: 13.sp,
               fontWeight: FontWeight.w500,
             ),
           );
-        }).onError((error, stackTrace){
-          log('error when changeData '+ error.toString());
+
+        }).catchError((error){
+
+          log('error when addUser '+ error.toString());
+
           snkbar(
             context,
             error.toString(),
             backgroundColor: Colors.red,
           );
+
         });
 
       } else {
         snkbar(
           context,
-          'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
-          seconds: 4,
+          'أنت غير متصل بالإنترنت !',
+          seconds: 1,
           backgroundColor: Colors.red,
           textStyle: const TextStyle(
             color: Colors.white,
@@ -272,5 +258,6 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
     });
 
   }
+
 
 }

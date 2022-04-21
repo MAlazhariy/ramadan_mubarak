@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:hive/hive.dart';
 import 'package:ramadan_kareem/models/users_model.dart';
+import 'package:ramadan_kareem/shared/components/constants.dart';
 
 class Cache {
   static Box box = Hive.box('box');
@@ -89,8 +90,7 @@ class Cache {
   }
 
   static int getLength() {
-    List data = getData();
-    return data.length;
+    return userModel.data.where((user) => user.approved == true).toList().length;
   }
 
 
@@ -124,12 +124,12 @@ class Cache {
     return box.get('coordinates',);
   }
 
-  static double getLongitude(){
+  static double getLatitude(){
     var list = getCoordinates();
     return list[0];
   }
 
-  static double getLatitude(){
+  static double getLongitude(){
     var list = getCoordinates();
     return list[1];
   }

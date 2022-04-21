@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:ramadan_kareem/modules/settings/admin/admin_screen.dart';
 import 'package:ramadan_kareem/layout/home_screen.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
@@ -77,6 +78,10 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // if(deviceId == '3a9a32a9d64d9dcf' || deviceId == 'd592267254ebbd0e'){
+    //   return const AdminScreen();
+    // }
 
     if(Cache.isLogin()) {
       return const HomeScreen();

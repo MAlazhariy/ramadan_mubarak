@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:ramadan_kareem/models/users_model.dart';
 import 'package:ramadan_kareem/modules/adeya.dart';
 import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
@@ -31,11 +32,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Stream<QuerySnapshot> streamSnapData;
   String name = '';
   String doaa = '';
   int counter = 0;
-  int adeyaCounter = 0;
+
+  // final List<UserDataModel> users = userModel.data.where((user) => user.approved == true).toList();
 
   void next() {
     setState(() {
@@ -43,8 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Cache.setCounter(counter);
       int index = counter % Cache.getLength();
 
-      name = userModel.data[index].name;
-      doaa = userModel.data[index].doaa;
+      name = userModel.data.where((user) => user.approved == true).toList()[index].name;
+      doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
     });
   }
 
@@ -54,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
       // Cache.setCounter(counter);
       int index = counter % Cache.getLength();
 
-      name = userModel.data[index].name;
-      doaa = userModel.data[index].doaa;
+      name = userModel.data.where((user) => user.approved == true).toList()[index].name;
+      doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
     });
   }
 
@@ -64,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
       counter = getRandomIndex();
       Cache.setCounter(counter);
 
-      name = userModel.data[counter].name;
-      doaa = userModel.data[counter].doaa;
+      name = userModel.data.where((user) => user.approved == true).toList()[counter].name;
+      doaa = userModel.data.where((user) => user.approved == true).toList()[counter].doaa;
     });
   }
 
@@ -75,35 +76,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
     /// if it's first time set a random value to counter
     /// and save counter .. then set isFirstTime to false
-    if (Cache.isFirstTime()) {
-      // get counter random value
-      int index = getRandomIndex();
-      counter = index;
-      // save new counter value to cache
-      Cache.setCounter(counter);
+    setState(() {
 
-      // get name & doaa
-      name = userModel.data[counter].name;
-      doaa = userModel.data[counter].doaa;
-
-      // set IsFirstTime to false
-      Cache.setIsFirstTime(false);
-    } else {
-      int len = Cache.getLength();
-
-      if (len != 0) {
-        // get counter from cache plus one
-        counter = Cache.getCounter() + 1;
-        // set index value
-        int index = counter;
-
+      if (Cache.isFirstTime()) {
+        // get counter random value
+        int index = getRandomIndex();
+        counter = index;
+        // save new counter value to cache
         Cache.setCounter(counter);
-        index = counter % len;
 
-        name = userModel.data[index].name;
-        doaa = userModel.data[index].doaa;
+        // get name & doaa
+        name = userModel.data.where((user) => user.approved == true).toList()[counter].name;
+        doaa = userModel.data.where((user) => user.approved == true).toList()[counter].doaa;
+
+        // set IsFirstTime to false
+        Cache.setIsFirstTime(false);
+      } else {
+        int len = Cache.getLength();
+
+        if (len != 0) {
+          // get counter from cache plus one
+          counter = Cache.getCounter() + 1;
+          // set index value
+          int index = counter;
+
+          Cache.setCounter(counter);
+          index = counter % len;
+
+          name = userModel.data.where((user) => user.approved == true).toList()[index].name;
+          doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
+        }
       }
-    }
+
+    });
+
 
     if (!Cache.isNotificationsDone()) {
       readyShowScheduledNotification(context);
