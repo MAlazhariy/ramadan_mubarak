@@ -24,8 +24,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
-  var users =
-      userModel.data.where((user) => user.deviceId == deviceId);
+  var users = userModel.data.where((user) => user.deviceId == deviceId);
 
   @override
   void initState() {
@@ -48,14 +47,17 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
     });
 
     setState(() {
-      if(users.isNotEmpty){
-        if (users.first.name.isNotEmpty) {
-          nameCtrl.text = users.first.name;
-          doaaCtrl.text = users.first.doaa;
-        }
+      if (users.isNotEmpty) {
+        nameCtrl.text = users.first.name;
+        doaaCtrl.text = users.first.doaa;
       }
-
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
   }
 
   @override
@@ -82,19 +84,6 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   'تعديل البيانات',
-                    //   style: Theme.of(context).textTheme.headline1.copyWith(
-                    //         fontWeight: FontWeight.w700,
-                    //         fontSize: 25,
-                    //         height: 1.4,
-                    //         // color: const Color(0xE639444C),
-                    //         color: Colors.black38,
-                    //         // letterSpacing: 1.2,
-                    //       ),
-                    // ),
-                    //
-                    // SizedBox(height: 10.sp),
 
                     /// name
                     WhiteTextForm(
@@ -149,13 +138,15 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
               const SizedBox(height: 40),
 
               // Save button
-              if (users.isEmpty || nameCtrl.text != users.first.name || doaaCtrl.text != users.first.doaa)
+              if (users.isEmpty ||
+                  nameCtrl.text != users.first.name ||
+                  doaaCtrl.text != users.first.doaa)
                 Align(
                   alignment: AlignmentDirectional.center,
                   // ignore: deprecated_member_use
                   child: RaisedButton(
                     onPressed: () async {
-                      if(formKey.currentState.validate()){
+                      if (formKey.currentState.validate()) {
                         dismissKeyboard(context);
 
                         await changeData(
@@ -163,7 +154,6 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                           newDoaa: doaaCtrl.text,
                         );
 
-                        Navigator.pop(context);
                       }
                     },
                     padding: const EdgeInsets.all(0),
@@ -212,29 +202,29 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
     @required String newName,
     @required String newDoaa,
   }) async {
-    hasNetwork().then((connected){
+    hasNetwork().then((connected) {
       if (connected) {
-
         FirebaseFirestore.instance.collection('users').doc(deviceId).update({
           'nameUpdate': newName,
           'doaaUpdate': newDoaa,
           'pendingEdit': true,
         }).then((_) {
 
-          try{
-            var user =
-                userModel.data.where((user) => user.deviceId == deviceId).first;
-
-            // Save updates to variable
-            var index = userModel.data.indexOf(user);
-            userModel.data[index].name = user.nameUpdate;
-            userModel.data[index].doaa = user.doaaUpdate;
-            // Save updates in local
-            Cache.saveData(userModel.toList());
-          } catch(e){
-            log('error when edit data: ' + e.toString());
-          }
-
+          // try {
+          //   var user =
+          //       userModel.data.where((user) => user.deviceId == deviceId).first;
+          //
+          //   // Save updates to variable
+          //   var index = userModel.data.indexOf(user);
+          //   userModel.data[index].name = newName;
+          //   userModel.data[index].doaa = newDoaa;
+          //   userModel.data.elementAt(index).approved = true;
+          //
+          //   // Save updates in local
+          //   Cache.saveData(userModel.toList());
+          // } catch (e) {
+          //   log('try catch error in when edit data: ' + e.toString());
+          // }
 
           snkbar(
             context,
@@ -247,15 +237,19 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
               fontWeight: FontWeight.w500,
             ),
           );
-        }).onError((error, stackTrace){
-          log('error when changeData '+ error.toString());
+
+          if(mounted){
+            Navigator.pop(context);
+          }
+
+        }).onError((error, stackTrace) {
+          log('error when changeData ' + error.toString());
           snkbar(
             context,
             error.toString(),
             backgroundColor: Colors.red,
           );
         });
-
       } else {
         snkbar(
           context,
@@ -270,7 +264,5 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
         );
       }
     });
-
   }
-
 }

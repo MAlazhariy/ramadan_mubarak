@@ -191,11 +191,11 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
 
         int time = DateTime.now().toUtc().microsecondsSinceEpoch;
 
-        FirebaseFirestore.instance.collection('users').doc(deviceId).set({
+        FirebaseFirestore.instance.collection('users').doc(name).set({
           'name': name,
           'doaa': doaa,
-          'device id': deviceId,
-          'approved': false,
+          'device id': '',
+          'approved': true,
           'time': time,
           'nameUpdate': '',
           'doaaUpdate': '',

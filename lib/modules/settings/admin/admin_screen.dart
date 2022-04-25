@@ -1,11 +1,17 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/models/users_model.dart';
 import 'package:ramadan_kareem/modules/settings/admin/add_data/add_user.dart';
 import 'package:ramadan_kareem/modules/settings/admin/format_data/format_data.dart';
 import 'package:ramadan_kareem/modules/settings/admin/review_data/pending_data_screen.dart';
+import 'package:ramadan_kareem/modules/settings/admin/users_list/users_list_screen.dart';
 import 'package:ramadan_kareem/shared/components/components/network_check.dart';
 import 'package:ramadan_kareem/shared/components/components/push.dart';
 import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
@@ -60,6 +66,7 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
           child: Column(
             children: [
+
               // pending data
               Align(
                 alignment: AlignmentDirectional.center,
@@ -77,20 +84,22 @@ class _AdminScreenState extends State<AdminScreen> {
                       borderRadius: BorderRadius.circular(15.sp),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 50,
+                      padding: const EdgeInsetsDirectional.only(
+                        top: 15,
+                        bottom: 16,
+                        start: 50,
+                        end: 15,
                       ),
                       width: 70.w,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
                             Icons.pending_actions,
                             color: Colors.white,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Text(
                             'مراجعة البيانات',
                             style:
@@ -100,6 +109,58 @@ class _AdminScreenState extends State<AdminScreen> {
                                       fontWeight: FontWeight.w600,
                                       height: 1.3,
                                     ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Show all users
+              Align(
+                alignment: AlignmentDirectional.center,
+                child: RaisedButton(
+                  onPressed: () async {
+                    push(context, const UsersListScreen());
+                  },
+                  padding: const EdgeInsets.all(0),
+                  shape: const StadiumBorder(),
+                  highlightElevation: 5,
+                  highlightColor: pinkColor.withAlpha(50),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      color: greyColor,
+                      borderRadius: BorderRadius.circular(15.sp),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsetsDirectional.only(
+                        top: 15,
+                        bottom: 16,
+                        start: 50,
+                        end: 15,
+                      ),
+                      width: 70.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.supervised_user_circle_outlined,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            'عرض المستخدمين',
+                            style:
+                            Theme.of(context).textTheme.headline2.copyWith(
+                              color: Colors.white,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              height: 1.3,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -127,20 +188,22 @@ class _AdminScreenState extends State<AdminScreen> {
                       borderRadius: BorderRadius.circular(15.sp),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 50,
+                      padding: const EdgeInsetsDirectional.only(
+                        top: 15,
+                        bottom: 16,
+                        start: 50,
+                        end: 15,
                       ),
                       width: 70.w,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
                             Icons.person_add_alt,
                             color: Colors.white,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Text(
                             'إضافة مستخدم',
                             style:
@@ -160,6 +223,9 @@ class _AdminScreenState extends State<AdminScreen> {
               ),
               const SizedBox(height: 20),
 
+              const Divider(height: 1, thickness: 1, indent: 20, endIndent: 20),
+              const SizedBox(height: 20),
+
               // Handling users fields
               Align(
                 alignment: AlignmentDirectional.center,
@@ -177,20 +243,22 @@ class _AdminScreenState extends State<AdminScreen> {
                       borderRadius: BorderRadius.circular(15.sp),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 50,
+                      padding: const EdgeInsetsDirectional.only(
+                        top: 15,
+                        bottom: 16,
+                        start: 50,
+                        end: 15,
                       ),
                       width: 70.w,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
                             Icons.published_with_changes,
                             color: Colors.white,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Text(
                             'تهيئة البيانات',
                             style:
@@ -210,7 +278,7 @@ class _AdminScreenState extends State<AdminScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Get all data
+              // Reload data
               Align(
                 alignment: AlignmentDirectional.center,
                 child: RaisedButton(
@@ -258,20 +326,22 @@ class _AdminScreenState extends State<AdminScreen> {
                       borderRadius: BorderRadius.circular(15.sp),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 50,
+                      padding: const EdgeInsetsDirectional.only(
+                        top: 15,
+                        bottom: 16,
+                        start: 50,
+                        end: 15,
                       ),
                       width: 70.w,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
-                            Icons.cloud_download,
+                            Icons.cloud_download_outlined,
                             color: Colors.white,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Text(
                             'تحميل البيانات',
                             style:

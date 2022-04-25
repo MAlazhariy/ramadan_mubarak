@@ -49,7 +49,9 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     /// تعديل الدعاء أو الاسم
-                    if (deviceId != null && deviceId.isNotEmpty && users.isNotEmpty)
+                    if (deviceId != null &&
+                        deviceId.isNotEmpty &&
+                        users.isNotEmpty)
                       ListTile(
                         title: Text(
                           'تعديل الاسم أو الدعاء',
@@ -224,6 +226,7 @@ class SettingsScreen extends StatelessWidget {
 
                     /// صفحة الإشراف
                     if (deviceId == '027e5a15c8257dff' || // My xiaomi
+                        deviceId == '3a9a32a9d64d9dcf' || // My xiaomi برضو
                         deviceId == 'd592267254ebbd0e') // my emulator
                       ListTile(
                         title: Text(

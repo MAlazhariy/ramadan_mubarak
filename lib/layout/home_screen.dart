@@ -44,8 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
       Cache.setCounter(counter);
       int index = counter % Cache.getLength();
 
-      name = userModel.data.where((user) => user.approved == true).toList()[index].name;
-      doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
+      name =
+          userModel.data.where((user) => user.approved == true).toList()[index]
+              .name;
+      doaa =
+          userModel.data.where((user) => user.approved == true).toList()[index]
+              .doaa;
     });
   }
 
@@ -55,8 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
       // Cache.setCounter(counter);
       int index = counter % Cache.getLength();
 
-      name = userModel.data.where((user) => user.approved == true).toList()[index].name;
-      doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
+      name =
+          userModel.data.where((user) => user.approved == true).toList()[index]
+              .name;
+      doaa =
+          userModel.data.where((user) => user.approved == true).toList()[index]
+              .doaa;
     });
   }
 
@@ -65,8 +73,10 @@ class _HomeScreenState extends State<HomeScreen> {
       counter = getRandomIndex();
       Cache.setCounter(counter);
 
-      name = userModel.data.where((user) => user.approved == true).toList()[counter].name;
-      doaa = userModel.data.where((user) => user.approved == true).toList()[counter].doaa;
+      name = userModel.data.where((user) => user.approved == true)
+          .toList()[counter].name;
+      doaa = userModel.data.where((user) => user.approved == true)
+          .toList()[counter].doaa;
     });
   }
 
@@ -78,41 +88,41 @@ class _HomeScreenState extends State<HomeScreen> {
     /// and save counter .. then set isFirstTime to false
     setState(() {
 
-      if (Cache.isFirstTime()) {
-        // get counter random value
-        int index = getRandomIndex();
-        counter = index;
-        // save new counter value to cache
-        Cache.setCounter(counter);
+    if (Cache.isFirstTime()) {
+    // get counter random value
+    int index = getRandomIndex();
+    counter = index;
+    // save new counter value to cache
+    Cache.setCounter(counter);
 
-        // get name & doaa
-        name = userModel.data.where((user) => user.approved == true).toList()[counter].name;
-        doaa = userModel.data.where((user) => user.approved == true).toList()[counter].doaa;
+    // get name & doaa
+    name = userModel.data.where((user) => user.approved == true).toList()[counter].name;
+    doaa = userModel.data.where((user) => user.approved == true).toList()[counter].doaa;
 
-        // set IsFirstTime to false
-        Cache.setIsFirstTime(false);
-      } else {
-        int len = Cache.getLength();
+    // set IsFirstTime to false
+    Cache.setIsFirstTime(false);
+    } else {
+    int len = Cache.getLength();
 
-        if (len != 0) {
-          // get counter from cache plus one
-          counter = Cache.getCounter() + 1;
-          // set index value
-          int index = counter;
+    if (len != 0) {
+    // get counter from cache plus one
+    counter = Cache.getCounter() + 1;
+    // set index value
+    int index = counter;
 
-          Cache.setCounter(counter);
-          index = counter % len;
+    Cache.setCounter(counter);
+    index = counter % len;
 
-          name = userModel.data.where((user) => user.approved == true).toList()[index].name;
-          doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
-        }
-      }
+    name = userModel.data.where((user) => user.approved == true).toList()[index].name;
+    doaa = userModel.data.where((user) => user.approved == true).toList()[index].doaa;
+    }
+    }
 
     });
 
 
     if (!Cache.isNotificationsDone()) {
-      readyShowScheduledNotification(context);
+    readyShowScheduledNotification(context);
     }
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -136,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
         alignment: AlignmentDirectional.topCenter,
         textDirection: TextDirection.rtl,
         children: [
+
           /// BG
           SizedBox(
             // height: 35.h,
@@ -246,6 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+
                             /// hadeeth
                             Padding(
                               padding: EdgeInsetsDirectional.only(
@@ -301,8 +313,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
+
                                         /// name
                                         Text(
                                           name,
@@ -423,7 +436,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const DescriptionText(
                               title:
-                                  'إن أفضل الدعاء، دعوة غائب لغائب، فدعاء المسلم لأخيه المسلم بظهر الغيب أنفع وأرجى للإجابة للداعي وللمدعو له، كما أخبرنا النبي ﷺ.\nوقد كان بعض السلف إذا أراد أن يدعو لنفسه، يدعو لأخيه المسلم بتلك الدعوة؛ فتكون أقرب للإجابة ويحصل له مثلها بسبب تأمين الملك.',
+                              'إن أفضل الدعاء، دعوة غائب لغائب، فدعاء المسلم لأخيه المسلم بظهر الغيب أنفع وأرجى للإجابة للداعي وللمدعو له، كما أخبرنا النبي ﷺ.\nوقد كان بعض السلف إذا أراد أن يدعو لنفسه، يدعو لأخيه المسلم بتلك الدعوة؛ فتكون أقرب للإجابة ويحصل له مثلها بسبب تأمين الملك.',
                             ),
 
                             SizedBox(
@@ -437,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const DescriptionText(
                               title:
-                                  'قَالَ رَسُول اللَّه ﷺ: (ثَلَاثَةٌ لَا تُرَدُّ دَعْوَتُهُمْ: الصَّائِمُ حَتَّى يُفْطِرَ وَالْإِمَامُ الْعَادِلُ وَالْمَظْلُومُ).',
+                              'قَالَ رَسُول اللَّه ﷺ: (ثَلَاثَةٌ لَا تُرَدُّ دَعْوَتُهُمْ: الصَّائِمُ حَتَّى يُفْطِرَ وَالْإِمَامُ الْعَادِلُ وَالْمَظْلُومُ).',
                             ),
                             SizedBox(
                               height: 12.sp,
@@ -529,7 +542,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
           push(
             context,
             SettingsScreen(),

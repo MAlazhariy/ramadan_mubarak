@@ -51,6 +51,8 @@ Future<void> formatData(BuildContext context) async {
           );
         });
       }
+
+      snkbar(context, 'تم');
     } else {
       snkbar(
         context,

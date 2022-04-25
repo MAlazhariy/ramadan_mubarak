@@ -25,7 +25,6 @@ class UserEditScreen extends StatefulWidget {
 }
 
 class _PendingDataScreenState extends State<UserEditScreen> {
-
   var nameCtrl = TextEditingController();
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
@@ -78,7 +77,6 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     /// name
                     WhiteTextForm(
                       controller: nameCtrl,
@@ -89,7 +87,7 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                         }
                       },
                       onChanged: (value) {
-                        setState(() {});
+                        // setState(() {});
                       },
                       keyboardType: TextInputType.name,
                       inputAction: TextInputAction.next,
@@ -114,7 +112,7 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                         }
                       },
                       onChanged: (value) {
-                        setState(() {});
+                        // setState(() {});
                       },
                       keyboardType: TextInputType.text,
                       inputAction: TextInputAction.none,
@@ -132,18 +130,20 @@ class _PendingDataScreenState extends State<UserEditScreen> {
               const SizedBox(height: 40),
 
               // Save button
-              if (nameCtrl.text != widget.user.name || doaaCtrl.text != widget.user.doaa)
+              if (nameCtrl.text != widget.user.name ||
+                  doaaCtrl.text != widget.user.doaa ||
+                  true)
                 Align(
                   alignment: AlignmentDirectional.center,
                   // ignore: deprecated_member_use
                   child: RaisedButton(
                     onPressed: () async {
-                      if(formKey.currentState.validate()){
+                      if (formKey.currentState.validate()) {
                         dismissKeyboard(context);
 
                         await changeData(
-                          name: nameCtrl.text,
-                          doaa: doaaCtrl.text,
+                          updatedName: nameCtrl.text,
+                          updatedDoaa: doaaCtrl.text,
                         );
                       }
                     },
@@ -165,10 +165,10 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                         child: Text(
                           'موافقة وحفظ',
                           style: Theme.of(context).textTheme.headline2.copyWith(
-                            color: Colors.white,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+                                color: Colors.white,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -190,30 +190,39 @@ class _PendingDataScreenState extends State<UserEditScreen> {
   }
 
   Future<void> changeData({
-    @required String name,
-    @required String doaa,
+    @required String updatedName,
+    @required String updatedDoaa,
   }) async {
-    hasNetwork().then((connected){
+    hasNetwork().then((connected) {
       if (connected) {
-
-        FirebaseFirestore.instance.collection('users').doc(widget.user.deviceId).update({
-          'name': name,
-          'doaa': doaa,
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.user.id)
+            .update({
+          'name': updatedName,
+          'doaa': updatedDoaa,
           'approved': true,
+          'nameUpdate': '',
+          'doaaUpdate': '',
+          'pendingEdit': false,
         }).then((_) {
+          if (userModel.data.contains(widget.user)) {
+            int index = userModel.data.indexOf(widget.user);
 
-          setState(() {
-            var index = userModel.data.indexOf(widget.user);
-            userModel.data[index].name = name;
-            userModel.data[index].doaa = doaa;
+            userModel.data[index].name = updatedName;
+            userModel.data[index].doaa = updatedDoaa;
             userModel.data[index].approved = true;
+
+            userModel.data[index].nameUpdate = '';
+            userModel.data[index].doaaUpdate = '';
+            userModel.data[index].pendingEdit = false;
             // Save updates in local
             Cache.saveData(userModel.toList());
-          });
+          }
 
           snkbar(
             context,
-            '${widget.user.name} approved',
+            '${widget.user.name} edited & approved',
             seconds: 1,
             backgroundColor: Colors.green,
             textStyle: TextStyle(
@@ -224,16 +233,14 @@ class _PendingDataScreenState extends State<UserEditScreen> {
           );
 
           Navigator.pop(context);
-
-        }).onError((error, stackTrace){
-          log('error when changeData in user edit screen '+ error.toString());
+        }).onError((error, stackTrace) {
+          log('error when changeData in user edit screen ' + error.toString());
           snkbar(
             context,
             error.toString(),
             backgroundColor: Colors.red,
           );
         });
-
       } else {
         snkbar(
           context,
@@ -248,8 +255,5 @@ class _PendingDataScreenState extends State<UserEditScreen> {
         );
       }
     });
-
   }
-
-
 }

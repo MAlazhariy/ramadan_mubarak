@@ -6,6 +6,9 @@ void snkbar(
   int seconds = 3,
   Color backgroundColor,
   TextStyle textStyle,
+  void Function() action,
+  String actionLabel = '',
+  Color labelColor = Colors.white,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: Text(
@@ -14,5 +17,10 @@ void snkbar(
     ),
     duration: Duration(seconds: seconds),
     backgroundColor: backgroundColor,
+    action: SnackBarAction(
+      onPressed: action??(){},
+      label: actionLabel,
+      textColor: labelColor,
+    ),
   ));
 }
