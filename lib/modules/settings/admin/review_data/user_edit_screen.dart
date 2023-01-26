@@ -14,8 +14,8 @@ import 'package:sizer/sizer.dart';
 
 class UserEditScreen extends StatefulWidget {
   const UserEditScreen({
-    Key key,
-    @required this.user,
+    Key? key,
+    required this.user,
   }) : super(key: key);
 
   final UserDataModel user;
@@ -81,8 +81,8 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                     WhiteTextForm(
                       controller: nameCtrl,
                       labelText: 'الاسم',
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (value) {
+                        if (value?.isEmpty??true) {
                           return 'هذا الحقل يجب ألا يكون فارغاً';
                         }
                       },
@@ -106,8 +106,8 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                     WhiteTextForm(
                       controller: doaaCtrl,
                       labelText: 'الدعاء',
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (value) {
+                        if (value?.isEmpty??true) {
                           return 'هذا الحقل يجب ألا يكون فارغاً';
                         }
                       },
@@ -136,9 +136,9 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                 Align(
                   alignment: AlignmentDirectional.center,
                   // ignore: deprecated_member_use
-                  child: RaisedButton(
+                  child: MaterialButton(
                     onPressed: () async {
-                      if (formKey.currentState.validate()) {
+                      if (formKey.currentState!.validate()) {
                         dismissKeyboard(context);
 
                         await changeData(
@@ -164,7 +164,7 @@ class _PendingDataScreenState extends State<UserEditScreen> {
                         width: 80.w,
                         child: Text(
                           'موافقة وحفظ',
-                          style: Theme.of(context).textTheme.headline2.copyWith(
+                          style: Theme.of(context).textTheme.headline2?.copyWith(
                                 color: Colors.white,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w600,
@@ -190,8 +190,8 @@ class _PendingDataScreenState extends State<UserEditScreen> {
   }
 
   Future<void> changeData({
-    @required String updatedName,
-    @required String updatedDoaa,
+    required String updatedName,
+    required String updatedDoaa,
   }) async {
     hasNetwork().then((connected) {
       if (connected) {
@@ -206,18 +206,18 @@ class _PendingDataScreenState extends State<UserEditScreen> {
           'doaaUpdate': '',
           'pendingEdit': false,
         }).then((_) {
-          if (userModel.data.contains(widget.user)) {
-            int index = userModel.data.indexOf(widget.user);
+          if (userModel?.data.contains(widget.user)??false) {
+            int index = userModel!.data.indexOf(widget.user);
 
-            userModel.data[index].name = updatedName;
-            userModel.data[index].doaa = updatedDoaa;
-            userModel.data[index].approved = true;
+            userModel?.data[index].name = updatedName;
+            userModel?.data[index].doaa = updatedDoaa;
+            userModel?.data[index].approved = true;
 
-            userModel.data[index].nameUpdate = '';
-            userModel.data[index].doaaUpdate = '';
-            userModel.data[index].pendingEdit = false;
+            userModel?.data[index].nameUpdate = '';
+            userModel?.data[index].doaaUpdate = '';
+            userModel?.data[index].pendingEdit = false;
             // Save updates in local
-            Cache.saveData(userModel.toList());
+            Cache.saveData(userModel!.toList());
           }
 
           snkbar(

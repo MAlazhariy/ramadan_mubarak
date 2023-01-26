@@ -14,7 +14,7 @@ import 'package:sizer/sizer.dart';
 
 class AddNewUserScreen extends StatefulWidget {
   const AddNewUserScreen({
-    Key key
+    Key? key
   }) : super(key: key);
 
   @override
@@ -77,8 +77,8 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
                     WhiteTextForm(
                       controller: nameCtrl,
                       labelText: 'الاسم',
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (String? value) {
+                        if (value?.isEmpty??true) {
                           return 'هذا الحقل يجب ألا يكون فارغاً';
                         }
                       },
@@ -102,8 +102,8 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
                     WhiteTextForm(
                       controller: doaaCtrl,
                       labelText: 'الدعاء',
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (value) {
+                        if (value?.isEmpty??true) {
                           return 'هذا الحقل يجب ألا يكون فارغاً';
                         }
                       },
@@ -131,7 +131,7 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
                   // ignore: deprecated_member_use
                   child: MaterialButton(
                     onPressed: () async {
-                      if(formKey.currentState.validate()){
+                      if(formKey.currentState!.validate()){
                         dismissKeyboard(context);
 
                         await addUser(
@@ -157,7 +157,7 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
                         width: 80.w,
                         child: Text(
                           'موافقة وحفظ',
-                          style: Theme.of(context).textTheme.headline2.copyWith(
+                          style: Theme.of(context).textTheme.headline2?.copyWith(
                             color: Colors.white,
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
@@ -183,8 +183,8 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
   }
 
   Future<void> addUser({
-    @required String name,
-    @required String doaa,
+    required String name,
+    required String doaa,
   }) async {
     hasNetwork().then((connected){
       if (connected) {
@@ -202,7 +202,7 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
           'pendingEdit': false,
         }).then((_) {
           // add to userModel
-          userModel.data.add(UserDataModel.fromMap({
+          userModel?.data.add(UserDataModel.fromMap({
             'name': name,
             'doaa': doaa,
             'device id': '',
@@ -214,7 +214,7 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
           }));
 
           // Save updates in local
-          Cache.saveData(userModel.toList());
+          Cache.saveData(userModel!.toList());
 
           Navigator.pop(context);
 

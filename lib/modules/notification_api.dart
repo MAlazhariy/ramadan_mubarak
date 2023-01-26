@@ -61,8 +61,8 @@ class NotificationApi {
 
   static Future showNotification({
     int id = 0,
-    @required String title,
-    @required String body,
+    required String title,
+    required String body,
     String payload = '',
   }) async {
     return _notifications.show(
@@ -76,11 +76,11 @@ class NotificationApi {
 
   static void showScheduledNotification({
     int id = 1,
-    @required String title,
-    @required String body,
+    required String title,
+    required String body,
     String payload = '',
-    @required DateTime date,
-    // @required Time time,
+    required DateTime date,
+    // required Time time,
     Duration repeatDuration = const Duration(days: 1),
   }) async {
     return _notifications.zonedSchedule(

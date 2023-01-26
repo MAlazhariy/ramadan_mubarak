@@ -6,7 +6,7 @@ import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class ScreenName extends StatefulWidget {
-  const ScreenName({Key key}) : super(key: key);
+  const ScreenName({Key? key}) : super(key: key);
 
   @override
   State<ScreenName> createState() => _PendingDataScreenState();
@@ -57,7 +57,7 @@ class _PendingDataScreenState extends State<ScreenName> {
               // back button
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -78,7 +78,7 @@ class _PendingDataScreenState extends State<ScreenName> {
                       width: 70.w,
                       child: Text(
                         'مراجعة الأسماء',
-                        style: Theme.of(context).textTheme.headline2.copyWith(
+                        style: Theme.of(context).textTheme.headline2?.copyWith(
                           color: Colors.white,
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w600,

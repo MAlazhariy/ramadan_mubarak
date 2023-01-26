@@ -8,8 +8,8 @@ import 'package:ramadan_kareem/shared/network/firebase_funcs.dart';
 import 'package:ramadan_kareem/shared/components/components/snack_bar.dart';
 import 'components/network_check.dart';
 
-String deviceId;
-UserDocsModel userModel;
+String? deviceId;
+UserDocsModel? userModel;
 
 Future<void> initGetAndSaveData() async {
   final bool connected = await hasNetwork();
@@ -30,19 +30,19 @@ Future<void> initGetAndSaveData() async {
 
   // save data to local
   if(userModel != null) {
-    Cache.saveData(userModel.toList());
+    Cache.saveData(userModel!.toList());
   }
 
   /// check id
   if (!Cache.isLoginChecked() && connected) {
     dev.log('started search for id');
 
-    if (deviceId != null && deviceId.isNotEmpty) {
+    if (deviceId != null && (deviceId?.isNotEmpty??false)) {
       // search by device id
-      var users = userModel.data.where((user) => user.deviceId == deviceId);
-      if (users.isNotEmpty) {
+      var users = userModel?.data.where((user) => user.deviceId == deviceId);
+      if (users?.isNotEmpty??false) {
         Cache.setUserLoginInfo(
-          name: users.first.name,
+          name: users!.first.name,
           doaa: users.first.doaa,
           time: users.first.time,
           docId: users.first.deviceId,
@@ -57,8 +57,9 @@ Future<void> initGetAndSaveData() async {
 }
 
 int getRandomIndex() {
+  // todo: check getRandomIndex
   try {
-    return Random().nextInt(Cache.getLength());
+    return Random().nextInt(Cache.getLength()!);
   } catch (e) {
     return 0;
   }

@@ -16,10 +16,10 @@ class Cache {
   }
 
   static void setUserLoginInfo({
-    String name,
-    String doaa,
-    int time,
-    String docId,
+    required String name,
+    required String doaa,
+    required int time,
+    required String? docId,
   }) {
     final Map info = {
       'name': name,
@@ -89,8 +89,8 @@ class Cache {
     return data;
   }
 
-  static int getLength() {
-    return userModel.data.where((user) => user.approved == true).toList().length;
+  static int? getLength() {
+    return userModel?.data.where((user) => user.approved == true).toList().length;
   }
 
 

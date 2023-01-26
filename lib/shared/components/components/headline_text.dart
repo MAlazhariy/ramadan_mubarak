@@ -4,8 +4,8 @@ import 'package:sizer/sizer.dart';
 
 class HeadlineText extends StatelessWidget {
   const HeadlineText({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
   }) : super(key: key);
 
   final String title;

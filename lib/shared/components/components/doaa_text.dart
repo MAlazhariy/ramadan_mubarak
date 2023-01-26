@@ -4,8 +4,8 @@ import 'package:sizer/sizer.dart';
 
 class DoaaText extends StatelessWidget {
   const DoaaText({
-    Key key,
-    @required this.doaa,
+    Key? key,
+    required this.doaa,
   }) : super(key: key);
 
   final String doaa;

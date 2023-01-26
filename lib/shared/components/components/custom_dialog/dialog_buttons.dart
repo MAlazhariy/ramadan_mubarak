@@ -5,10 +5,10 @@ import 'package:sizer/sizer.dart';
 
 class DialogButton extends StatelessWidget {
   const DialogButton({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.isBold = false,
-    @required this.onPressed,
+    required this.onPressed,
     this.color = Colors.pink,
   }) : super(key: key);
   final String title;

@@ -20,7 +20,7 @@ import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class AdminScreen extends StatefulWidget {
-  const AdminScreen({Key key}) : super(key: key);
+  const AdminScreen({Key? key}) : super(key: key);
 
   @override
   State<AdminScreen> createState() => _AdminScreenState();
@@ -68,55 +68,56 @@ class _AdminScreenState extends State<AdminScreen> {
             children: [
 
               // pending data
-              Align(
-                alignment: AlignmentDirectional.center,
-                child: MaterialButton(
-                  onPressed: () {
-                    push(context, const PendingDataScreen());
-                  },
-                  padding: const EdgeInsets.all(0),
-                  shape: const StadiumBorder(),
-                  highlightElevation: 5,
-                  highlightColor: pinkColor.withAlpha(50),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      color: greyColor,
-                      borderRadius: BorderRadius.circular(15.sp),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsetsDirectional.only(
-                        top: 15,
-                        bottom: 16,
-                        start: 50,
-                        end: 15,
-                      ),
-                      width: 70.w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.pending_actions,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'مراجعة البيانات',
-                            style:
-                                Theme.of(context).textTheme.headline2.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w600,
-                                      height: 1.3,
-                                    ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // Align(
+              //   alignment: AlignmentDirectional.center,
+              //   child: MaterialButton(
+              //     onPressed: () {
+              //       push(context, const PendingDataScreen());
+              //     },
+              //     padding: const EdgeInsets.all(0),
+              //     shape: const StadiumBorder(),
+              //     highlightElevation: 5,
+              //     highlightColor: pinkColor.withAlpha(50),
+              //     child: Ink(
+              //       decoration: BoxDecoration(
+              //         color: greyColor,
+              //         borderRadius: BorderRadius.circular(15.sp),
+              //       ),
+              //       child: Container(
+              //         padding: const EdgeInsetsDirectional.only(
+              //           top: 15,
+              //           bottom: 16,
+              //           start: 50,
+              //           end: 15,
+              //         ),
+              //         width: 70.w,
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.start,
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: [
+              //             const Icon(
+              //               Icons.pending_actions,
+              //               color: Colors.white,
+              //             ),
+              //             const SizedBox(width: 10),
+              //             Text(
+              //               'مراجعة البيانات',
+              //               style:
+              //                   Theme.of(context).textTheme.headline2?.copyWith(
+              //                         color: Colors.white,
+              //                         fontSize: 13.sp,
+              //                         fontWeight: FontWeight.w600,
+              //                         height: 1.3,
+              //                       ),
+              //               textAlign: TextAlign.center,
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // check pending data button
               const SizedBox(height: 20),
 
               // Show all users
@@ -155,7 +156,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           Text(
                             'عرض المستخدمين',
                             style:
-                            Theme.of(context).textTheme.headline2.copyWith(
+                            Theme.of(context).textTheme.headline2?.copyWith(
                               color: Colors.white,
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,
@@ -207,7 +208,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           Text(
                             'إضافة مستخدم',
                             style:
-                                Theme.of(context).textTheme.headline2.copyWith(
+                                Theme.of(context).textTheme.headline2?.copyWith(
                                       color: Colors.white,
                                       fontSize: 13.sp,
                                       fontWeight: FontWeight.w600,
@@ -262,7 +263,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           Text(
                             'تهيئة البيانات',
                             style:
-                            Theme.of(context).textTheme.headline2.copyWith(
+                            Theme.of(context).textTheme.headline2?.copyWith(
                               color: Colors.white,
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,
@@ -289,7 +290,7 @@ class _AdminScreenState extends State<AdminScreen> {
 
                           snkbar(
                             context,
-                            'تم تحميل جميع البيانات: ${userModel.length}',
+                            'تم تحميل جميع البيانات: ${userModel?.length}',
                             seconds: 3,
                             backgroundColor: Colors.green,
                             textStyle: TextStyle(
@@ -345,7 +346,7 @@ class _AdminScreenState extends State<AdminScreen> {
                           Text(
                             'تحميل البيانات',
                             style:
-                            Theme.of(context).textTheme.headline2.copyWith(
+                            Theme.of(context).textTheme.headline2?.copyWith(
                               color: Colors.white,
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,

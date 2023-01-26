@@ -5,7 +5,7 @@ import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class DoneScreen extends StatelessWidget {
-  const DoneScreen({Key key}) : super(key: key);
+  const DoneScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class DoneScreen extends StatelessWidget {
               // button
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () {
                     pushAndFinish(
                       context,
@@ -108,7 +108,7 @@ class DoneScreen extends StatelessWidget {
                       width: 50.w,
                       child: Text(
                         'متابعة',
-                        style: Theme.of(context).textTheme.headline2.copyWith(
+                        style: Theme.of(context).textTheme.headline2?.copyWith(
                               color: Colors.white,
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,

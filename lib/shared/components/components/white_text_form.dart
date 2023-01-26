@@ -5,33 +5,33 @@ import 'package:sizer/sizer.dart';
 class WhiteTextForm extends StatelessWidget {
   const WhiteTextForm({
     this.inputAction,
-    @required this.controller,
+    required this.controller,
     this.keyboardType,
     this.hintText,
     this.prefixIcon,
     this.helper,
     this.onChanged,
     this.onTap,
-    @required this.validator,
+    required this.validator,
     this.obscureText = false,
     this.suffix,
     this.maxLines = 1,
-    Key key,
+    Key? key,
     this.labelText,
   }) : super(key: key);
 
-  final TextInputAction inputAction;
+  final TextInputAction? inputAction;
   final TextEditingController controller;
-  final TextInputType keyboardType;
-  final String hintText;
-  final String labelText;
-  final Icon prefixIcon;
-  final String helper;
-  final ValueChanged<String> onChanged;
-  final GestureTapCallback onTap;
-  final Function validator;
+  final TextInputType? keyboardType;
+  final String? hintText;
+  final String? labelText;
+  final Icon? prefixIcon;
+  final String? helper;
+  final ValueChanged<String>? onChanged;
+  final GestureTapCallback? onTap;
+  final String? Function(String?)? validator;
   final bool obscureText;
-  final Widget suffix;
+  final Widget? suffix;
   final int maxLines;
 
   @override

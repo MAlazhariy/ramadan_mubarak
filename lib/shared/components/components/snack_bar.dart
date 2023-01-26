@@ -4,9 +4,9 @@ void snkbar(
   BuildContext context,
   String msg, {
   int seconds = 3,
-  Color backgroundColor,
-  TextStyle textStyle,
-  void Function() action,
+  Color? backgroundColor,
+  TextStyle? textStyle,
+  void Function()? action,
   String actionLabel = '',
   Color labelColor = Colors.white,
 }) {

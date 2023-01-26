@@ -15,7 +15,7 @@ import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class UsersListScreen extends StatefulWidget {
-  const UsersListScreen({Key key}) : super(key: key);
+  const UsersListScreen({Key? key}) : super(key: key);
 
   @override
   State<UsersListScreen> createState() => _AdminScreenState();
@@ -26,7 +26,7 @@ class _AdminScreenState extends State<UsersListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('قائمة المستخدمين (${userModel.data.length})'),
+        title: Text('قائمة المستخدمين (${userModel?.data.length})'),
         // actions: [
         //   IconButton(
         //     onPressed: () {
@@ -51,10 +51,10 @@ class _AdminScreenState extends State<UsersListScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // New users
-              if(pendingNewUsers().isNotEmpty)
+              if(pendingNewUsers()?.isNotEmpty??false)
                 Text(
                 'مستخدمين جدد',
-                style: Theme.of(context).textTheme.headline1.copyWith(
+                style: Theme.of(context).textTheme.headline1?.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: 25,
                   height: 1.4,
@@ -64,7 +64,7 @@ class _AdminScreenState extends State<UsersListScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              for (var user in pendingNewUsers())
+              for (var user in pendingNewUsers()??[])
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 7),
                   child: MaterialButton(
@@ -118,7 +118,7 @@ class _AdminScreenState extends State<UsersListScreen> {
               // New users
               Text(
                 'كل الأعضاء',
-                style: Theme.of(context).textTheme.headline1.copyWith(
+                style: Theme.of(context).textTheme.headline1?.copyWith(
                       fontWeight: FontWeight.w700,
                       fontSize: 25,
                       height: 1.4,
@@ -128,7 +128,7 @@ class _AdminScreenState extends State<UsersListScreen> {
                     ),
               ),
               const SizedBox(height: 10),
-              for (var user in userModel.data.reversed)
+              for (var user in userModel!.data.reversed)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 7),
                   child: MaterialButton(
@@ -185,8 +185,8 @@ class _AdminScreenState extends State<UsersListScreen> {
     );
   }
 
-  List<UserDataModel> pendingNewUsers() {
-    return userModel.data.where((user) => user.approved == false).toList();
+  List<UserDataModel>? pendingNewUsers() {
+    return userModel?.data.where((user) => user.approved == false).toList();
   }
 
 }

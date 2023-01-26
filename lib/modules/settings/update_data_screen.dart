@@ -13,7 +13,7 @@ import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class UpdateUserDataScreen extends StatefulWidget {
-  const UpdateUserDataScreen({Key key}) : super(key: key);
+  const UpdateUserDataScreen({Key? key}) : super(key: key);
 
   @override
   State<UpdateUserDataScreen> createState() => _UpdateUserDataScreenState();
@@ -24,7 +24,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
-  var users = userModel.data.where((user) => user.deviceId == deviceId);
+  var users = userModel?.data.where((user) => user.deviceId == deviceId);
 
   @override
   void initState() {
@@ -47,9 +47,9 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
     });
 
     setState(() {
-      if (users.isNotEmpty) {
-        nameCtrl.text = users.first.name;
-        doaaCtrl.text = users.first.doaa;
+      if (users?.isNotEmpty??false) {
+        nameCtrl.text = users!.first.name;
+        doaaCtrl.text = users!.first.doaa;
       }
     });
   }
@@ -89,8 +89,8 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                     WhiteTextForm(
                       controller: nameCtrl,
                       labelText: 'الاسم',
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (value) {
+                        if (value?.isEmpty??true) {
                           return 'هذا الحقل يجب ألا يكون فارغاً';
                         }
                       },
@@ -114,8 +114,8 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                     WhiteTextForm(
                       controller: doaaCtrl,
                       labelText: 'الدعاء',
-                      validator: (String value) {
-                        if (value.isEmpty) {
+                      validator: (value) {
+                        if (value?.isEmpty??true) {
                           return 'هذا الحقل يجب ألا يكون فارغاً';
                         }
                       },
@@ -137,16 +137,17 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
 
               const SizedBox(height: 40),
 
+              // todo: check null-safety operations
               // Save button
-              if (users.isEmpty ||
-                  nameCtrl.text != users.first.name ||
-                  doaaCtrl.text != users.first.doaa)
+              if (users!.isEmpty ||
+                  nameCtrl.text != users!.first.name ||
+                  doaaCtrl.text != users!.first.doaa)
                 Align(
                   alignment: AlignmentDirectional.center,
                   // ignore: deprecated_member_use
-                  child: RaisedButton(
+                  child: MaterialButton(
                     onPressed: () async {
-                      if (formKey.currentState.validate()) {
+                      if (formKey.currentState!.validate()) {
                         dismissKeyboard(context);
 
                         await changeData(
@@ -173,7 +174,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                         width: 50.w,
                         child: Text(
                           'حفظ',
-                          style: Theme.of(context).textTheme.headline2.copyWith(
+                          style: Theme.of(context).textTheme.headline2?.copyWith(
                                 color: Colors.white,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w600,
@@ -199,8 +200,8 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
   }
 
   Future<void> changeData({
-    @required String newName,
-    @required String newDoaa,
+    required String newName,
+    required String newDoaa,
   }) async {
     hasNetwork().then((connected) {
       if (connected) {
@@ -212,13 +213,13 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
 
           // try {
           //   var user =
-          //       userModel.data.where((user) => user.deviceId == deviceId).first;
+          //       userModel?.data.where((user) => user.deviceId == deviceId).first;
           //
           //   // Save updates to variable
-          //   var index = userModel.data.indexOf(user);
-          //   userModel.data[index].name = newName;
-          //   userModel.data[index].doaa = newDoaa;
-          //   userModel.data.elementAt(index).approved = true;
+          //   var index = userModel?.data.indexOf(user);
+          //   userModel?.data[index].name = newName;
+          //   userModel?.data[index].doaa = newDoaa;
+          //   userModel?.data.elementAt(index).approved = true;
           //
           //   // Save updates in local
           //   Cache.saveData(userModel.toList());

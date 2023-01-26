@@ -33,10 +33,10 @@ void readyShowScheduledNotification(BuildContext context) async {
     int hijriMonthInt = HijriCalendar.fromDate(date).hMonth;
 
     if (hijriMonthInt != 9) {
-      var users = userModel.data.where((element) => element.deviceId == deviceId);
+      var users = userModel?.data.where((element) => element.deviceId == deviceId);
       String callUser = '';
-      if(users.isNotEmpty){
-        callUser = ' يا ${users.first.name}';
+      if(users?.isNotEmpty??false){
+        callUser = ' يا ${users!.first.name}';
       }
 
       snkbar(context, 'تم ضبط الإشعارات بنجاح ✅');
@@ -64,8 +64,8 @@ void readyShowScheduledNotification(BuildContext context) async {
     );
 
     int _random = getRandomIndex();
-    String notifiName = userModel.data[_random].name;
-    String notifiDoaa = userModel.data[_random].doaa;
+    String notifiName = userModel?.data[_random].name ??'';
+    String notifiDoaa = userModel?.data[_random].doaa ??'';
 
     var scheduledDate = DateTime(
       date.year,

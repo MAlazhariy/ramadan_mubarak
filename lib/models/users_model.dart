@@ -41,17 +41,17 @@ class UserDataModel {
   //   'doaaUpdate': '',
   //   'pendingEdit': false,
 
-  String id;
+  late final String id;
 
-  String name;
-  String doaa;
-  String deviceId;
-  bool approved;
-  int time;
+  late final String name;
+  late final String doaa;
+  late final String? deviceId;
+  late final bool approved;
+  late final int time;
 
-  String nameUpdate;
-  String doaaUpdate;
-  bool pendingEdit;
+  late final String nameUpdate;
+  late final String doaaUpdate;
+  late final bool pendingEdit;
 
   UserDataModel.fromSnapshot(
     QueryDocumentSnapshot<Map<String, dynamic>> snapshot,

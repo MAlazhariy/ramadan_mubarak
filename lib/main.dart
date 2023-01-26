@@ -47,7 +47,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
 
 
 class StartScreen extends StatelessWidget {
-  const StartScreen({Key key}) : super(key: key);
+  const StartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

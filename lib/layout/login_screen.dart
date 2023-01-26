@@ -29,7 +29,7 @@ enum Field {
 }
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -39,14 +39,14 @@ class _LoginScreenState extends State<LoginScreen> {
   var nameCtrl = TextEditingController();
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  Field _field;
+  Field? _field;
 
   // bool passwordIsShown = false;
   bool loading = false;
 
   Future<void> login({
-    @required String name,
-    @required String doaa,
+    required String name,
+    required String doaa,
   }) async {
     setState(() {
       loading = true;
@@ -76,10 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
             name: name,
             doaa: doaa,
             time: time,
-            docId: deviceId,
+            docId: deviceId??name,
           );
 
-          userModel.data.add(UserDataModel.fromMap({
+          userModel?.data.add(UserDataModel.fromMap({
             'name': name,
             'doaa': doaa,
             'device id': deviceId,
@@ -97,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
             // Go to HomeScreen
             pushAndFinish(context, const HomeScreen());
           }
-
         }).catchError((error) {
           setState(() {
             loading = false;
@@ -159,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       'مرحبًا',
-                      style: Theme.of(context).textTheme.headline1.copyWith(
+                      style: Theme.of(context).textTheme.headline1?.copyWith(
                             fontWeight: FontWeight.w700,
                             fontSize: 85,
                             color: const Color(0xE639444C),
@@ -171,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Text(
                       'يرجى تسجيل الدخول للمتابعة',
-                      style: Theme.of(context).textTheme.headline2.copyWith(
+                      style: Theme.of(context).textTheme.headline2?.copyWith(
                             color: Colors.black38,
                             fontSize: 19.5,
                             fontWeight: FontWeight.w400,
@@ -184,17 +183,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     /// name
                     WhiteTextForm(
                       controller: nameCtrl,
-                      validator: (String value) {
-                        return value.isEmpty ? 'هذا الحقل مطلوب' : null;
+                      validator: (value) {
+                        return value?.isEmpty??true ? 'هذا الحقل مطلوب' : null;
                       },
                       keyboardType: TextInputType.name,
                       inputAction: TextInputAction.next,
                       hintText: 'الاسم ثنائي',
                       prefixIcon: Icon(
                         Icons.account_circle_outlined,
-                        color: _field == Field.NAME
-                            ? const Color(0x7CFF0028)
-                            : const Color(0x7C323F48),
+                        color: _field == Field.NAME ? const Color(0x7CFF0028) : const Color(0x7C323F48),
                         size: 19.sp,
                       ),
                       // onChanged: (value) {
@@ -212,18 +209,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     /// doaa
                     WhiteTextForm(
                       controller: doaaCtrl,
-                      validator: (String value) {
-                        return value.isEmpty ? 'هذا الحقل مطلوب' : null;
+                      validator: (value) {
+                        return value?.isEmpty??true ? 'هذا الحقل مطلوب' : null;
                       },
                       keyboardType: TextInputType.multiline,
                       maxLines: 6,
-                      hintText:
-                          'اكتب دعاءك المفضل بصيغة الغائب، مثال: "اللهم اغفر له"',
+                      hintText: 'اكتب دعاءك المفضل بصيغة الغائب، مثال: "اللهم اغفر له"',
                       prefixIcon: Icon(
                         Icons.article_outlined,
-                        color: _field == Field.DOAA
-                            ? const Color(0x7CFF0028)
-                            : const Color(0x7C323F48),
+                        color: _field == Field.DOAA ? const Color(0x7CFF0028) : const Color(0x7C323F48),
                         size: 19.sp,
                       ),
                       // onChanged: (value) {
@@ -242,12 +236,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     // button
                     Align(
                       alignment: AlignmentDirectional.center,
-                      child: RaisedButton(
+                      child: MaterialButton(
                         onPressed: () async {
                           setState(() {});
                           dismissKeyboard(context);
 
-                          if (formKey.currentState.validate()) {
+                          if (formKey.currentState!.validate()) {
                             await login(
                               name: nameCtrl.text,
                               doaa: doaaCtrl.text,
@@ -277,10 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             child: Text(
                               'تسجيل الدخول',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline2
-                                  .copyWith(
+                              style: Theme.of(context).textTheme.headline2?.copyWith(
                                     color: Colors.white,
                                     fontSize: 19.5,
                                     fontWeight: FontWeight.w600,
@@ -314,7 +305,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //           color: Colors.transparent,
                     //         ),
                     //       ),
-                    //       validator: (String value)
+                    //       validator: (value)
                     //       {
                     //         return (value.isEmpty)
                     //             ? 'هذا الحقل مطلوب'
@@ -334,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //       //   setState(() {
                     //       //     passwordIsShown = false;
                     //       //   });
-                    //       //   if(formKey.currentState.validate())
+                    //       //   if(formKey.currentState!.validate())
                     //       //   {
                     //       //     // cubit.signIn(
                     //       //     //   email: emailController.text,
@@ -350,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //         top: 3.0,
                     //       ),
                     //       // ignore: deprecated_member_use
-                    //       child: RaisedButton(
+                    //       child: MaterialButton(
                     //         onPressed: (){
                     //           // hide or show password
                     //           setState(() {
