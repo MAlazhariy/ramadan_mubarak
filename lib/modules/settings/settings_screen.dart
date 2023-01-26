@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ramadan_kareem/modules/notification_api.dart';
 import 'package:ramadan_kareem/modules/settings/admin/admin_screen.dart';
 import 'package:ramadan_kareem/modules/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/modules/settings/update_data_screen.dart';
@@ -15,23 +16,17 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen({Key key}) : super(key: key);
+  SettingsScreen({super.key});
 
-  final List<String> allowedDeviceIDs = [
-    'b5515f47ea9d92df', // أبو يوسف
-    'd1c4159a8fd1ac52', // آلاء عبد الفتاح
-    '5e52c61a71751b03', // فاطم رياض
-    '33df7de003ca17ad', // هدية ابراهيم
-    '027e5a15c8257dff', // أنا
-    // '3a9a32a9d64d9dcf', // Xiaomi أنا
-    '027e5a15c8257dff', // Xiaomi أنا
-  ];
+  final users =
+      userModel?.data.where((user) => user.deviceId == deviceId).toList();
 
-  var users =
-      userModel.data.where((user) => user.deviceId == deviceId).toList();
 
   @override
   Widget build(BuildContext context) {
+    DocumentSnapshot<Map<String, dynamic>>? lastDoc;
+    String? lastId;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('الإعدادات'),
@@ -50,8 +45,8 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     /// تعديل الدعاء أو الاسم
                     if (deviceId != null &&
-                        deviceId.isNotEmpty &&
-                        users.isNotEmpty)
+                        (deviceId?.isNotEmpty??false) &&
+                        (users?.isNotEmpty??false))
                       ListTile(
                         title: Text(
                           'تعديل الاسم أو الدعاء',
@@ -243,6 +238,112 @@ class SettingsScreen extends StatelessWidget {
                         },
                         leading: const Icon(Icons.admin_panel_settings),
                       ),
+
+                    // pagination
+                    ListTile(
+                      title: Text(
+                        'pagination',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: greyColor,
+                        ),
+                      ),
+                      onTap: () async {
+                        /// get limitation
+                        // try{
+                        //   DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore.instance.collection('users').doc('2d5d084e1babf51d').get();
+                        //   log('We have got document "${doc.id} - ${doc.data()['name']}"');
+                        //
+                        //   const int limitation = 20;
+                        //   int dataSize = 0;
+                        //
+                        //   QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('users').orderBy('time').startAfterDocument(doc).limit(limitation).get();
+                        //   log('--- size = ${data.size}');
+                        //   dataSize = data.size;
+                        //   data.docs.forEach((user) {
+                        //     log('name: ${user['name']}');
+                        //   });
+                        //   if(dataSize < limitation){
+                        //     final int remainingDataSize = limitation - dataSize;
+                        //     log('---- getting remaining $remainingDataSize data from Firebase');
+                        //     QuerySnapshot<Map<String, dynamic>> remainData = await FirebaseFirestore.instance.collection('users').orderBy('time').limit(remainingDataSize).get();
+                        //     dataSize += remainData.size;
+                        //     log('--- total size = $dataSize');
+                        //     remainData.docs.forEach((user) {
+                        //       log('name: ${user['name']}');
+                        //     });
+                        //   }
+                        //
+                        // } catch(e){
+                        //   log('إلحق يزميلي إيرور: $e');
+                        // }
+
+                        /// get nested limitation
+                        try{
+                          if(lastDoc == null){
+                            await FirebaseFirestore.instance.collection('users').orderBy('time').limit(1).get().then((value){
+                              lastDoc = value.docs.first;
+                              lastId = lastDoc?.id;
+                            });
+                          }
+                          log('last document: id:"${lastDoc?.id}, name:${lastDoc?.data()?['name']}"');
+
+
+                          const int limit = 20;
+                          int _dataSize = 0;
+
+                          QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('users').orderBy('time').startAfterDocument(lastDoc!).limit(limit).get();
+                          log('--- size = ${data.size}');
+                          _dataSize = data.size;
+                          data.docs.forEach((user) {
+                            log('name: ${user['name']}');
+                          });
+
+                          if(_dataSize >= limit){
+                            lastDoc = data.docs.last;
+                          } else {
+                            final int remainingDataSize = limit - _dataSize;
+                            log('---- getting remaining $remainingDataSize data from Firebase');
+                            QuerySnapshot<Map<String, dynamic>> remainData = await FirebaseFirestore.instance.collection('users').orderBy('time').limit(remainingDataSize).get();
+                            _dataSize += remainData.size;
+                            log('--- total size = $_dataSize');
+                            remainData.docs.forEach((user) {
+                              log('name: ${user['name']}');
+                            });
+
+                            lastDoc = remainData.docs.last;
+                          }
+
+                        } catch(e){
+                          log('إلحق يزميلي إيرور: $e');
+                        }
+                      },
+                      leading: const Icon(Icons.warning_amber),
+                      // leading: const Icon(Icons.favorite_border),
+                    ),
+
+                    // get count
+                    ListTile(
+                      title: Text(
+                        'get count',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: greyColor,
+                        ),
+                      ),
+                      onTap: () async {
+                        await FirebaseFirestore.instance.collection('users').orderBy('time').count().get().then((value){
+                          var count = value.count;
+                          debugPrint('count is: $count');
+                        });
+                      },
+                      leading: const Icon(Icons.warning_amber),
+                      // leading: const Icon(Icons.favorite_border),
+                    ),
                   ],
                 ),
               ),
@@ -251,7 +352,7 @@ class SettingsScreen extends StatelessWidget {
             // back button
             Align(
               alignment: AlignmentDirectional.center,
-              child: RaisedButton(
+              child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -272,7 +373,7 @@ class SettingsScreen extends StatelessWidget {
                     width: 50.w,
                     child: Text(
                       'رجوع',
-                      style: Theme.of(context).textTheme.headline2.copyWith(
+                      style: Theme.of(context).textTheme.headline2?.copyWith(
                             color: Colors.white,
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w600,
@@ -297,3 +398,6 @@ String mailUs({
   const String email = 'malazhariy.ramadankareem@gmail.com';
   return 'mailto:$email?subject=$subject&body=$body';
 }
+
+
+int counter = 0;
