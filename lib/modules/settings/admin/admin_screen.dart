@@ -70,7 +70,7 @@ class _AdminScreenState extends State<AdminScreen> {
               // pending data
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () {
                     push(context, const PendingDataScreen());
                   },
@@ -122,7 +122,7 @@ class _AdminScreenState extends State<AdminScreen> {
               // Show all users
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () async {
                     push(context, const UsersListScreen());
                   },
@@ -174,7 +174,7 @@ class _AdminScreenState extends State<AdminScreen> {
               // Add a new user
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () {
                     push(context, const AddNewUserScreen());
                   },
@@ -229,7 +229,7 @@ class _AdminScreenState extends State<AdminScreen> {
               // Handling users fields
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () async {
                     await formatData(context);
                   },
@@ -281,7 +281,7 @@ class _AdminScreenState extends State<AdminScreen> {
               // Reload data
               Align(
                 alignment: AlignmentDirectional.center,
-                child: RaisedButton(
+                child: MaterialButton(
                   onPressed: () async {
                     hasNetwork().then((value) async {
                       if(value){

@@ -129,7 +129,7 @@ class _PendingDataScreenState extends State<AddNewUserScreen> {
               Align(
                   alignment: AlignmentDirectional.center,
                   // ignore: deprecated_member_use
-                  child: RaisedButton(
+                  child: MaterialButton(
                     onPressed: () async {
                       if(formKey.currentState.validate()){
                         dismissKeyboard(context);

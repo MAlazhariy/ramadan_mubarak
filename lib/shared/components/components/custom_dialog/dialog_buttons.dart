@@ -18,7 +18,7 @@ class DialogButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
+    return MaterialButton(
       child: Text(
         title,
         style: TextStyle(

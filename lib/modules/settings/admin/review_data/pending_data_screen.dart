@@ -62,7 +62,7 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
               snkbar(
                 context,
                 'screen refreshed',
-                seconds: 3,
+                seconds: 1,
                 // backgroundColor: Colors.green,
                 textStyle: const TextStyle(
                   color: Colors.white,
@@ -234,8 +234,8 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
                         Expanded(
                           child: MaterialButton(
                             onPressed: () async {
-                              // await reject(user);
-                              await rejectTest(user);
+                              await reject(user);
+                              // await rejectTest(user);
                             },
                             color: Colors.red,
                             child: Text(
@@ -511,9 +511,96 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
   Future<void> reject(UserDataModel user) async {
     hasNetwork().then((connected) {
       if (connected) {
-        Map<String, dynamic> userMap = user.toMap();
+        // create a map from user to remove time from it
+        // Do not change time in user model to null and instead of that create
+        // .. a map and remove time from it.
+        var userMap = user.toMap();
         userMap.remove('time');
 
+        // remove time from user data in Firebase
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.id)
+            .set(userMap)
+            .then((_) {
+          // remove user from local
+          setState(() {
+            if (userModel.data.contains(user)) {
+              // remove user from userModel
+              userModel.data.remove(user);
+
+              // Save updates in local
+              Cache.saveData(userModel.toList());
+            } else if (newUsers.data.contains(user)) {
+              newUsers.data.remove(user);
+            }
+          });
+
+          snkbar(context, '${user.name} rejected',
+              seconds: 8,
+              backgroundColor: Colors.red,
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+              actionLabel: 'UNDO', action: () {
+            FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.id)
+                .update(user.toMap())
+                .then((value) {
+              setState(() {
+                if (userModel.data.length == newUsers.length) {
+                  // new users == userModel
+
+                  userModel.data.add(user);
+                  // Save updates in local
+                  Cache.saveData(userModel.toList());
+                } else {
+                  newUsers.data.add(user);
+                }
+              });
+            });
+          });
+        }).catchError((e) {
+          log('error when reject: ${e.toString()}');
+
+          snkbar(
+            context,
+            'error when reject: ${e.toString()}',
+            seconds: 8,
+            backgroundColor: Colors.red,
+            textStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          );
+        });
+      } else {
+        snkbar(
+          context,
+          'أنت غير متصل بالإنترنت !',
+          seconds: 1,
+          backgroundColor: Colors.red,
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        );
+      }
+    });
+  }
+
+  Future<void> rejectTest(UserDataModel user) async {
+    var _user2 = UserDataModel.fromObject(user);
+
+    hasNetwork().then((connected) {
+      if (connected) {
+        Map<String, dynamic> userMap = user.toMap();
+        userMap.remove('time');
 
         FirebaseFirestore.instance
             .collection('users')
@@ -522,18 +609,10 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
             .then((_) {
           setState(() {
             if (userModel.data.contains(user)) {
-              // remove user from variable if available
-              var index = userModel.data.indexOf(user);
-              var data = userModel.data;
-              data[index].nameUpdate = 'hiiii this is a test from mostafa alazhariy';
-
-              userModel.data[index].nameUpdate = 'hi there';
-              log(user.toMap().toString());
-              data.removeAt(index);
-              userModel.data = data;
+              // data.removeAt(index);
 
               // Save updates in local
-              Cache.saveData(userModel.toList());
+              // Cache.saveData(userModel.toList());
             }
             if (newUsers.data.contains(user)) {
               var index = newUsers.data.indexOf(user);
@@ -586,112 +665,6 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
             ),
           );
         });
-      } else {
-        snkbar(
-          context,
-          'أنت غير متصل بالإنترنت !',
-          seconds: 1,
-          backgroundColor: Colors.red,
-          textStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
-        );
-      }
-    });
-  }
-
-  Future<void> rejectTest(UserDataModel user) async {
-    hasNetwork().then((connected) {
-      if (connected) {
-        Map<String, dynamic> userMap = user.toMap();
-        log('user map: ${userMap.toString()}');
-        userMap.remove('time');
-        log('user keys after removing "time" key from "user map": ${user.toMap().keys.toString()}');
-        log('--------------------- setState');
-
-
-        // FirebaseFirestore.instance
-        //     .collection('users')
-        //     .doc(user.id)
-        //     .set(userMap)
-        //     .then((_) {
-        //   setState(() {
-            if (userModel.data.contains(user)) {
-              // remove user from variable if available
-              var index = userModel.data.indexOf(user);
-              var data = userModel.data;
-              log('create copy from userModel "data"');
-              log('data[$index] = ${data[index].toMap().toString()}');
-              log('user = ${user.toMap().toString()}');
-              log('--------------------- change data nameUpdate');
-              data[index].nameUpdate = '########################################';
-              data[index].toMap()['nameUpdate'] = 'hi there how are you?';
-              log('data[$index] after changing nameUpdate: ${data[index].toMap().toString()}');
-              log('user after changing nameUpdate in data: ${user.toMap().toString()}');
-              log('userModel after changing nameUpdate in data: ${userModel.data[index].toMap().toString()}');
-              log('newUsers after changing nameUpdate in data: ${newUsers.data[index].toMap().toString()}');
-              log('pendingNewUsers() after changing nameUpdate in data: ${pendingNewUsers().first.toMap().toString()}');
-              log('---------------------');
-
-              data.removeAt(index);
-              userModel.data = data;
-
-              // Save updates in local
-              Cache.saveData(userModel.toList());
-            }
-            if (newUsers.data.contains(user)) {
-              var index = newUsers.data.indexOf(user);
-              var data = newUsers.data;
-              data.removeAt(index);
-              newUsers.data = data;
-            }
-          // });
-
-          snkbar(context, '${user.name} rejected',
-              seconds: 8,
-              backgroundColor: Colors.red,
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
-              actionLabel: 'UNDO', action: () {
-                // FirebaseFirestore.instance
-                //     .collection('users')
-                //     .doc(user.id)
-                //     .update(user.toMap())
-                //     .then((value) {
-                  setState(() {
-                    if (userModel.data.length == newUsers.length) {
-                      // new users == userModel
-
-                      userModel.data.add(user);
-                      newUsers.data.add(user);
-                      // Save updates in local
-                      Cache.saveData(userModel.toList());
-                    } else {
-                      newUsers.data.add(user);
-                    }
-                  });
-                // });
-              });
-        // }).catchError((e) {
-        //   log('error when reject: ${e.toString()}');
-        //
-        //   snkbar(
-        //     context,
-        //     'error when reject: ${e.toString()}',
-        //     seconds: 8,
-        //     backgroundColor: Colors.red,
-        //     textStyle: const TextStyle(
-        //       color: Colors.white,
-        //       fontSize: 13,
-        //       fontWeight: FontWeight.w600,
-        //     ),
-        //   );
-        // });
       } else {
         snkbar(
           context,
@@ -791,6 +764,7 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
   }
 
   Future<void> rejectUpdates(UserDataModel user) async {
+    var _user2 = UserDataModel.fromObject(user);
 
     hasNetwork().then((connected) {
       if (connected) {
@@ -805,29 +779,20 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
           'pendingEdit': false,
         }).then((_) {
           setState(() {
+            // Save updates in memory
+            user.nameUpdate = '';
+            user.doaaUpdate = '';
+            user.pendingEdit = false;
+
             if (userModel.data.contains(user)) {
-              // Save updates to variable
-              var index = userModel.data.indexOf(user);
-
-              // userModel.data[index].nameUpdate = '';
-              usersUpdate.data[index].doaaUpdate = '12345';
-              userModel.data[index].doaaUpdate = '123';
-              userModel.data[index].pendingEdit = false;
-
               // Save updates in local
               Cache.saveData(userModel.toList());
             }
-            if (usersUpdate.data.contains(user)) {
-              var index = usersUpdate.data.indexOf(user);
-
-              usersUpdate.data[index].nameUpdate = '123';
-              usersUpdate.data[index].doaaUpdate = '';
-              usersUpdate.data[index].pendingEdit = false;
-            }
-
           });
 
-          snkbar(context, '${user.name} updates rejected',
+          snkbar(
+              context,
+              '${user.name} updates rejected',
               seconds: 6,
               backgroundColor: Colors.red,
               textStyle: const TextStyle(
@@ -836,31 +801,21 @@ class _PendingDataScreenState extends State<PendingDataScreen> {
                 fontWeight: FontWeight.w600,
               ),
               actionLabel: 'UNDO', action: () {
-                log('action tapped -> user.pendingEdit = ${user.pendingEdit}');
-                log('action tapped -> user.pendingEdit = ${user.pendingEdit}');
             FirebaseFirestore.instance
                 .collection('users')
                 .doc(user.id)
-                .set(user.toMap())
+                .set(_user2.toMap())
                 .then((value) {
-              log('after set firebase func. -> user.pendingEdit = ${user.pendingEdit}');
               setState(() {
+                // undo changes in memory
+                user.nameUpdate = _user2.nameUpdate;
+                user.doaaUpdate = _user2.doaaUpdate;
+                user.pendingEdit = _user2.pendingEdit;
+
                 if (userModel.data.length == usersUpdate.length) {
-                  var index = userModel.data.indexOf(user);
-
-                  userModel.data[index].nameUpdate = user.nameUpdate;
-                  userModel.data[index].doaaUpdate = user.doaaUpdate;
-                  userModel.data[index].pendingEdit = user.pendingEdit;
-
                   // Save updates in local
                   Cache.saveData(userModel.toList());
                 }
-
-                var index = usersUpdate.data.indexOf(user);
-
-                usersUpdate.data[index].nameUpdate = user.nameUpdate;
-                usersUpdate.data[index].doaaUpdate = user.doaaUpdate;
-                usersUpdate.data[index].pendingEdit = user.pendingEdit;
               });
             });
           });
