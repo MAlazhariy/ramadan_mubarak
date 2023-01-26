@@ -28,9 +28,9 @@ Future<QuerySnapshot<Map<String, dynamic>>> getUpdatedCollection() async {
 }
 
 Future<List> getFirebaseData([
-  QuerySnapshot collection,
+  QuerySnapshot? collection,
 ]) async {
-  QuerySnapshot myCollection;
+  QuerySnapshot? myCollection;
 
   if (collection != null) {
     myCollection = collection;
