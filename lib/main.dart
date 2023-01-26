@@ -27,7 +27,7 @@ void main() async {
 
   // init Hive & open box
   await Hive.initFlutter();
-  await Hive.openBox('box');
+  await Hive.openLazyBox('box');
 
   // init Notification
   await NotificationApi.init(true);
