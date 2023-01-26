@@ -2,20 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// void hi() {
-//   FirebaseFirestore.instance.collection('users').orderBy('time').get().then((
-//       value) {
-//     QuerySnapshot<Map<String, dynamic>> data = value;
-//     value.docs
-//
-//     log(data.docs.length.toString());
-//     for (var data in data.docs) {
-//       log(data.data()['name']);
-//       data.id;
-//     }
-//   });
-// }
-
 class UserDocsModel {
   int length = 0;
   List<UserDataModel> data = [];
@@ -39,8 +25,8 @@ class UserDocsModel {
     }
   }
 
-  List<Map<String, dynamic>> toList(){
-    if(data.isEmpty) return [];
+  List<Map<String, dynamic>> toList() {
+    if (data.isEmpty) return [];
     return data.map((e) => e.toMap()).toList();
   }
 }
@@ -83,6 +69,22 @@ class UserDataModel {
     pendingEdit = snapshot.data()['pendingEdit'];
   }
 
+  UserDataModel.fromObject(
+    UserDataModel o,
+  ) {
+    id = o.id;
+
+    name = o.name;
+    doaa = o.doaa;
+    deviceId = o.deviceId;
+    approved = o.approved;
+    time = o.time;
+
+    nameUpdate = o.nameUpdate;
+    doaaUpdate = o.doaaUpdate;
+    pendingEdit = o.pendingEdit;
+  }
+
   UserDataModel.fromMap(Map map) {
     id = '';
 
@@ -97,7 +99,7 @@ class UserDataModel {
     pendingEdit = map['pendingEdit'];
   }
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'name': name,
       'doaa': doaa,
