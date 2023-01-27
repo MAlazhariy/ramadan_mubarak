@@ -112,3 +112,10 @@ class UserDataModel {
     };
   }
 }
+
+enum UserStatus {
+  newMember,
+  approved,
+  rejected,
+  pendingEdit,
+}
