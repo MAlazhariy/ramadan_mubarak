@@ -1,16 +1,8 @@
-# ramadan_kareem
+# Ramadan Mubarak
 
-ramadan kareem
+An app that connects users to each other and reminds them via Firebase to pray for each other when breaking the fast in Ramadan, with admin control in a separate version.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+It is being worked on, state management is being added and a refactor is being made for the code...
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google play icon" width="210"/>](https://play.google.com/store/apps/details?id=malazhariy.ramadan_kareem)
