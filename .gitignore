@@ -46,4 +46,4 @@ app.*.map.json
 /android/app/release
 
 # Custom
-lib/utils/secret_constants.dart
+/lib/utils/secret_constants.dart

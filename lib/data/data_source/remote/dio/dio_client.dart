@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:ramadan_kareem/utils/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:ramadan_kareem/data/data_source/remote/dio/logging_interceptor.dart';
+import 'package:ramadan_kareem/utils/app_string_keys.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioClient {
   late final SharedPreferences sharedPreferences;
@@ -11,7 +12,6 @@ class DioClient {
 
   late Dio dio;
   late String token;
-  final _schoolId = <String, dynamic>{'school_id': AppConstants.schoolId};
 
   DioClient(
     this.baseUrl,
@@ -19,7 +19,7 @@ class DioClient {
     required this.sharedPreferences,
     required this.loggingInterceptor,
   }) {
-    token = sharedPreferences.getString(AppStrings.TOKEN)??'';
+    token = sharedPreferences.getString(AppLocalKeys.TOKEN)??'';
 
     dio = dioC;
     dio
@@ -46,7 +46,7 @@ class DioClient {
     try {
       return await dio.get(
         path,
-        queryParameters: {..._schoolId, ...?queryParameters},
+        queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
@@ -73,7 +73,7 @@ class DioClient {
       return await dio.post(
         path,
         data: data,
-        queryParameters: {..._schoolId, ...?queryParameters},
+        queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
@@ -99,7 +99,7 @@ class DioClient {
       return await dio.put(
         path,
         data: data,
-        queryParameters: {..._schoolId, ...?queryParameters},
+        queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
@@ -123,7 +123,7 @@ class DioClient {
       return await dio.delete(
         path,
         data: data,
-        queryParameters: {..._schoolId, ...?queryParameters},
+        queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
       );

@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:ramadan_kareem/layout/home_screen.dart';
+import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:sizer/sizer.dart';
-import 'layout/login_screen.dart';
+import 'view/screens/login/login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 name: ramadan_kareem
 description: ramadan kareem
 publish_to: 'none'
-version: 2022.4.22+8
+version: 2023.0.0+9
 
 environment:
   sdk: ">=2.18.4 <3.0.0"
@@ -18,7 +18,7 @@ dependencies:
   platform_device_id: ^1.0.1
   flutter_local_notifications: ^13.0.0
   flutter_native_timezone: ^2.0.0
-  adhan: ^1.1.16
+  adhan: ^2.0.0-nullsafety.2
   geocode: ^1.0.1
   geolocator: ^9.0.2
   share_plus: ^6.3.0
@@ -26,6 +26,7 @@ dependencies:
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.5
   cloud_firestore: ^4.3.1
+  firebase_messaging: ^14.2.6
   provider: ^6.0.5
 
   salomon_bottom_bar: ^3.1.0

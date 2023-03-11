@@ -8,9 +8,9 @@ class ApiResponse {
 
   Response? get response => _response;
   ErrorResponse? get error => _error;
-  bool get isSuccess => _response != null;
+  bool get isSuccess => _error == null;
 
-  ApiResponse.withSuccess(Response responseValue)
+  ApiResponse.withSuccess([Response? responseValue])
       : _response = responseValue,
         _error = null;
 
