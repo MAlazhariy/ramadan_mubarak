@@ -7,6 +7,7 @@ class FirebaseKeys {
 }
 
 class AppLocalKeys {
+  static const TOKEN = "";
   static const USER_DATA = "user_data";
   static const USER_ID = "user_id";
   static const FIRST_OPEN = "first-open";

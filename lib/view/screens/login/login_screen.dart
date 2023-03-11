@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
   var formKey = GlobalKey<FormState>();
   Field? _field;
 
-  // bool passwordIsShown = false;
   bool loading = false;
 
   Future<void> login({

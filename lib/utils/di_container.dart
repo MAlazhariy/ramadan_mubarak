@@ -12,7 +12,7 @@ class Di {
 
   static Future<void> init() async {
     // Core
-    sl.registerLazySingleton(() => DioClient(AppUri.FCM_URL, sl(), sharedPreferences: sl(), loggingInterceptor: sl()));
+    sl.registerLazySingleton(() => DioClient(AppUri.BASE_URL, sl(), sharedPreferences: sl(), loggingInterceptor: sl()));
 
     // Repositories
     // sl.registerLazySingleton(() => AuthRepo(sharedPreferences: sl(), dioClient: sl()));

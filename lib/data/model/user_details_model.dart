@@ -33,6 +33,7 @@ class UserDetails extends User {
   @override
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'doaa': doaa,
       'device_id': deviceId,

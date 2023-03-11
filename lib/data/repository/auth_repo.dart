@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:ramadan_kareem/data/data_source/remote/dio/dio_client.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
 import 'package:ramadan_kareem/data/model/base/api_response.dart';
 import 'package:ramadan_kareem/data/model/user_details_model.dart';
@@ -10,9 +13,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthRepo {
   AuthRepo({
     required this.sharedPreferences,
+    required this.dioClient,
   });
 
   final SharedPreferences sharedPreferences;
+  final DioClient dioClient;
 
   // is logged in
   bool get isLoggedIn => sharedPreferences.containsKey(AppLocalKeys.USER_ID);
@@ -33,10 +38,12 @@ class AuthRepo {
         ...user.toJson(),
         'name_update': '',
         'doaa_update': '',
-        'token': token??'',
+        'token': token ?? '',
       });
 
       await _saveUserId(docId);
+      await updateUserData(user);
+      await _sendFCM(user);
 
       return ApiResponse.withSuccess();
     } catch (e) {
@@ -44,55 +51,14 @@ class AuthRepo {
     }
   }
 
-  // token
-  // Future<ApiResponse> updateFirebaseToken() async {
-  //   try {
-  //     late String? deviceToken;
-  //     if (!Platform.isAndroid) {
-  //       NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-  //         alert: true,
-  //         announcement: false,
-  //         badge: true,
-  //         carPlay: false,
-  //         criticalAlert: false,
-  //         provisional: false,
-  //         sound: true,
-  //       );
-  //
-  //       if (settings.authorizationStatus == AuthorizationStatus.authorized && !kIsWeb) {
-  //         deviceToken = await _getDeviceToken();
-  //       }
-  //     } else {
-  //       deviceToken = await _getDeviceToken();
-  //     }
-  //     FirebaseMessaging.instance.subscribeToTopic(AppStrings.TOPIC);
-  //
-  //     Response response = await dioClient.post(
-  //       AppUri.FCM_TOKEN,
-  //       data: {
-  //         "_method": "put",
-  //         "cm_firebase_token": deviceToken,
-  //       },
-  //     );
-  //
-  //     return ApiResponse.fromResponse(response);
-  //   } catch (e) {
-  //     return ApiResponse.withError(ApiErrorHandler.handle(e));
-  //   }
-  // }
-
-  // Future<String> _getDeviceToken() async {
-  //   late final String deviceToken;
-  //
-  //   if (Platform.isAndroid) {
-  //     deviceToken = await FirebaseMessaging.instance.getToken() ?? '';
-  //   } else if (Platform.isIOS) {
-  //     deviceToken = await FirebaseMessaging.instance.getAPNSToken() ?? '';
-  //   }
-  //   debugPrint('--------Device Token---------- $deviceToken');
-  //
-  //   return deviceToken;
-  // }
+  Future<ApiResponse> _sendFCM(UserDetails user) async {
+    try {
+      final response = await dioClient.postFCM(user: user);
+      return ApiResponse.fromResponse(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.handle(e));
+    }
+  }
 
   Future<void> _saveUserId(String id) async {
     // save token in shared-pref
@@ -107,17 +73,36 @@ class AuthRepo {
     return sharedPreferences.getString(AppLocalKeys.USER_ID) ?? '';
   }
 
-  // Future<bool> logout() async {
-  //   if (!kIsWeb) {
-  //     // todo: firebase method
-  //     // await FirebaseMessaging.instance.unsubscribeFromTopic(AppStrings.TOPIC);
-  //   }
-  //   await sharedPreferences.remove(AppStrings.TOKEN);
-  //   // await sharedPreferences.remove(AppStrings.SEARCH_ADDRESS);
-  //
-  //   dioClient
-  //     ..token = ''
-  //     ..firebase.options.headers.update('Authorization', (value) => 'Bearer ');
-  //   return true;
-  // }
+  Future<void> updateUserData(UserDetails user) async {
+    try {
+      final userDataEncoded = json.encode(user);
+      await sharedPreferences.setString(AppLocalKeys.USER_DATA, userDataEncoded);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  UserDetails? getUserDetails() {
+    final userData = sharedPreferences.getString(AppLocalKeys.USER_DATA);
+    if (userData == null) {
+      return null;
+    }
+
+    final userDataDecoded = json.decode(userData);
+
+    return UserDetails.fromJson(userDataDecoded, id: userDataDecoded['id']);
+  }
+
+// Future<bool> logout() async {
+//   if (!kIsWeb) {
+//     // await FirebaseMessaging.instance.unsubscribeFromTopic(AppStrings.TOPIC);
+//   }
+//   await sharedPreferences.remove(AppStrings.TOKEN);
+//   // await sharedPreferences.remove(AppStrings.SEARCH_ADDRESS);
+//
+//   dioClient
+//     ..token = ''
+//     ..firebase.options.headers.update('Authorization', (value) => 'Bearer ');
+//   return true;
+// }
 }

@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:ramadan_kareem/data/data_source/remote/dio/logging_interceptor.dart';
+import 'package:ramadan_kareem/data/model/user_details_model.dart';
+import 'package:ramadan_kareem/helpers/enums/user_status_enum.dart';
 import 'package:ramadan_kareem/utils/app_string_keys.dart';
+import 'package:ramadan_kareem/utils/app_uri.dart';
+import 'package:ramadan_kareem/utils/secret_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioClient {
@@ -19,7 +23,7 @@ class DioClient {
     required this.sharedPreferences,
     required this.loggingInterceptor,
   }) {
-    token = sharedPreferences.getString(AppLocalKeys.TOKEN)??'';
+    token = sharedPreferences.getString(AppLocalKeys.TOKEN) ?? '';
 
     dio = dioC;
     dio
@@ -78,6 +82,52 @@ class DioClient {
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
+      );
+    } on FormatException catch (_) {
+      throw const FormatException("Unable to process the data");
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> postFCM({
+    required UserDetails user,
+  }) async {
+    try {
+      final dio = Dio();
+      dio
+        ..options.baseUrl = AppUri.FCM_BASE_URL
+        ..options.connectTimeout = 30000
+        ..options.receiveTimeout = 30000
+        ..httpClientAdapter
+        ..options.headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'key=${AppSecretKeys.fcmServerKey}',
+        };
+
+      return await dio.post(
+        AppUri.SEND_FCM,
+        data:
+          {
+            "topic": AppUri.ADMIN_FCM_TOPIC,
+            "notification": {
+              "title": user.status.name,
+              "body": "${user.name}\n${user.doaa}"
+            },
+            "android": {
+              "priority": "HIGH",
+              "notification": {
+                "notification_priority": "PRIORITY_MAX",
+                "sound": "Tri-tone",
+                "default_sound": true
+              }
+            },
+            "data": {
+              "click_action": "FLUTTER_NOTIFICATION_CLICK",
+              "status": user.status.name,
+              "id": user.id,
+            }
+          },
       );
     } on FormatException catch (_) {
       throw const FormatException("Unable to process the data");

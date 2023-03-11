@@ -19,6 +19,6 @@ class ApiResponse {
         _error = errorValue;
 
   ApiResponse.fromResponse(Response response)
-      : _response = response.statusCode == 200 && response.data['status'] == true ? response : null,
-        _error = response.statusCode == 200 && response.data['status'] == true ? null : ApiErrorHandler.handle(response.data['message']??response.statusMessage);
+      : _response = response.statusCode == 200 && response.data['success'] == 1 ? response : null,
+        _error = response.statusCode == 200 && response.data['success'] == 1 ? null : ApiErrorHandler.handle(response.data['message']??response.statusMessage);
 }

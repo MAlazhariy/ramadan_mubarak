@@ -6,9 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:ramadan_kareem/helpers/notification_api.dart';
-import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
-import 'package:ramadan_kareem/shared/components/constants.dart';
+import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
 
 void readyShowScheduledNotification(BuildContext context) async {
 
