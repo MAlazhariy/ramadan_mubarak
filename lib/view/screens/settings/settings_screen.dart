@@ -2,25 +2,16 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ramadan_kareem/helpers/notification_api.dart';
-import 'package:ramadan_kareem/modules/settings/admin/admin_screen.dart';
 import 'package:ramadan_kareem/helpers/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/view/screens/settings/update_data_screen.dart';
 import 'package:ramadan_kareem/view/widgets/custom_dialog.dart';
 import 'package:ramadan_kareem/view/widgets/dialog_buttons.dart';
-import 'package:ramadan_kareem/helpers/push_and_finish.dart';
-import 'package:ramadan_kareem/shared/components/constants.dart';
-import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen({super.key});
-
-  final users =
-      userModel?.data.where((user) => user.deviceId == deviceId).toList();
-
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +35,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     /// تعديل الدعاء أو الاسم
-                    if (deviceId != null &&
-                        (deviceId?.isNotEmpty??false) &&
-                        (users?.isNotEmpty??false))
+                    if (deviceId != null && (deviceId?.isNotEmpty ?? false) && (users?.isNotEmpty ?? false))
                       ListTile(
                         title: Text(
                           'تعديل الاسم أو الدعاء',
@@ -93,8 +82,7 @@ class SettingsScreen extends StatelessWidget {
                           color: greyColor,
                         ),
                       ),
-                      leading:
-                          const Icon(Icons.notification_important_outlined),
+                      leading: const Icon(Icons.notification_important_outlined),
                     ),
 
                     /// التواصل مع المبرمج
@@ -281,32 +269,33 @@ class SettingsScreen extends StatelessWidget {
                         // }
 
                         /// get nested limitation
-                        try{
-                          if(lastDoc == null){
-                            await FirebaseFirestore.instance.collection('users').orderBy('time').limit(1).get().then((value){
+                        try {
+                          if (lastDoc == null) {
+                            await FirebaseFirestore.instance.collection('users').orderBy('time').limit(1).get().then((value) {
                               lastDoc = value.docs.first;
                               lastId = lastDoc?.id;
                             });
                           }
                           log('last document: id:"${lastDoc?.id}, name:${lastDoc?.data()?['name']}"');
 
-
                           const int limit = 20;
                           int _dataSize = 0;
 
-                          QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('users').orderBy('time').startAfterDocument(lastDoc!).limit(limit).get();
+                          QuerySnapshot<Map<String, dynamic>> data =
+                              await FirebaseFirestore.instance.collection('users').orderBy('time').startAfterDocument(lastDoc!).limit(limit).get();
                           log('--- size = ${data.size}');
                           _dataSize = data.size;
                           data.docs.forEach((user) {
                             log('name: ${user['name']}');
                           });
 
-                          if(_dataSize >= limit){
+                          if (_dataSize >= limit) {
                             lastDoc = data.docs.last;
                           } else {
                             final int remainingDataSize = limit - _dataSize;
                             log('---- getting remaining $remainingDataSize data from Firebase');
-                            QuerySnapshot<Map<String, dynamic>> remainData = await FirebaseFirestore.instance.collection('users').orderBy('time').limit(remainingDataSize).get();
+                            QuerySnapshot<Map<String, dynamic>> remainData =
+                                await FirebaseFirestore.instance.collection('users').orderBy('time').limit(remainingDataSize).get();
                             _dataSize += remainData.size;
                             log('--- total size = $_dataSize');
                             remainData.docs.forEach((user) {
@@ -315,8 +304,7 @@ class SettingsScreen extends StatelessWidget {
 
                             lastDoc = remainData.docs.last;
                           }
-
-                        } catch(e){
+                        } catch (e) {
                           log('إلحق يزميلي إيرور: $e');
                         }
                       },
@@ -336,7 +324,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                       ),
                       onTap: () async {
-                        await FirebaseFirestore.instance.collection('users').orderBy('time').count().get().then((value){
+                        await FirebaseFirestore.instance.collection('users').orderBy('time').count().get().then((value) {
                           var count = value.count;
                           debugPrint('count is: $count');
                         });
@@ -398,6 +386,5 @@ String mailUs({
   const String email = 'malazhariy.ramadankareem@gmail.com';
   return 'mailto:$email?subject=$subject&body=$body';
 }
-
 
 int counter = 0;

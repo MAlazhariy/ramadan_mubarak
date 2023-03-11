@@ -1,8 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ramadan_kareem/providers/auth_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
+import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
 import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
+import 'package:ramadan_kareem/utils/resources/font_manager.dart';
+import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
+import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/widgets/alert_dialog/alert_dialog.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> init() async {
     if (!mounted) return;
-    final responseModel = await Provider.of<SplashProvider>(context, listen: false).getConfig();
+    final responseModel = await Provider.of<SplashProvider>(context, listen: false).initAppData();
 
     if (responseModel.isSuccess) {
       _onSuccessConfig();
@@ -36,14 +41,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _onSuccessConfig() async {
     late final String screenRoute;
-    final config = Provider.of<SplashProvider>(context, listen: false).configModel!;
 
     // set navigation route name
-    if (!config.isSchoolActive) {
-      screenRoute = Routes.getUpdateAppScreen(isUpdate: false);
-    } else if (config.appConfig.status && config.appConfig.minVersion > AppConstants.appVersion) {
-      screenRoute = Routes.getUpdateAppScreen(isUpdate: true);
-    } else if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
+    if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
       screenRoute = Routes.getDashboardScreen();
     } else if (Provider.of<SplashProvider>(context, listen: false).isFirstOpen) {
       screenRoute = Routes.getOnBoardScreen();
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       screenRoute = Routes.getLoginScreen();
     }
 
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     Navigator.pushNamedAndRemoveUntil(context, screenRoute, (route) => false);
   }
@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 init();
               });
             },
-            child: Text(
+            child: const Text(
               "حاول مرة أخرى",
             )),
       ],
