@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/helpers/notification_ready_funcs.dart';
+import 'package:ramadan_kareem/helpers/push_to.dart';
 import 'package:ramadan_kareem/view/screens/settings/update_data_screen.dart';
 import 'package:ramadan_kareem/view/widgets/custom_dialog.dart';
 import 'package:ramadan_kareem/view/widgets/dialog_buttons.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
+import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     /// تعديل الدعاء أو الاسم
-                    if (deviceId != null && (deviceId?.isNotEmpty ?? false) && (users?.isNotEmpty ?? false))
+                    if (deviceId != null && (deviceId?.isNotEmpty ?? false))
                       ListTile(
                         title: Text(
                           'تعديل الاسم أو الدعاء',
@@ -222,7 +225,7 @@ class SettingsScreen extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          pushTo(context, const AdminScreen());
+                          //
                         },
                         leading: const Icon(Icons.admin_panel_settings),
                       ),

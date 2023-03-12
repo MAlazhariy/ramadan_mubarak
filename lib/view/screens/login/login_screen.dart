@@ -1,32 +1,23 @@
-// ignore_for_file: deprecated_member_use
 
 import 'dart:developer';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
+import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
-import 'package:ramadan_kareem/ztrash/users_model.dart';
 import 'package:ramadan_kareem/view/screens/login/done_screen.dart';
-import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
-import 'package:ramadan_kareem/view/widgets/custom_dialog.dart';
-import 'package:ramadan_kareem/view/widgets/dialog_buttons.dart';
 import 'package:ramadan_kareem/helpers/dismiss_keyboard.dart';
 import 'package:ramadan_kareem/helpers/network_check.dart';
 import 'package:ramadan_kareem/helpers/push_and_finish.dart';
 import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
 import 'package:ramadan_kareem/view/widgets/custom_text_form.dart';
-import 'package:ramadan_kareem/shared/components/constants.dart';
-import 'package:ramadan_kareem/shared/network/firebase_funcs.dart';
 import 'package:sizer/sizer.dart';
 
 enum Field {
-  // ignore: constant_identifier_names
-  NAME,
-  DOAA,
+  name,
+  doaa,
 }
 
 class LoginScreen extends StatefulWidget {
@@ -79,17 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
             docId: deviceId??name,
           );
 
-          userModel?.data.add(UserDataModel.fromMap({
-            'name': name,
-            'doaa': doaa,
-            'device_id': deviceId,
-            'approved': true,
-            'time': time,
-            'nameUpdate': '',
-            'doaaUpdate': '',
-            'pendingEdit': false,
-          }));
-
           if (!Cache.isNotificationsDone()) {
             // Go to DoneScreen
             pushAndFinish(context, const DoneScreen());
@@ -102,12 +82,12 @@ class _LoginScreenState extends State<LoginScreen> {
             loading = false;
           });
           log(error.toString());
-          SnkBar(context, error.toString());
+          SnkBar.show(context, message: error.toString());
         });
       } else {
-        SnkBar(
+        SnkBar.show(
           context,
-          'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
+          message: 'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
           seconds: 4,
           backgroundColor: Colors.red,
           textStyle: const TextStyle(
@@ -191,14 +171,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'الاسم ثنائي',
                       prefixIcon: Icon(
                         Icons.account_circle_outlined,
-                        color: _field == Field.NAME ? const Color(0x7CFF0028) : const Color(0x7C323F48),
+                        color: _field == Field.name ? const Color(0x7CFF0028) : const Color(0x7C323F48),
                         size: 19.sp,
                       ),
                       // onChanged: (value) {
                       // },
                       onTap: () {
                         setState(() {
-                          _field = Field.NAME;
+                          _field = Field.name;
                         });
                       },
                     ),
@@ -217,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'اكتب دعاءك المفضل بصيغة الغائب، مثال: "اللهم اغفر له"',
                       prefixIcon: Icon(
                         Icons.article_outlined,
-                        color: _field == Field.DOAA ? const Color(0x7CFF0028) : const Color(0x7C323F48),
+                        color: _field == Field.doaa ? const Color(0x7CFF0028) : const Color(0x7C323F48),
                         size: 19.sp,
                       ),
                       // onChanged: (value) {
@@ -225,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // },
                       onTap: () {
                         setState(() {
-                          _field = Field.DOAA;
+                          _field = Field.doaa;
                         });
                       },
                     ),

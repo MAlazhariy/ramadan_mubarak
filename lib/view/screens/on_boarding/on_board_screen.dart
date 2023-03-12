@@ -1,16 +1,15 @@
-import 'package:ams_garaihy/providers/auth_provider.dart';
-import 'package:ams_garaihy/providers/splash_provider.dart';
-import 'package:ams_garaihy/utils/resources/color_manger.dart';
-import 'package:ams_garaihy/utils/routes.dart';
-import 'package:ams_garaihy/view/screens/on_boarding/widgets/page_3.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/splash_provider.dart';
+import 'package:ramadan_kareem/utils/resources/color_manger.dart';
+import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'widgets/page_1.dart';
 import 'widgets/page_2.dart';
+import 'widgets/page_3.dart';
 
 class OnBoardScreen extends StatefulWidget {
   const OnBoardScreen({Key? key}) : super(key: key);
@@ -52,7 +51,7 @@ class OnBoardScreenState extends State<OnBoardScreen> {
               //     alignment: AlignmentDirectional.topEnd,
               //     child: GestureDetector(
               //       child: Text(
-              //         !isLast ? 'skip'.tr() : '',
+              //         !isLast ? 'skip' : '',
               //         style: const TextStyle(
               //           color: kGreyTextColor,
               //           fontSize: 9,
@@ -101,7 +100,7 @@ class OnBoardScreenState extends State<OnBoardScreen> {
               LayoutBuilder(
                 builder: (_, constraints) {
                   return Tooltip(
-                    message: isLast ? 'finish'.tr() : 'next'.tr(),
+                    message: isLast ? 'إنهاء' : 'التالي',
                     child: MaterialButton(
                       autofocus: true,
                       onPressed: () {
@@ -111,7 +110,7 @@ class OnBoardScreenState extends State<OnBoardScreen> {
                             context,
                             Provider.of<AuthProvider>(context, listen: false).isLoggedIn
                                 ? Routes.getDashboardScreen()
-                                : Routes.getSignUpScreen(),
+                                : Routes.getLoginScreen(),
                           );
                         } else {
                           /// navigate to next page
@@ -140,7 +139,7 @@ class OnBoardScreenState extends State<OnBoardScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            isLast ? 'finish'.tr() : 'next'.tr(),
+                            isLast ? 'إنهاء' : 'التالي',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,

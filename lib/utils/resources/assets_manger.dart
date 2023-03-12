@@ -34,4 +34,5 @@ class ImageRes {
   static const String paper = "$_baseImagePath/paper.jpg";
   static const String sectionIcon = "$_baseImagePath/semester_icon.png";
   static const String emptyBoxIcon = "$_baseImagePath/empty_box.png";
+  static const String placeholder = "$_baseImagePath/placeholder.webp";
 }

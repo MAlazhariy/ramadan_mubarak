@@ -26,9 +26,6 @@ class SplashRepo {
       // init local Notifications
       await NotificationApi.init(true);
 
-      // todo: get pagination data
-      // get data here from remote or local
-
       return ApiResponse.withSuccess();
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.handle(e));

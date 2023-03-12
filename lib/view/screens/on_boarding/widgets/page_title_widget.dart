@@ -1,5 +1,5 @@
-import 'package:ams_garaihy/utils/resources/color_manger.dart';
 import 'package:flutter/material.dart';
+import 'package:ramadan_kareem/utils/resources/color_manger.dart';
 
 class PageTitleWidget extends StatelessWidget {
   const PageTitleWidget({

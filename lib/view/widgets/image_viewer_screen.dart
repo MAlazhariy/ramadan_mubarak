@@ -1,5 +1,4 @@
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -59,7 +58,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
           // close button
           SafeArea(
             child: Tooltip(
-              message: 'back'.tr(),
+              message: 'رجوع',
               child: MaterialButton(
                 onPressed: () {
                   Navigator.pop(context);

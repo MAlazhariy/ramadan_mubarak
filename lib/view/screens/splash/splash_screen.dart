@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/internet_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
 import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
@@ -9,6 +10,7 @@ import 'package:ramadan_kareem/utils/resources/font_manager.dart';
 import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/widgets/alert_dialog/alert_dialog.dart';
+import 'package:ramadan_kareem/view/widgets/internet_consumer_builder.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -88,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return InternetConsumerBuilder(
       builder: (context, provider) {
         return Scaffold(
-            backgroundColor: const Color(0xFF1B1B85),
+            backgroundColor: Colors.white,
             body: Stack(
               children: [
                 // background

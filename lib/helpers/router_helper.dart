@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:fluro/fluro.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
+import 'package:ramadan_kareem/view/screens/blocked_user/blocked_user_screen.dart';
 import 'package:ramadan_kareem/view/screens/dashboard/dashboard_screen.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/view/screens/login/login_screen.dart';
@@ -54,6 +55,10 @@ class RouterHelper {
 
   static final Handler _settingsHandler = Handler(handlerFunc: (context, Map<String, List<String>> params) {
     return const SettingsScreen();
+  });
+
+  static final Handler _blockedScreenHandler = Handler(handlerFunc: (context, Map<String, List<String>> params) {
+    return const BlockedScreen();
   });
 
 

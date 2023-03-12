@@ -2,14 +2,12 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ramadan_kareem/ztrash/users_model.dart';
-import 'package:ramadan_kareem/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/helpers/dismiss_keyboard.dart';
 import 'package:ramadan_kareem/helpers/network_check.dart';
 import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
 import 'package:ramadan_kareem/view/widgets/custom_text_form.dart';
-import 'package:ramadan_kareem/shared/components/constants.dart';
-import 'package:ramadan_kareem/shared/styles.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
+import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class UpdateUserDataScreen extends StatefulWidget {
@@ -24,7 +22,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
-  var users = userModel?.data.where((user) => user.deviceId == deviceId);
+  var users = [];
 
   @override
   void initState() {
@@ -32,9 +30,9 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
 
     hasNetwork().then((connected) {
       if (!connected) {
-        SnkBar(
+        SnkBar.show(
           context,
-          'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
+          message: 'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
           seconds: 4,
           backgroundColor: Colors.red,
           textStyle: const TextStyle(
@@ -227,9 +225,9 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
           //   log('try catch error in when edit data: ' + e.toString());
           // }
 
-          SnkBar(
+          SnkBar.show(
             context,
-            'تم حفظ التعديلات بنجاح، وبانتظار مراجعة المبرمج.',
+            message: 'تم حفظ التعديلات بنجاح، وبانتظار مراجعة المبرمج.',
             seconds: 3,
             backgroundColor: Colors.green,
             textStyle: const TextStyle(
@@ -245,16 +243,16 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
 
         }).onError((error, stackTrace) {
           log('error when changeData ' + error.toString());
-          SnkBar(
+          SnkBar.show(
             context,
-            error.toString(),
+            message: error.toString(),
             backgroundColor: Colors.red,
           );
         });
       } else {
-        SnkBar(
+        SnkBar.show(
           context,
-          'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
+          message: 'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
           seconds: 4,
           backgroundColor: Colors.red,
           textStyle: const TextStyle(

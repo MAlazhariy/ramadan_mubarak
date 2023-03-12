@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'package:hive/hive.dart';
-import 'package:ramadan_kareem/ztrash/users_model.dart';
-import 'package:ramadan_kareem/shared/components/constants.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 
 class Cache {
   static final box = Hive.box('box');
@@ -90,7 +88,7 @@ class Cache {
   }
 
   static int? getLength() {
-    return userModel?.data.where((user) => user.approved == true).toList().length;
+    return 1;
   }
 
 

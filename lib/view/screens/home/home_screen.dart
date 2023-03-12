@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:ramadan_kareem/helpers/push_to.dart';
+import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/components/description_text.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/components/doaa_text.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/components/headline_text.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:ramadan_kareem/ztrash/adeya.dart';
 import 'package:ramadan_kareem/helpers/notification_ready_funcs.dart';
@@ -15,11 +21,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String name = '';
-  String doaa = '';
+  String name = 'Test name';
+  String doaa = 'Test doaa here';
   int counter = 0;
-
-  // final List<UserDataModel> users = userModel?.data.where((user) => user.approved == true).toList();
 
   void next() {
     setState(() {
@@ -27,9 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
       Cache.setCounter(counter);
 
       int index = counter % Cache.getLength()!;
-
-      name = userModel?.data.where((user) => user.approved == true).toList()[index].name ?? '';
-      doaa = userModel?.data.where((user) => user.approved == true).toList()[index].doaa ?? '';
     });
   }
 
@@ -39,8 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
       // Cache.setCounter(counter);
       int? index = counter % Cache.getLength()!;
 
-      name = userModel?.data.where((user) => user.approved == true).toList()[index].name ?? '';
-      doaa = userModel?.data.where((user) => user.approved == true).toList()[index].doaa ?? '';
     });
   }
 
@@ -48,9 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       counter = getRandomIndex();
       Cache.setCounter(counter);
-
-      name = userModel?.data.where((user) => user.approved == true).toList()[counter].name ?? '';
-      doaa = userModel?.data.where((user) => user.approved == true).toList()[counter].doaa ?? '';
     });
   }
 
@@ -69,8 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Cache.setCounter(counter);
 
         // get name & doaa
-        name = userModel?.data.where((user) => user.approved == true).toList()[counter].name ?? '';
-        doaa = userModel?.data.where((user) => user.approved == true).toList()[counter].doaa ?? '';
+
 
         // set IsFirstTime to false
         Cache.setIsFirstTime(false);
@@ -85,9 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Cache.setCounter(counter);
           index = counter % len;
-
-          name = userModel?.data.where((user) => user.approved == true).toList()[index].name ?? '';
-          doaa = userModel?.data.where((user) => user.approved == true).toList()[index].doaa ?? '';
         }
       }
     });
@@ -108,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var hijriDay = HijriCalendar.fromDate(DateTime.now()).toFormat('dd').padLeft(2, '٠');
     var hijriDay = HijriCalendar.fromDate(DateTime.now()).toFormat('dd');
     var hijriMY = HijriCalendar.fromDate(DateTime.now()).toFormat('MMMM yyyy');
 
@@ -506,15 +497,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          pushTo(
-            context,
-            SettingsScreen(),
-          );
-        },
-        child: const Icon(Icons.settings),
       ),
     );
   }

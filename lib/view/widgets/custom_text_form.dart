@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ramadan_kareem/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class CustomTextForm extends StatelessWidget {

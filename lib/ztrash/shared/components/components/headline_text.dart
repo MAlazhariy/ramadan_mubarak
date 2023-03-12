@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ramadan_kareem/shared/styles.dart';
+import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
 class HeadlineText extends StatelessWidget {

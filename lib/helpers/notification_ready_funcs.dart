@@ -8,9 +8,9 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:ramadan_kareem/helpers/notification_api.dart';
 import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
 import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 
 void readyShowScheduledNotification(BuildContext context) async {
-
   Coordinates coordinates;
 
   if(Cache.isCoordinatesSaved()){
@@ -32,13 +32,13 @@ void readyShowScheduledNotification(BuildContext context) async {
     int hijriMonthInt = HijriCalendar.fromDate(date).hMonth;
 
     if (hijriMonthInt != 9) {
-      var users = userModel?.data.where((element) => element.deviceId == deviceId);
+      var users = [];
       String callUser = '';
-      if(users?.isNotEmpty??false){
+      if(users.isNotEmpty??false){
         callUser = ' يا ${users!.first.name}';
       }
 
-      SnkBar(context, 'تم ضبط الإشعارات بنجاح ✅');
+      SnkBar.show(context, message: 'تم ضبط الإشعارات بنجاح ✅');
 
       NotificationApi.showScheduledNotification(
         title: 'عيد سعيد 🎉🎈',
@@ -63,8 +63,8 @@ void readyShowScheduledNotification(BuildContext context) async {
     );
 
     int _random = getRandomIndex();
-    String notifiName = userModel?.data[_random].name ??'';
-    String notifiDoaa = userModel?.data[_random].doaa ??'';
+    String notifiName = '';
+    String notifiDoaa = '';
 
     var scheduledDate = DateTime(
       date.year,

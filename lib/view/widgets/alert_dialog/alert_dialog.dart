@@ -1,7 +1,6 @@
 import 'package:ramadan_kareem/utils/resources/color_manger.dart';
 import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
 import 'package:ramadan_kareem/utils/resources/font_manager.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showErrorDialog({
@@ -56,7 +55,7 @@ Future<void> showErrorDialog({
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title ?? 'error_occurred'.tr(),
+                        title ?? 'حدث خطأ',
                         style: const TextStyle(
                           color: kWrongAnswerColor,
                           fontWeight: FontWeight.w900,

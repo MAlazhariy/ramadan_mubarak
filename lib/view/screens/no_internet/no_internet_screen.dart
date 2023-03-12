@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:ams_garaihy/providers/internet_provider_provider.dart';
-import 'package:ams_garaihy/utils/resources/color_manger.dart';
-import 'package:ams_garaihy/utils/resources/dimensions_manager.dart';
-import 'package:ams_garaihy/utils/resources/font_manager.dart';
-import 'package:ams_garaihy/utils/resources/text_styles_manager.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ramadan_kareem/providers/internet_provider.dart';
+import 'package:ramadan_kareem/utils/resources/color_manger.dart';
+import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
+import 'package:ramadan_kareem/utils/resources/font_manager.dart';
+import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
 
 class NoInternetScreen extends StatefulWidget {
   const NoInternetScreen({Key? key}) : super(key: key);
@@ -63,14 +61,14 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
             ),
             const SizedBox(height: AppSize.s14),
             Text(
-              'no_internet'.tr(),
+              'لا يوجد اتصال بالإنترنت',
               style: kBoldFontStyle.copyWith(
                 fontSize: FontSize.s20,
               ),
               textAlign: TextAlign.center,
             ),
-            Text(
-              'check_internet'.tr(),
+            const Text(
+              "يرجى التحقق من اتصال الانترنت الخاص بك",
               style: kRegularFontStyle,
             ),
             const SizedBox(height: AppSize.s10),
@@ -94,7 +92,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
                       )
                     : MaterialButton(
                         onPressed: _onPressed,
-                        child: Text('try_again'.tr()),
+                        child: const Text('محاولة مرة أخرى'),
                       );
               },
             ),
