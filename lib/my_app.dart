@@ -12,8 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    precacheImage(const AssetImage(ImageRes.logoReversed), context);
-    precacheImage(const AssetImage(ImageRes.splashBG), context);
+    // precacheImage(const AssetImage(ImageRes.logoReversed), context);
+    // precacheImage(const AssetImage(ImageRes.splashBG), context);
 
     return Sizer(
       builder: (context, orientation, deviceType) {

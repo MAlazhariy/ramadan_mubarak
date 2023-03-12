@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
+import 'package:ramadan_kareem/view/screens/share_app/share_app_screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
+    ShareAppScreen(),
     SettingsScreen(),
   ];
 
@@ -34,6 +36,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           SalomonBottomBarItem(
             icon: const Icon(Icons.home_rounded),
             title: const Text("الرئيسية"),
+          ),
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.favorite),
+            title: const Text("صدقة جارية"),
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.settings),

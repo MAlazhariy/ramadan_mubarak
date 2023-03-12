@@ -3,6 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ramadan_kareem/data/data_source/remote/dio/dio_client.dart';
 import 'package:ramadan_kareem/data/data_source/remote/dio/logging_interceptor.dart';
+import 'package:ramadan_kareem/data/repository/auth_repo.dart';
+import 'package:ramadan_kareem/data/repository/splash_repo.dart';
+import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/internet_provider.dart';
+import 'package:ramadan_kareem/providers/splash_provider.dart';
 import 'package:ramadan_kareem/utils/app_uri.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,11 +20,13 @@ class Di {
     sl.registerLazySingleton(() => DioClient(AppUri.BASE_URL, sl(), sharedPreferences: sl(), loggingInterceptor: sl()));
 
     // Repositories
-    // sl.registerLazySingleton(() => AuthRepo(sharedPreferences: sl(), dioClient: sl()));
+    sl.registerLazySingleton(() => SplashRepo(sharedPreferences: sl()));
+    sl.registerLazySingleton(() => AuthRepo(sharedPreferences: sl(), dioClient: sl()));
 
     // Providers
-    // sl.registerFactoryParam<AuthProvider, ProfileProvider, void>((ProfileProvider profileProvider, _) => AuthProvider(authRepo: sl(), profileProvider: profileProvider));
-    // sl.registerFactory(() => SplashProvider(sl()));
+    sl.registerFactory(() => SplashProvider(sl()));
+    sl.registerFactory(() => InternetProvider());
+    sl.registerFactory(() => AuthProvider(authRepo: sl()));
 
     // External
     final sharedPreferences = await SharedPreferences.getInstance();

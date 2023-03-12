@@ -1,10 +1,13 @@
+import 'package:hijri/hijri_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
 import 'package:ramadan_kareem/data/model/base/api_response.dart';
 import 'package:ramadan_kareem/data/model/base/error_response_model.dart';
 import 'package:ramadan_kareem/helpers/notification_api.dart';
 import 'package:ramadan_kareem/utils/app_string_keys.dart';
+import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class SplashRepo {
   SplashRepo({
@@ -25,6 +28,13 @@ class SplashRepo {
 
       // init local Notifications
       await NotificationApi.init(true);
+      // init TimeZone
+      tz.initializeTimeZones();
+
+      // get init data
+      await initGetAndSaveData();
+
+      HijriCalendar.setLocal('ar');
 
       return ApiResponse.withSuccess();
     } catch (e) {
