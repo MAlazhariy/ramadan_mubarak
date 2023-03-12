@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 
-class Cache {
+class CacheHelper {
   static final box = Hive.box('box');
 
   /// login

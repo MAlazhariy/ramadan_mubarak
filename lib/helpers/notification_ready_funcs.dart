@@ -13,12 +13,12 @@ import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 void readyShowScheduledNotification(BuildContext context) async {
   Coordinates coordinates;
 
-  if(Cache.isCoordinatesSaved()){
-    coordinates = Coordinates(Cache.getLatitude(), Cache.getLongitude());
+  if(CacheHelper.isCoordinatesSaved()){
+    coordinates = Coordinates(CacheHelper.getLatitude(), CacheHelper.getLongitude());
   } else {
     Position position = await _determinePosition(context);
     coordinates = Coordinates(position.latitude, position.longitude);
-    Cache.setCoordinates(coordinates.latitude, coordinates.longitude);
+    CacheHelper.setCoordinates(coordinates.latitude, coordinates.longitude);
   }
 
   final calculationParameters =
@@ -52,7 +52,7 @@ void readyShowScheduledNotification(BuildContext context) async {
         id: 32,
       );
 
-      Cache.notificationsDone();
+      CacheHelper.notificationsDone();
       break;
     }
 

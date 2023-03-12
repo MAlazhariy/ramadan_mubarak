@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/providers/internet_provider.dart';
 import 'package:ramadan_kareem/utils/resources/color_manger.dart';
@@ -49,7 +50,8 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
+      body: Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(AppSize.s16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

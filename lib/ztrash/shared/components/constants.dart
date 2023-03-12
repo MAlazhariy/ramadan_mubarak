@@ -12,32 +12,32 @@ Future<void> initGetAndSaveData() async {
   final bool connected = await hasNetwork();
 
   /// check id
-  if (!Cache.isLoginChecked() && connected) {
+  if (!CacheHelper.isLoginChecked() && connected) {
     dev.log('started search for id');
 
     if (deviceId != null && (deviceId?.isNotEmpty??false)) {
       // search by device id
       var users = [];
       if (users.isNotEmpty??false) {
-        Cache.setUserLoginInfo(
+        CacheHelper.setUserLoginInfo(
           name: users.first.name,
           doaa: users.first.doaa,
           time: users.first.time,
           docId: users.first.deviceId,
         );
-        Cache.hasLoggedIn();
+        CacheHelper.hasLoggedIn();
         dev.log('$deviceId logged in before 👍');
       }
     }
     dev.log('checked');
-    Cache.loginHasChecked();
+    CacheHelper.loginHasChecked();
   }
 }
 
 int getRandomIndex() {
   // todo: check getRandomIndex
   try {
-    return Random().nextInt(Cache.getLength()!);
+    return Random().nextInt(CacheHelper.getLength()!);
   } catch (e) {
     return 0;
   }

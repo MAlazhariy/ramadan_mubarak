@@ -61,16 +61,16 @@ class _LoginScreenState extends State<LoginScreen> {
             loading = false;
           });
 
-          Cache.hasLoggedIn();
+          CacheHelper.hasLoggedIn();
 
-          Cache.setUserLoginInfo(
+          CacheHelper.setUserLoginInfo(
             name: name,
             doaa: doaa,
             time: time,
             docId: deviceId??name,
           );
 
-          if (!Cache.isNotificationsDone()) {
+          if (!CacheHelper.isNotificationsDone()) {
             // Go to DoneScreen
             pushAndFinish(context, const DoneScreen());
           } else {

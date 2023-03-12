@@ -28,9 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void next() {
     setState(() {
       ++counter;
-      Cache.setCounter(counter);
+      CacheHelper.setCounter(counter);
 
-      int index = counter % Cache.getLength()!;
+      int index = counter % CacheHelper.getLength()!;
     });
   }
 
@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       --counter;
       // Cache.setCounter(counter);
-      int? index = counter % Cache.getLength()!;
+      int? index = counter % CacheHelper.getLength()!;
 
     });
   }
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void random() {
     setState(() {
       counter = getRandomIndex();
-      Cache.setCounter(counter);
+      CacheHelper.setCounter(counter);
     });
   }
 
@@ -57,34 +57,34 @@ class _HomeScreenState extends State<HomeScreen> {
     /// if it's first time set a random value to counter
     /// and save counter .. then set isFirstTime to false
     setState(() {
-      if (Cache.isFirstTime()) {
+      if (CacheHelper.isFirstTime()) {
         // get counter random value
         int index = getRandomIndex();
         counter = index;
         // save new counter value to cache
-        Cache.setCounter(counter);
+        CacheHelper.setCounter(counter);
 
         // get name & doaa
 
 
         // set IsFirstTime to false
-        Cache.setIsFirstTime(false);
+        CacheHelper.setIsFirstTime(false);
       } else {
-        int len = Cache.getLength()!;
+        int len = CacheHelper.getLength()!;
 
         if (len != 0) {
           // get counter from cache plus one
-          counter = Cache.getCounter() + 1;
+          counter = CacheHelper.getCounter() + 1;
           // set index value
           int index = counter;
 
-          Cache.setCounter(counter);
+          CacheHelper.setCounter(counter);
           index = counter % len;
         }
       }
     });
 
-    if (!Cache.isNotificationsDone()) {
+    if (!CacheHelper.isNotificationsDone()) {
       readyShowScheduledNotification(context);
     }
 

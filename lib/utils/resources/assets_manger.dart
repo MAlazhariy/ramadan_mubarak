@@ -1,38 +1,19 @@
 
 class ImageRes {
   static const String _baseImagePath = "assets/images";
+  static _ImageResSVG svg = _ImageResSVG();
 
-  static const String cancel = "$_baseImagePath/cancel.png";
-  static const String cardBG1 = "$_baseImagePath/cardbg1.png";
-  static const String debitCardIcon = "$_baseImagePath/debitcardicon.png";
-  static const String editProfileIcon = "$_baseImagePath/editprofileicon.png";
-  static const String filter = "$_baseImagePath/filter.png";
-  static const String google = "$_baseImagePath/google.png";
-  static const String lamp = "$_baseImagePath/lamp.png";
-  static const String languageIcon = "$_baseImagePath/languageicon.png";
-  static const String logoutIcon = "$_baseImagePath/logouticon.png";
-  static const String marketing = "$_baseImagePath/marketing.png";
-  static const String notification = "$_baseImagePath/notification.png";
-  static const String notificationIconRounded = "$_baseImagePath/notific.png";
-  static const String notificationIcon = "$_baseImagePath/notificationicon.png";
-  static const String onBoard = "$_baseImagePath/onboard.png";
-  static const String onBoard1 = "$_baseImagePath/onboard1.png";
-  static const String onBoard2 = "$_baseImagePath/onboard2.png";
-  static const String onBoard3 = "$_baseImagePath/onboard3.png";
-  static const String paymentDetailsIcon = "$_baseImagePath/paymentdetailsicon.png";
-  static const String paymentSuccess = "$_baseImagePath/paymentsuccess.png";
-  static const String paypal = "$_baseImagePath/paypal.png";
-  static const String photography = "$_baseImagePath/photography.png";
-  static const String logo = "$_baseImagePath/logo.png";
-  static const String logoReversed = "$_baseImagePath/logo_reversed.png";
-  static const String splashBG = "$_baseImagePath/splashbg.png";
-  static const String star = "$_baseImagePath/star.png";
-  static const String arabicFlag = "$_baseImagePath/arabic_flag.png";
-  static const String englishFlag = "$_baseImagePath/english_flag.png";
-  static const String maintenance = "$_baseImagePath/maintenance.png";
-  static const String updateApp = "$_baseImagePath/update_app.png";
-  static const String paper = "$_baseImagePath/paper.jpg";
-  static const String sectionIcon = "$_baseImagePath/semester_icon.png";
-  static const String emptyBoxIcon = "$_baseImagePath/empty_box.png";
-  static const String placeholder = "$_baseImagePath/placeholder.webp";
+  static const onBoard1 = "$_baseImagePath/onboard1.png";
+  static const onBoard2 = "$_baseImagePath/onboard2.png";
+  static const onBoard3 = "$_baseImagePath/onboard3.png";
+  static const placeholder = "$_baseImagePath/placeholder.webp";
+  static const emptyBoxIcon = "$_baseImagePath/empty_box.png";
+}
+
+class _ImageResSVG {
+  static const _baseImagePath = "assets/images";
+
+  final splashBG = "$_baseImagePath/splash_bg.svg";
+  final bonyanLogo = "$_baseImagePath/bonyan_logo.svg";
+  final quoteIcon = "$_baseImagePath/quote_icon.svg";
 }

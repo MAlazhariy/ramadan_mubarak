@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ramadan_kareem/helpers/router_helper.dart';
 import 'package:ramadan_kareem/utils/constants.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
@@ -12,8 +13,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // precacheImage(const AssetImage(ImageRes.logoReversed), context);
-    // precacheImage(const AssetImage(ImageRes.splashBG), context);
+    // precacheImage(AssetImage(ImageRes.svg.splashBG), context);
+    // precacheImage(AssetImage(ImageRes.svg.bonyanLogo), context);
 
     return Sizer(
       builder: (context, orientation, deviceType) {
