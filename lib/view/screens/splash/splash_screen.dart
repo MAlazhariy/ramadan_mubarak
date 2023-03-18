@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:ramadan_kareem/helpers/clipboard_helper.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
 import 'package:ramadan_kareem/providers/internet_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
@@ -13,6 +14,7 @@ import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/widgets/alert_dialog/alert_dialog.dart';
 import 'package:ramadan_kareem/view/widgets/internet_consumer_builder.dart';
+import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
 import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 
@@ -24,7 +26,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> init() async {
-    if (!mounted) return;
+    Provider.of<SplashProvider>(context, listen: false).getRandomHadeeth();
     final responseModel = await Provider.of<SplashProvider>(context, listen: false).initAppData();
 
     if (responseModel.isSuccess) {
@@ -59,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
-    // Navigator.pushNamedAndRemoveUntil(context, screenRoute, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(context, screenRoute, (route) => false);
   }
 
   void _onFailedConfig(BuildContext context, String errorMsg) {
@@ -108,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   alignment: Alignment.topCenter,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 35),
+                      padding: const EdgeInsets.only(top: 18),
                       child: Container(
                         // alignment: Alignment.center,
                         // height: double.infinity,
@@ -117,59 +118,67 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppPadding.p30,
-                          vertical : AppPadding.p20,
+                          vertical: AppPadding.p20,
                         ),
                         decoration: BoxDecoration(
                           color: kWhiteColor,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          border: Border.all(
-                            color: pinkColor,
-                            strokeAlign: 0,
-                            width: 1.8,
-                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(15)),
+                          // border: Border.all(
+                          //   color: pinkColor,
+                          //   strokeAlign: 0,
+                          //   width: 1.8,
+                          // ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.10),
                               blurRadius: 4,
                               spreadRadius: 0,
-                              offset: const Offset(1,3),
+                              offset: const Offset(1, 3),
                             ),
                           ],
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // icon
-                            // SvgPicture.asset(
-                            //   ImageRes.svg.quoteIcon,
-                            //   height: 38,
-                            // ),
-                            const SizedBox(height: AppSize.s20),
-                            // quote
-                            Text(
-                              'قَالَ رَسُول اللَّه ﷺ: (دَعْوةُ المرءِ المُسْلِمِ لأَخيهِ بِظَهْرِ الغَيْبِ مُسْتَجَابةٌ، عِنْد رأْسِهِ ملَكٌ مُوكَّلٌ كلَّمَا دَعَا لأَخِيهِ بخيرٍ قَال المَلَكُ المُوكَّلُ بِهِ: آمِينَ، ولَكَ بمِثْلٍ).',
-                              style: kBoldFontStyle.copyWith(
-                                fontSize: 14.sp,
-                                height: 1.65,
-                              ),
-                              textAlign: TextAlign.justify,
-                            ),
-                            const SizedBox(height: AppSize.s20),
-                          ],
+                        child: Consumer<SplashProvider>(
+                          builder: (context, splashProvider, _) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // icon
+                                // SvgPicture.asset(
+                                //   ImageRes.svg.quoteIcon,
+                                //   height: 38,
+                                // ),
+                                const SizedBox(height: AppSize.s20),
+                                // quote text
+                                Text(
+                                  splashProvider.hadeeth,
+                                  style: kBoldFontStyle.copyWith(
+                                    fontSize: 12.5.sp,
+                                    height: 1.65,
+                                  ),
+                                  textAlign: TextAlign.justify,
+                                ),
+                                const SizedBox(height: AppSize.s20),
+                                // copy
+                                if (splashProvider.hadeeth.isNotEmpty)
+                                  IconButton(
+                                    onPressed: () async {
+                                      await ClipboardHelper.copy(splashProvider.hadeeth);
+                                      if (!mounted) return;
+                                      SnkBar.showSuccess(context, 'تم النسخ');
+                                    },
+                                    icon: const Icon(Icons.copy, size: 20),
+                                  ),
+                                // const SizedBox(height: AppSize.s12),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: kWhiteColor,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: const EdgeInsets.all(AppPadding.p15),
-                      child: SvgPicture.asset(
-                        ImageRes.svg.quoteIcon,
-                        height: 38,
-                        color: pinkColor,
-                      ),
+                    SvgPicture.asset(
+                      ImageRes.svg.quoteIcon,
+                      height: 32,
+                      color: pinkColor,
                     ),
                   ],
                 ),

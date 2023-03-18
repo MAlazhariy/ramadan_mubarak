@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
@@ -44,5 +47,10 @@ class SplashRepo {
 
   Future<bool> setIsAppFirstOpen([bool value = false]) async {
     return await sharedPreferences.setBool(AppLocalKeys.FIRST_OPEN, value);
+  }
+
+  Future<Map<String, dynamic>> getSplashAhadeeth() async {
+    String jsonString = await rootBundle.loadString('assets/data/splash_ahadeeth.json');
+    return json.decode(jsonString);
   }
 }
