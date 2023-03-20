@@ -341,40 +341,40 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             // back button
-            Align(
-              alignment: AlignmentDirectional.center,
-              child: MaterialButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                padding: const EdgeInsets.all(0),
-                shape: const StadiumBorder(),
-                highlightElevation: 5,
-                highlightColor: pinkColor.withAlpha(50),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    color: pinkColor,
-                    borderRadius: BorderRadius.circular(15.sp),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 50,
-                    ),
-                    width: 50.w,
-                    child: Text(
-                      'رجوع',
-                      style: Theme.of(context).textTheme.headline2?.copyWith(
-                            color: Colors.white,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Align(
+            //   alignment: AlignmentDirectional.center,
+            //   child: MaterialButton(
+            //     onPressed: () {
+            //       Navigator.pop(context);
+            //     },
+            //     padding: const EdgeInsets.all(0),
+            //     shape: const StadiumBorder(),
+            //     highlightElevation: 5,
+            //     highlightColor: pinkColor.withAlpha(50),
+            //     child: Ink(
+            //       decoration: BoxDecoration(
+            //         color: pinkColor,
+            //         borderRadius: BorderRadius.circular(15.sp),
+            //       ),
+            //       child: Container(
+            //         padding: const EdgeInsets.symmetric(
+            //           vertical: 15,
+            //           horizontal: 50,
+            //         ),
+            //         width: 50.w,
+            //         child: Text(
+            //           'رجوع',
+            //           style: Theme.of(context).textTheme.headline2?.copyWith(
+            //                 color: Colors.white,
+            //                 fontSize: 13.sp,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //           textAlign: TextAlign.center,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
