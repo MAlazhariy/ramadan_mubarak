@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 // const kMainColor = Color(0xFFEE3E3C);
-const kMainColor = Color(0xFF0B0C91);
-const kPrimarySemiLightColor = Color(0xFF6769B9);
+const kMainColor = Colors.pink;
+const kPrimarySemiLightColor = Color(0x7CFF0028);
 const kPrimaryLightColor = Color(0xffb6b6de);
 const kCorrectAnswerColor = Colors.green;
 const kWrongAnswerColor = Colors.red;
 const kTitleColor = Color(0xFF2E2E46);
 const kSecondaryColor = Color(0xFFF90DCC);
 const kGreyTextColor = Color(0xFF696973);
+const kLightGreyColor = Color(0x7C323F48);
 const kBorderColorTextField = Color(0xFFC2C2C2);
 const kDarkWhite = Color(0xFFF1F7F7);
 const kWhiteColor = Colors.white;

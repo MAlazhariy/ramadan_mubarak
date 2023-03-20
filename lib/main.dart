@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/helpers/router_helper.dart';
 import 'package:ramadan_kareem/my_app.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/doaa_provider.dart';
 import 'package:ramadan_kareem/providers/internet_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
 import 'package:ramadan_kareem/utils/di_container.dart';
@@ -31,6 +32,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => Di.sl<SplashProvider>()),
         ChangeNotifierProvider(create: (context) => Di.sl<InternetProvider>()),
         ChangeNotifierProvider(create: (context) => Di.sl<AuthProvider>()),
+        ChangeNotifierProvider(create: (context) => Di.sl<DoaaProvider>()),
       ],
       child: const MyApp(),
     ),

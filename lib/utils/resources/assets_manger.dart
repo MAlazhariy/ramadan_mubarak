@@ -16,4 +16,5 @@ class _ImageResSVG {
   final splashBG = "$_baseImagePath/splash_bg.svg";
   final bonyanLogo = "$_baseImagePath/bonyan_logo.svg";
   final quoteIcon = "$_baseImagePath/quote_icon.svg";
+  final appBar = "$_baseImagePath/appbar.svg";
 }

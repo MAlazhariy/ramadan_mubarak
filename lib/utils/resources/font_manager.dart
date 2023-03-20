@@ -1,6 +1,7 @@
 
 class FontFamily {
-  static const String tajawal = "Tajawal";
+  static const String almarai = "Almarai";
+  // static const String almarai = "Almarai";
 }
 
 class FontSize {

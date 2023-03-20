@@ -25,7 +25,6 @@ Future<void> initGetAndSaveData() async {
           time: users.first.time,
           docId: users.first.deviceId,
         );
-        CacheHelper.hasLoggedIn();
         dev.log('$deviceId logged in before 👍');
       }
     }

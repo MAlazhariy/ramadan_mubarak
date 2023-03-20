@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
 class CustomTextForm extends StatelessWidget {
@@ -17,6 +18,9 @@ class CustomTextForm extends StatelessWidget {
     this.maxLines = 1,
     Key? key,
     this.labelText,
+    this.inputFormatters,
+    this.maxLength,
+    this.counterText,
   }) : super(key: key);
 
   final TextInputAction? inputAction;
@@ -32,6 +36,9 @@ class CustomTextForm extends StatelessWidget {
   final bool obscureText;
   final Widget? suffix;
   final int maxLines;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? maxLength;
+  final String? counterText;
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +58,14 @@ class CustomTextForm extends StatelessWidget {
         obscureText: obscureText,
         minLines: 1,
         maxLines: maxLines,
+        maxLength: maxLength,
         textDirection: TextDirection.rtl,
         // enableInteractiveSelection: true,
         scrollPhysics: const BouncingScrollPhysics(),
         scrollController: ScrollController(
           keepScrollOffset: true,
         ),
+        inputFormatters: inputFormatters,
         style: const TextStyle(
           fontSize: 19.5,
           height: 1.5,
@@ -127,6 +136,7 @@ class CustomTextForm extends StatelessWidget {
                 )
               : null,
           helperText: helper,
+          counterText: counterText,
           helperMaxLines: 4,
           helperStyle: TextStyle(
             color: const Color(0x7CFF0028),

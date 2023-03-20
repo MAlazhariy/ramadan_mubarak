@@ -1,10 +1,18 @@
-
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/doaa_provider.dart';
+import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
+import 'package:ramadan_kareem/utils/resources/color_manger.dart';
+import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
+import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
+import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
+import 'package:ramadan_kareem/view/widgets/internet_consumer_builder.dart';
 import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:ramadan_kareem/view/screens/login/done_screen.dart';
@@ -14,11 +22,6 @@ import 'package:ramadan_kareem/helpers/push_and_finish.dart';
 import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
 import 'package:ramadan_kareem/view/widgets/custom_text_form.dart';
 import 'package:sizer/sizer.dart';
-
-enum Field {
-  name,
-  doaa,
-}
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -31,381 +34,258 @@ class _LoginScreenState extends State<LoginScreen> {
   var nameCtrl = TextEditingController();
   var doaaCtrl = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  Field? _field;
 
-  bool loading = false;
+  Future<void> _submitLogin(AuthProvider authProvider) async {
+    dismissKeyboard(context);
 
-  Future<void> login({
-    required String name,
-    required String doaa,
-  }) async {
-    setState(() {
-      loading = true;
-    });
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
 
-    await hasNetwork().then((hasNetwork) async {
-      if (hasNetwork) {
-        int time = DateTime.now().toUtc().microsecondsSinceEpoch;
+    final responseModel = await authProvider.login(
+      name: nameCtrl.text.trim(),
+      doaa: doaaCtrl.text.trim(),
+    );
 
-        FirebaseFirestore.instance.collection('users').doc(deviceId).set({
-          'name': name,
-          'doaa': doaa,
-          'device_id': deviceId,
-          'approved': false,
-          'time': time,
-          'nameUpdate': '',
-          'doaaUpdate': '',
-          'pendingEdit': false,
-        }).then((_) {
-          setState(() {
-            loading = false;
-          });
+    if (responseModel.isSuccess){
+      return _navigate();
+    } else {
+      if(!mounted) return;
+      SnkBar.showError(context, responseModel.message??'حدث خطأ، يرجى المحاولة مرة أخرى لاحقًا');
+    }
+  }
 
-          CacheHelper.hasLoggedIn();
-
-          CacheHelper.setUserLoginInfo(
-            name: name,
-            doaa: doaa,
-            time: time,
-            docId: deviceId??name,
-          );
-
-          if (!CacheHelper.isNotificationsDone()) {
-            // Go to DoneScreen
-            pushAndFinish(context, const DoneScreen());
-          } else {
-            // Go to HomeScreen
-            pushAndFinish(context, const HomeScreen());
-          }
-        }).catchError((error) {
-          setState(() {
-            loading = false;
-          });
-          log(error.toString());
-          SnkBar.show(context, message: error.toString());
-        });
-      } else {
-        SnkBar.show(
-          context,
-          message: 'أنت غير متصل بالإنترنت، يرجى الاتصال بالإنترنت ثم إعادة المحاولة مرة أخرى',
-          seconds: 4,
-          backgroundColor: Colors.red,
-          textStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
-        );
-        loading = false;
-      }
-    });
+  Future<void> _navigate() async {
+    if (!CacheHelper.isNotificationsDone()) {
+      // Go to DoneScreen
+      pushAndFinish(context, const DoneScreen());
+    } else {
+      // Go to HomeScreen
+      Navigator.pushNamedAndRemoveUntil(context, Routes.getDashboardScreen(), (route) => false);
+    }
   }
 
   @override
   void initState() {
-    super.initState();
-    loading = false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
       ),
     );
 
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.restoreSystemUIOverlays();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.bottomCenter,
-              height: 25.h,
-              child: SvgPicture.asset(
-                'assets/images/appbar.svg',
-                fit: BoxFit.cover,
+      // resizeToAvoidBottomInset: true,
+      body: InternetConsumerBuilder(
+        builder: (context, internetProvider) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
                 alignment: Alignment.bottomCenter,
-              ),
-            ),
-            Form(
-              key: formKey,
-              child: Padding(
-                padding: EdgeInsets.all(20.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'مرحبًا',
-                      style: Theme.of(context).textTheme.headline1?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 85,
-                            color: const Color(0xE639444C),
-                            // letterSpacing: 1.2,
-                          ),
-                    ),
-                    SizedBox(
-                      height: 12.sp,
-                    ),
-                    Text(
-                      'يرجى تسجيل الدخول للمتابعة',
-                      style: Theme.of(context).textTheme.headline2?.copyWith(
-                            color: Colors.black38,
-                            fontSize: 19.5,
-                            fontWeight: FontWeight.w400,
-                          ),
-                    ),
-                    SizedBox(
-                      height: 30.sp,
-                    ),
-
-                    /// name
-                    CustomTextForm(
-                      controller: nameCtrl,
-                      validator: (value) {
-                        return value?.isEmpty??true ? 'هذا الحقل مطلوب' : null;
-                      },
-                      keyboardType: TextInputType.name,
-                      inputAction: TextInputAction.next,
-                      hintText: 'الاسم ثنائي',
-                      prefixIcon: Icon(
-                        Icons.account_circle_outlined,
-                        color: _field == Field.name ? const Color(0x7CFF0028) : const Color(0x7C323F48),
-                        size: 19.sp,
-                      ),
-                      // onChanged: (value) {
-                      // },
-                      onTap: () {
-                        setState(() {
-                          _field = Field.name;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 15.sp,
-                    ),
-
-                    /// doaa
-                    CustomTextForm(
-                      controller: doaaCtrl,
-                      validator: (value) {
-                        return value?.isEmpty??true ? 'هذا الحقل مطلوب' : null;
-                      },
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 6,
-                      hintText: 'اكتب دعاءك المفضل بصيغة الغائب، مثال: "اللهم اغفر له"',
-                      prefixIcon: Icon(
-                        Icons.article_outlined,
-                        color: _field == Field.doaa ? const Color(0x7CFF0028) : const Color(0x7C323F48),
-                        size: 19.sp,
-                      ),
-                      // onChanged: (value) {
-                      //
-                      // },
-                      onTap: () {
-                        setState(() {
-                          _field = Field.doaa;
-                        });
-                      },
-                    ),
-
-                    SizedBox(
-                      height: 20.sp,
-                    ),
-                    // button
-                    Align(
-                      alignment: AlignmentDirectional.center,
-                      child: MaterialButton(
-                        onPressed: () async {
-                          setState(() {});
-                          dismissKeyboard(context);
-
-                          if (formKey.currentState!.validate()) {
-                            await login(
-                              name: nameCtrl.text,
-                              doaa: doaaCtrl.text,
-                            );
-                          }
-                        },
-                        padding: const EdgeInsets.all(0),
-                        shape: const StadiumBorder(),
-                        highlightElevation: 5,
-                        highlightColor: const Color(0x7CFF0028).withAlpha(50),
-                        child: Ink(
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0XFFFF4AA3),
-                                Color(0XFFF8B556),
-                              ],
-                              begin: Alignment.centerRight,
-                              end: Alignment.centerLeft,
-                            ),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 50,
-                            ),
-                            child: Text(
-                              'تسجيل الدخول',
-                              style: Theme.of(context).textTheme.headline2?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 19.5,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    /* password*/
-                    // Stack(
-                    //   alignment: AlignmentDirectional.topEnd,
-                    //   children: [
-                    //     WhiteTextForm(
-                    //       controller: passwordController,
-                    //       prefixIcon: Icon(
-                    //         passwordIsShown
-                    //             ? Icons.lock_open_outlined
-                    //             : Icons.lock_outline,
-                    //         color: _field==Field.PASSWORD ? const Color(0x7CFF0028) : const Color(0x7C323F48),
-                    //         size: 22.5,
-                    //       ),
-                    //       hintText: 'كلمة السر',
-                    //       inputAction: TextInputAction.done,
-                    //       keyboardType: TextInputType.number,
-                    //       obscureText: !passwordIsShown,
-                    //       suffix: Text(
-                    //         passwordSuffix,
-                    //         style: const TextStyle(
-                    //           color: Colors.transparent,
-                    //         ),
-                    //       ),
-                    //       validator: (value)
-                    //       {
-                    //         return (value.isEmpty)
-                    //             ? 'هذا الحقل مطلوب'
-                    //             : (value.length <= 3) ? 'ايه يعم الباسورد ده؟! متكتب باسورد عدل!' : null ;
-                    //       },
-                    //       onChanged: (value)
-                    //       {
-                    //         setState(() {});
-                    //         if (passwordController.text.isEmpty) {
-                    //           _field = null;
-                    //         } else {
-                    //           _field = Field.PASSWORD;
-                    //         }
-                    //       },
-                    //       // onFieldSubmitted: (value)
-                    //       // {
-                    //       //   setState(() {
-                    //       //     passwordIsShown = false;
-                    //       //   });
-                    //       //   if(formKey.currentState!.validate())
-                    //       //   {
-                    //       //     // cubit.signIn(
-                    //       //     //   email: emailController.text,
-                    //       //     //   password: passwordController.text,
-                    //       //     //   lang: 'ar',
-                    //       //     // );
-                    //       //   }
-                    //       // },
-                    //     ),
-                    //     Padding(
-                    //       padding: const EdgeInsetsDirectional.only(
-                    //         end: 2.5,
-                    //         top: 3.0,
-                    //       ),
-                    //       // ignore: deprecated_member_use
-                    //       child: MaterialButton(
-                    //         onPressed: (){
-                    //           // hide or show password
-                    //           setState(() {
-                    //             passwordIsShown = !passwordIsShown;
-                    //           });
-                    //         },
-                    //         color: const Color(0x7CFF0028).withAlpha(19),
-                    //         highlightColor: const Color(0x7CFF0028).withAlpha(5),
-                    //         splashColor: const Color(0x7CFF0028).withAlpha(25),
-                    //         padding: const EdgeInsets.all(0),
-                    //         shape: const RoundedRectangleBorder(
-                    //           borderRadius: BorderRadiusDirectional.only(
-                    //             topEnd: Radius.circular(50),
-                    //             bottomEnd: Radius.circular(50),
-                    //           ),
-                    //         ),
-                    //         elevation: 0,
-                    //         focusElevation: 0,
-                    //         highlightElevation: 0,
-                    //         child: Container(
-                    //           alignment: Alignment.center,
-                    //           width: 60,
-                    //           height: 53.5,
-                    //           decoration: const BoxDecoration(
-                    //             // color: Colors.red,
-                    //             borderRadius: BorderRadiusDirectional.only(
-                    //               topEnd: Radius.circular(50),
-                    //               bottomEnd: Radius.circular(50),
-                    //             ),
-                    //           ),
-                    //           child:  Text(
-                    //             passwordSuffix,
-                    //             style: const TextStyle(
-                    //               color: Color(0x7CFF0028),
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: 17,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    /* Register button */
-                    // SizedBox(height: 10.sp),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     const Text(
-                    //       'Don\'t have an account?',
-                    //       style: TextStyle(
-                    //         color: Color(0x7C323F48),
-                    //         fontSize: 15,
-                    //         fontWeight: FontWeight.w500,
-                    //       ),
-                    //     ),
-                    //     const SizedBox(width: 2.5),
-                    //     GestureDetector(
-                    //       onTap: (){
-                    //         Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) => const RegisterScreen(),
-                    //           ),
-                    //         );
-                    //       },
-                    //       child: const Text(
-                    //         'Create',
-                    //         style: TextStyle(
-                    //           // color: Colors.grey[600],
-                    //           color: Color(0x7CFF0028),
-                    //           fontSize: 15,
-                    //           fontWeight: FontWeight.w700,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
+                height: 15.h,
+                child: SvgPicture.asset(
+                  ImageRes.svg.appBar,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter,
                 ),
               ),
-            ),
-          ],
-        ),
+              Expanded(
+                child: Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                        top: 20.sp,
+                        start: 20.sp,
+                        end: 20.sp,
+                    ),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'مرحبًا',
+                            style: Theme.of(context).textTheme.headline1?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 85,
+                                  color: const Color(0xE639444C),
+                                  // letterSpacing: 1.2,
+                                ),
+                          ),
+                          SizedBox(height: 15.sp),
+                          Text(
+                            'قم بتسجيل الدخول للمتابعة\nاكتب اسمك الثنائي الذي تحب أن يدعو لك الآخرين به، ثم اكتب الدعاء بصيغة الغائب.',
+                            style: Theme.of(context).textTheme.headline2?.copyWith(
+                                  color: Colors.black38,
+                                  fontSize: 19.5,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 30.sp),
+
+                          Consumer<DoaaProvider>(
+                            builder: (context, doaaProvider, _) {
+                              const arabicDiacritics = 'ًٌٍَُِّْ';
+
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  /// name
+                                  CustomTextForm(
+                                    controller: nameCtrl,
+                                    validator: (value) {
+                                      return value?.isEmpty ?? true ? 'هذا الحقل مطلوب' : null;
+                                    },
+                                    keyboardType: TextInputType.name,
+                                    inputAction: TextInputAction.next,
+                                    hintText: 'الاسم ثنائي',
+                                    prefixIcon: Icon(
+                                      Icons.account_circle_outlined,
+                                      color: doaaProvider.isInNameField ? kPrimarySemiLightColor : kLightGreyColor,
+                                      size: 19.sp,
+                                    ),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(RegExp('[\u0600-\u06FF\\s]+')),
+                                    ],
+                                    onTap: () {
+                                      doaaProvider.onTapField(isName: true);
+                                    },
+                                  ),
+                                  SizedBox(height: 15.sp),
+                                  // doaa
+                                  CustomTextForm(
+                                    controller: doaaCtrl,
+                                    validator: (value) {
+                                      return value?.isEmpty ?? true ? 'هذا الحقل مطلوب' : null;
+                                    },
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 6,
+                                    hintText: 'اكتب دعاءك المفضل بصيغة الغائب، مثال: "اللهم اغفر له"',
+                                    prefixIcon: Icon(
+                                      Icons.article_outlined,
+                                      color: doaaProvider.isInDoaaField ? kPrimarySemiLightColor : kLightGreyColor,
+                                      size: 19.sp,
+                                    ),
+                                    maxLength: doaaProvider.maxDoaaLength,
+                                    counterText: '',
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp('[\u0600-\u06FF$arabicDiacritics\\s]*'),
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      doaaProvider.onChangeDoaaLength(value.length);
+                                    },
+                                    onTap: () {
+                                      doaaProvider.onTapField(isName: false);
+                                    },
+                                  ),
+                                  if (doaaProvider.isInDoaaField)
+                                    Container(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      padding: const EdgeInsetsDirectional.only(
+                                        end: AppPadding.p30 - 3,
+                                        top: AppPadding.p5,
+                                      ),
+                                      child: Text(
+                                        '${doaaProvider.doaaLength}/${doaaProvider.maxDoaaLength}',
+                                        // style: const TextStyle(
+                                        //   color: kPrimarySemiLightColor,
+                                        //   fontWeight: FontWeight.w600,
+                                        // ),
+                                        style: kBoldFontStyle.copyWith(
+                                          color: kPrimarySemiLightColor,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                          SizedBox(height: 20.sp),
+
+                          // login button
+                          Consumer<AuthProvider>(
+                            builder: (context, authProvider, _) {
+                              if(authProvider.isLoading){
+                                return const Center(child: CircularProgressIndicator.adaptive());
+                              }
+
+                              return Align(
+                                alignment: AlignmentDirectional.center,
+                                child: MaterialButton(
+                                  onPressed: () async {
+                                    await _submitLogin(authProvider);
+                                  },
+                                  padding: const EdgeInsets.all(0),
+                                  shape: const StadiumBorder(),
+                                  highlightElevation: 5,
+                                  highlightColor: const Color(0x7CFF0028).withAlpha(50),
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0XFFFF4AA3),
+                                          Color(0XFFF8B556),
+                                        ],
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                      ),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 15,
+                                        horizontal: 50,
+                                      ),
+                                      child: Text(
+                                        'تسجيل الدخول',
+                                        style: Theme.of(context).textTheme.headline2?.copyWith(
+                                          color: Colors.white,
+                                          fontSize: 19.5,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          const SizedBox(height: AppPadding.p5),
+                          TextButton(
+                            onPressed: (){
+                              _navigate();
+                            },
+                            child: Text(
+                              'متابعة دون تسجيل الدخول',
+                              style: kMediumFontStyle,
+                            ),
+                          ),
+                          SizedBox(height: 20.sp),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

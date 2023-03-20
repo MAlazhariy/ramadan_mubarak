@@ -5,12 +5,9 @@ class CacheHelper {
   static final box = Hive.box('box');
 
   /// login
+  /// todo: REMOVE
   static bool isLogin() {
     return box.get('login', defaultValue: false);
-  }
-
-  static void hasLoggedIn([bool value = true]) {
-    box.put('login', value);
   }
 
   static void setUserLoginInfo({

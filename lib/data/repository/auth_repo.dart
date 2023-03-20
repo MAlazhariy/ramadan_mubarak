@@ -43,7 +43,7 @@ class AuthRepo {
 
       await _saveUserId(docId);
       await updateUserData(user);
-      await _sendFCM(user);
+      await _sendNotification(user);
 
       return ApiResponse.withSuccess();
     } catch (e) {
@@ -51,7 +51,7 @@ class AuthRepo {
     }
   }
 
-  Future<ApiResponse> _sendFCM(UserDetails user) async {
+  Future<ApiResponse> _sendNotification(UserDetails user) async {
     try {
       final response = await dioClient.postFCM(user: user);
       return ApiResponse.fromResponse(response);

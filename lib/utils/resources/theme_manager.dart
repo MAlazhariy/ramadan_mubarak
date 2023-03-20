@@ -16,7 +16,7 @@ class ThemeManager {
     // splashColor: ColorManager.kLightPrimary,
 
     /// font family
-    fontFamily: FontFamily.tajawal,
+    fontFamily: FontFamily.almarai,
 
     // Add the line below to get horizontal sliding transitions for routes.
     pageTransitionsTheme: const PageTransitionsTheme(

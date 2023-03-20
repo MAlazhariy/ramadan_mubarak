@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ramadan_kareem/helpers/router_helper.dart';
 import 'package:ramadan_kareem/utils/constants.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
+import 'package:ramadan_kareem/utils/resources/font_manager.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/screens/splash/splash_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primarySwatch: Colors.pink,
-            fontFamily: 'Almarai',
+            fontFamily: FontFamily.almarai,
           ),
           initialRoute: Routes.splashScreen,
           onGenerateRoute: RouterHelper.router.generator,
