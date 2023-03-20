@@ -11,6 +11,7 @@ class UserDetails extends User {
     required super.id,
     required super.name,
     required super.doaa,
+    super.isAlive,
     required this.time,
     required this.deviceId,
     this.status = UserStatus.newMember,
@@ -34,8 +35,7 @@ class UserDetails extends User {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
-      'doaa': doaa,
+      ...super.toJson(),
       'device_id': deviceId,
       'status': status.name,
       'time': time.millisecondsSinceEpoch,

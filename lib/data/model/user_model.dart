@@ -4,11 +4,13 @@ class User {
   late final String id;
   late final String name;
   late final String doaa;
+  late final bool isAlive;
 
   User({
     required this.id,
     required this.name,
     required this.doaa,
+    this.isAlive = true,
 });
 
   User.fromSnapshot(
@@ -17,6 +19,7 @@ class User {
     id = snapshot.id;
     name = snapshot.data()['name'];
     doaa = snapshot.data()['doaa'];
+    isAlive = snapshot.data()['is_alive'];
   }
 
   User.fromObject(
@@ -31,12 +34,14 @@ class User {
     id = id;
     name = json['name'];
     doaa = json['doaa'];
+    isAlive = json['is_alive'];
   }
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'doaa': doaa,
+      'is_alive': isAlive,
     };
   }
 }
