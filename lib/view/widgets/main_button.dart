@@ -15,6 +15,7 @@ class MainButton extends StatelessWidget {
     this.fit = true,
     this.outlined = false,
     this.strokeAlign = BorderSide.strokeAlignInside,
+    this.flat = false,
   }) : super(key: key);
 
   final void Function()? onPressed;
@@ -26,6 +27,10 @@ class MainButton extends StatelessWidget {
   final double horizontalContentPadding;
   final double verticalContentPadding;
 
+  /// Flat color.
+  /// If [true] gradient is disabled.
+  final bool flat;
+
   bool get _activated => onPressed != null;
 
   @override
@@ -35,18 +40,29 @@ class MainButton extends StatelessWidget {
       child: MaterialButton(
         onPressed: onPressed,
         padding: EdgeInsets.zero,
+        highlightColor: kPrimarySemiLightColor.withAlpha(50),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSize.s8),
+          borderRadius: BorderRadius.circular(AppSize.s14),
         ),
         highlightElevation: 5,
         child: Ink(
           decoration: BoxDecoration(
-            color: outlined
-                ? null
-                : _activated
+            color: !_activated
+                ? Colors.grey[400]
+                : flat && !outlined
                     ? kMainColor
-                    : Colors.grey[400],
-            borderRadius: BorderRadius.circular(AppSize.s8),
+                    : null,
+            gradient: flat
+                ? null
+                : const LinearGradient(
+                    colors: [
+                      Color(0XFFFF4AA3),
+                      Color(0XFFF8B556),
+                    ],
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                  ),
+            borderRadius: BorderRadius.circular(AppSize.s14),
             border: outlined
                 ? Border.all(
                     color: _activated ? kMainColor : Colors.grey.shade400,

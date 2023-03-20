@@ -13,6 +13,7 @@ import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/view/widgets/internet_consumer_builder.dart';
+import 'package:ramadan_kareem/view/widgets/main_button.dart';
 import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:ramadan_kareem/view/screens/login/done_screen.dart';
@@ -47,11 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
       doaa: doaaCtrl.text.trim(),
     );
 
-    if (responseModel.isSuccess){
+    if (responseModel.isSuccess) {
       return _navigate();
     } else {
-      if(!mounted) return;
-      SnkBar.showError(context, responseModel.message??'حدث خطأ، يرجى المحاولة مرة أخرى لاحقًا');
+      if (!mounted) return;
+      SnkBar.showError(context, responseModel.message ?? 'حدث خطأ، يرجى المحاولة مرة أخرى لاحقًا');
     }
   }
 
@@ -106,9 +107,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: formKey,
                   child: Padding(
                     padding: EdgeInsetsDirectional.only(
-                        top: 20.sp,
-                        start: 20.sp,
-                        end: 20.sp,
+                      top: 20.sp,
+                      start: 20.sp,
+                      end: 20.sp,
                     ),
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
@@ -220,55 +221,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           // login button
                           Consumer<AuthProvider>(
                             builder: (context, authProvider, _) {
-                              if(authProvider.isLoading){
+                              if (authProvider.isLoading) {
                                 return const Center(child: CircularProgressIndicator.adaptive());
                               }
 
-                              return Align(
-                                alignment: AlignmentDirectional.center,
-                                child: MaterialButton(
-                                  onPressed: () async {
-                                    await _submitLogin(authProvider);
-                                  },
-                                  padding: const EdgeInsets.all(0),
-                                  shape: const StadiumBorder(),
-                                  highlightElevation: 5,
-                                  highlightColor: const Color(0x7CFF0028).withAlpha(50),
-                                  child: Ink(
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0XFFFF4AA3),
-                                          Color(0XFFF8B556),
-                                        ],
-                                        begin: Alignment.centerRight,
-                                        end: Alignment.centerLeft,
-                                      ),
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 15,
-                                        horizontal: 50,
-                                      ),
-                                      child: Text(
-                                        'تسجيل الدخول',
-                                        style: Theme.of(context).textTheme.headline2?.copyWith(
-                                          color: Colors.white,
-                                          fontSize: 19.5,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                              return MainButton(
+                                onPressed: () async {
+                                  await _submitLogin(authProvider);
+                                },
+                                title: 'تسجيل الدخول',
+                                fontSize: 19.5,
+                                fit: false,
+                                flat: false,
                               );
                             },
                           ),
 
                           const SizedBox(height: AppPadding.p5),
                           TextButton(
-                            onPressed: (){
+                            onPressed: () {
                               _navigate();
                             },
                             child: Text(
