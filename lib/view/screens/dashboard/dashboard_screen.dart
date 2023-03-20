@@ -12,11 +12,11 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
     ShareAppScreen(),
+    HomeScreen(),
     SettingsScreen(),
   ];
 
@@ -34,12 +34,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTap: (i) => setState(() => _currentIndex = i),
         items: [
           SalomonBottomBarItem(
-            icon: const Icon(Icons.home_rounded),
-            title: const Text("الرئيسية"),
-          ),
-          SalomonBottomBarItem(
             icon: const Icon(Icons.favorite),
             title: const Text("صدقة جارية"),
+          ),
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.home_rounded),
+            title: const Text("الرئيسية"),
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.settings),
