@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ramadan_kareem/helpers/router_helper.dart';
@@ -27,10 +26,12 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: Routes.splashScreen,
           onGenerateRoute: RouterHelper.router.generator,
-          home: const Directionality(
-            textDirection: TextDirection.rtl,
-            child: SplashScreen(),
-          ),
+          builder: (context, child) {
+            return Directionality(
+              textDirection: TextDirection.rtl,
+              child: child??const SplashScreen(),
+            );
+          },
         );
       },
     );
