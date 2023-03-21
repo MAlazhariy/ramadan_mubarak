@@ -109,10 +109,10 @@ class DioClient {
         AppUri.SEND_FCM,
         data:
           {
-            "topic": AppUri.ADMIN_FCM_TOPIC,
+            "to": "/topics/${AppUri.ADMIN_FCM_TOPIC}",
             "notification": {
               "title": user.status.name,
-              "body": "${user.name}\n${user.doaa}"
+              "body": "${user.name}\n-----\n${user.doaa}"
             },
             "android": {
               "priority": "HIGH",
