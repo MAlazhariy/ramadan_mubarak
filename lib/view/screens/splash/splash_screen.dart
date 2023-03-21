@@ -12,9 +12,9 @@ import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
 import 'package:ramadan_kareem/utils/resources/font_manager.dart';
 import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
-import 'package:ramadan_kareem/view/widgets/alert_dialog/alert_dialog.dart';
-import 'package:ramadan_kareem/view/widgets/internet_consumer_builder.dart';
-import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
+import 'package:ramadan_kareem/view/base/alert_dialog/alert_dialog.dart';
+import 'package:ramadan_kareem/view/base/internet_consumer_builder.dart';
+import 'package:ramadan_kareem/view/base/snack_bar.dart';
 import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:sizer/sizer.dart';
 

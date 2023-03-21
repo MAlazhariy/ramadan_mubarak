@@ -1,26 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ramadan_kareem/helpers/api_data_helper.dart';
 
 class User {
   late final String id;
   late final String name;
   late final String doaa;
+  late final DateTime time;
   late final bool isAlive;
+
+  int get timeStamp => time.millisecondsSinceEpoch;
 
   User({
     required this.id,
     required this.name,
     required this.doaa,
+    required this.time,
     this.isAlive = true,
 });
-
-  User.fromSnapshot(
-    QueryDocumentSnapshot<Map<String, dynamic>> snapshot,
-  ) {
-    id = snapshot.id;
-    name = snapshot.data()['name'];
-    doaa = snapshot.data()['doaa'];
-    isAlive = snapshot.data()['is_alive'];
-  }
 
   User.fromObject(
     User o,
@@ -28,12 +24,14 @@ class User {
     id = o.id;
     name = o.name;
     doaa = o.doaa;
+    time = o.time;
   }
 
   User.fromJson(Map<String, dynamic> json, {required String id}) {
     id = id;
     name = json['name'];
     doaa = json['doaa'];
+    time = ApiDataHelper.getDateTimeFromStamp(json['time'])??DateTime.now();
     isAlive = json['is_alive'];
   }
 
@@ -41,6 +39,7 @@ class User {
     return {
       'name': name,
       'doaa': doaa,
+      'time': time.millisecondsSinceEpoch,
       'is_alive': isAlive,
     };
   }

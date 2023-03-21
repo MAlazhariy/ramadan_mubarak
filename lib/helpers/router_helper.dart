@@ -8,7 +8,7 @@ import 'package:ramadan_kareem/view/screens/login/login_screen.dart';
 import 'package:ramadan_kareem/view/screens/on_boarding/on_board_screen.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
 import 'package:ramadan_kareem/view/screens/splash/splash_screen.dart';
-import 'package:ramadan_kareem/view/widgets/screen_not_found.dart';
+import 'package:ramadan_kareem/view/base/screen_not_found.dart';
 
 class RouterHelper {
   /// params handlers

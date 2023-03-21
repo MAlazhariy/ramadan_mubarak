@@ -8,6 +8,7 @@ import 'package:ramadan_kareem/data/repository/doaa_repo.dart';
 import 'package:ramadan_kareem/data/repository/splash_repo.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
 import 'package:ramadan_kareem/providers/doaa_provider.dart';
+import 'package:ramadan_kareem/providers/field_doaa_provider.dart';
 import 'package:ramadan_kareem/providers/internet_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
 import 'package:ramadan_kareem/utils/app_uri.dart';
@@ -30,6 +31,7 @@ class Di {
     sl.registerFactory(() => SplashProvider(sl()));
     sl.registerFactory(() => InternetProvider());
     sl.registerFactory(() => AuthProvider(authRepo: sl()));
+    sl.registerFactory(() => FieldDoaaProvider());
     sl.registerFactory(() => DoaaProvider(sl()));
 
     // External

@@ -3,7 +3,7 @@ import 'package:ramadan_kareem/helpers/api_data_helper.dart';
 import 'package:ramadan_kareem/helpers/enums/user_status_enum.dart';
 
 class UserDetails extends User {
-  late final DateTime time;
+
   late final String? deviceId;
   late final UserStatus status;
 
@@ -11,8 +11,8 @@ class UserDetails extends User {
     required super.id,
     required super.name,
     required super.doaa,
+    required super.time,
     super.isAlive,
-    required this.time,
     required this.deviceId,
     this.status = UserStatus.newMember,
   });
@@ -21,13 +21,11 @@ class UserDetails extends User {
     UserDetails o,
   ) : super.fromObject(o) {
     deviceId = o.deviceId;
-    time = o.time;
     status = o.status;
   }
 
   UserDetails.fromJson(Map<String, dynamic> json, {required String id}) : super.fromJson(json, id: id) {
     deviceId = json['device_id'];
-    time = ApiDataHelper.getDateTimeFromStamp(json['time'])??DateTime.now();
     status = json['status'].toUserStatus;
   }
 
@@ -38,7 +36,6 @@ class UserDetails extends User {
       ...super.toJson(),
       'device_id': deviceId,
       'status': status.name,
-      'time': time.millisecondsSinceEpoch,
     };
   }
 }

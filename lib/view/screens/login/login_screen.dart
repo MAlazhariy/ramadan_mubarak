@@ -5,23 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
-import 'package:ramadan_kareem/providers/doaa_provider.dart';
+import 'package:ramadan_kareem/providers/field_doaa_provider.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
 import 'package:ramadan_kareem/utils/resources/color_manger.dart';
 import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
 import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
 import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
-import 'package:ramadan_kareem/view/widgets/internet_consumer_builder.dart';
-import 'package:ramadan_kareem/view/widgets/main_button.dart';
+import 'package:ramadan_kareem/view/base/internet_consumer_builder.dart';
+import 'package:ramadan_kareem/view/base/main_button.dart';
 import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:ramadan_kareem/view/screens/login/done_screen.dart';
 import 'package:ramadan_kareem/helpers/dismiss_keyboard.dart';
 import 'package:ramadan_kareem/helpers/network_check.dart';
 import 'package:ramadan_kareem/helpers/push_and_finish.dart';
-import 'package:ramadan_kareem/view/widgets/snack_bar.dart';
-import 'package:ramadan_kareem/view/widgets/custom_text_form.dart';
+import 'package:ramadan_kareem/view/base/snack_bar.dart';
+import 'package:ramadan_kareem/view/base/custom_text_form.dart';
 import 'package:sizer/sizer.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'مرحبًا',
                             style: Theme.of(context).textTheme.headline1?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 85,
+                                  fontSize: 65,
                                   color: const Color(0xE639444C),
                                   // letterSpacing: 1.2,
                                 ),
@@ -130,14 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             'قم بتسجيل الدخول للمتابعة\nاكتب اسمك الثنائي الذي تحب أن يدعو لك الآخرين به، ثم اكتب الدعاء بصيغة الغائب.',
                             style: Theme.of(context).textTheme.headline2?.copyWith(
                                   color: Colors.black38,
-                                  fontSize: 19.5,
+                                  fontSize: 19,
                                   fontWeight: FontWeight.w400,
                                 ),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 30.sp),
 
-                          Consumer<DoaaProvider>(
+                          Consumer<FieldDoaaProvider>(
                             builder: (context, doaaProvider, _) {
                               const arabicDiacritics = 'ًٌٍَُِّْ';
 

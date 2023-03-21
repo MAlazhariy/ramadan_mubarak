@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
 import 'package:ramadan_kareem/utils/resources/font_manager.dart';
 import 'package:ramadan_kareem/utils/resources/text_styles_manager.dart';
-import 'package:ramadan_kareem/view/widgets/main_button.dart';
+import 'package:ramadan_kareem/view/base/main_button.dart';
 
 class BlockedScreen extends StatelessWidget {
   const BlockedScreen({super.key});

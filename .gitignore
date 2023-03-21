@@ -48,4 +48,4 @@ app.*.map.json
 # Custom
 /lib/utils/secret_constants.dart
 /lib/providers/internet_provider.dart
-/lib/view/widgets/internet_consumer_builder.dart
+/lib/view/base/internet_consumer_builder.dart

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/helpers/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/helpers/push_to.dart';
 import 'package:ramadan_kareem/view/screens/settings/update_data_screen.dart';
-import 'package:ramadan_kareem/view/widgets/custom_dialog.dart';
-import 'package:ramadan_kareem/view/widgets/dialog_buttons.dart';
+import 'package:ramadan_kareem/view/base/custom_dialog.dart';
+import 'package:ramadan_kareem/view/base/dialog_buttons.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,7 +19,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DocumentSnapshot<Map<String, dynamic>>? lastDoc;
-    String? lastId;
 
     return Scaffold(
       appBar: AppBar(
@@ -274,9 +273,10 @@ class SettingsScreen extends StatelessWidget {
                         /// get nested limitation
                         try {
                           if (lastDoc == null) {
+                            // 15
+                            // 18
                             await FirebaseFirestore.instance.collection('users').orderBy('time').limit(1).get().then((value) {
                               lastDoc = value.docs.first;
-                              lastId = lastDoc?.id;
                             });
                           }
                           log('last document: id:"${lastDoc?.id}, name:${lastDoc?.data()?['name']}"');
@@ -307,6 +307,104 @@ class SettingsScreen extends StatelessWidget {
 
                             lastDoc = remainData.docs.last;
                           }
+                        } catch (e) {
+                          log('إلحق يزميلي إيرور: $e');
+                        }
+                      },
+                      leading: const Icon(Icons.warning_amber),
+                      // leading: const Icon(Icons.favorite_border),
+                    ),
+
+                    // pagination test
+                    ListTile(
+                      title: Text(
+                        'pagination TEST',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: greyColor,
+                        ),
+                      ),
+                      onTap: () async {
+                        /// get limitation
+                        // try{
+                        //   DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore.instance.collection('users').doc('2d5d084e1babf51d').get();
+                        //   log('We have got document "${doc.id} - ${doc.data()['name']}"');
+                        //
+                        //   const int limitation = 20;
+                        //   int dataSize = 0;
+                        //
+                        //   QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('users').orderBy('time').startAfterDocument(doc).limit(limitation).get();
+                        //   log('--- size = ${data.size}');
+                        //   dataSize = data.size;
+                        //   data.docs.forEach((user) {
+                        //     log('name: ${user['name']}');
+                        //   });
+                        //   if(dataSize < limitation){
+                        //     final int remainingDataSize = limitation - dataSize;
+                        //     log('---- getting remaining $remainingDataSize data from Firebase');
+                        //     QuerySnapshot<Map<String, dynamic>> remainData = await FirebaseFirestore.instance.collection('users').orderBy('time').limit(remainingDataSize).get();
+                        //     dataSize += remainData.size;
+                        //     log('--- total size = $dataSize');
+                        //     remainData.docs.forEach((user) {
+                        //       log('name: ${user['name']}');
+                        //     });
+                        //   }
+                        //
+                        // } catch(e){
+                        //   log('إلحق يزميلي إيرور: $e');
+                        // }
+
+                        /// get nested limitation
+                        try {
+                          if (lastDoc == null) {
+                            // 15
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .orderBy('time')
+                                .where('time', isGreaterThan: 1678485205532487)
+                                .limit(5)
+                                .get()
+                                .then((value) {
+                              debugPrint('value length: ${value.docs.length}');
+                              if (value.docs.isNotEmpty) {
+                                lastDoc = value.docs.last;
+                              }
+
+                              value.docs.forEach((user) {
+                                log('name: ${user['name']}');
+                              });
+                            });
+                          }
+                          log('last document: id:"${lastDoc?.id}, name:${lastDoc?.data()?['name']}"');
+
+                          //   const int limit = 20;
+                          //   int _dataSize = 0;
+                          //
+                          //   QuerySnapshot<Map<String, dynamic>> data =
+                          //   await FirebaseFirestore.instance.collection('users').orderBy('time').startAfterDocument(lastDoc!).limit(limit).get();
+                          //   log('--- size = ${data.size}');
+                          //   _dataSize = data.size;
+                          //   data.docs.forEach((user) {
+                          //     log('name: ${user['name']}');
+                          //   });
+                          //
+                          //   if (_dataSize >= limit) {
+                          //     lastDoc = data.docs.last;
+                          //   } else {
+                          //     final int remainingDataSize = limit - _dataSize;
+                          //     log('---- getting remaining $remainingDataSize data from Firebase');
+                          //     QuerySnapshot<Map<String, dynamic>> remainData =
+                          //     await FirebaseFirestore.instance.collection('users').orderBy('time').limit(remainingDataSize).get();
+                          //     _dataSize += remainData.size;
+                          //     log('--- total size = $_dataSize');
+                          //     remainData.docs.forEach((user) {
+                          //       log('name: ${user['name']}');
+                          //     });
+                          //
+                          //     lastDoc = remainData.docs.last;
+                          //   }
                         } catch (e) {
                           log('إلحق يزميلي إيرور: $e');
                         }
