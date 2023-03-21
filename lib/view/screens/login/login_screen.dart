@@ -174,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     keyboardType: TextInputType.multiline,
                                     maxLines: 6,
-                                    hintText: 'اكتب دعاءك المفضل بصيغة الغائب، مثال: "اللهم اغفر له"',
+                                    hintText: 'اكتب الدعاء باللغة العريبة بصيغة الغائب، مثال: "اللهم اغفر له"',
                                     prefixIcon: Icon(
                                       Icons.article_outlined,
                                       color: doaaProvider.isInDoaaField ? kPrimarySemiLightColor : kLightGreyColor,
