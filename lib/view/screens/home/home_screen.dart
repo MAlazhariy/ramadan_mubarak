@@ -66,9 +66,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    debugPrint('heloooooo: initState');
-
     controller.addListener(_scrollListener);
+    
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.jumpTo(
+        Provider.of<DoaaProvider>(context, listen: false).cachedPosition,
+      );
+    });
 
     /// if it's first time set a random value to counter
     /// and save counter .. then set isFirstTime to false
@@ -457,12 +461,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 id: '$index',
                                                 builder: (context, isInView, _) {
                                                   if (isInView) {
-                                                    doaaProvider.paginate(index);
-                                                    debugPrint('**************');
-                                                    for(var i in doaaProvider.users){
-                                                      debugPrint('- user: ${i.name} | ${i.timeStamp}');
-                                                    }
-                                                    debugPrint('**************');
+                                                    doaaProvider.paginate(index, position: controller.offset);
+                                                    // debugPrint('**************');
+                                                    // for(var i in doaaProvider.users){
+                                                    //   debugPrint('- user: ${i.name} | ${i.timeStamp}');
+                                                    // }
+                                                    // debugPrint('**************');
                                                     // debugPrint('index "$index" is in view');
                                                   }
                                                   return Container(

@@ -20,6 +20,7 @@ class DoaaProvider extends ChangeNotifier {
   bool _noMoreDocs = false;
   bool _isLoading = false;
   int _lastIndex = 0;
+  double _cachedPosition = 0;
 
   List<User> get users => _users;
 
@@ -27,10 +28,17 @@ class DoaaProvider extends ChangeNotifier {
 
   int get lastIndex => _lastIndex;
 
-  Future<ResponseModel> paginate(int index, {int gap = 2}) async {
+  double get cachedPosition => _cachedPosition;
+
+  Future<ResponseModel> paginate(
+    int index, {
+    required double position,
+    int gap = 2,
+  }) async {
     // update the current time
     debugPrint('updating time..');
     _lastIndex = index;
+    _cachedPosition = position;
     await updateLastDocTime(_users[index].timeStamp);
     debugPrint('time updated');
 
