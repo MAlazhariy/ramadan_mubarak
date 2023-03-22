@@ -55,13 +55,15 @@ class _SplashScreenState extends State<SplashScreen> {
     // set navigation route name
     if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
       screenRoute = Routes.getDashboardScreen();
-    } else if (Provider.of<SplashProvider>(context, listen: false).isFirstOpen) {
-      screenRoute = Routes.getDashboardScreen();
-      // TODO: HANDLE ONBOARDING SCREEN
-      // screenRoute = Routes.getOnBoardScreen();
     } else {
       screenRoute = Routes.getLoginScreen();
     }
+
+    // // TODO: HANDLE ONBOARDING SCREEN
+    // else if (Provider.of<SplashProvider>(context, listen: false).isFirstOpen) {
+    // screenRoute = Routes.getLoginScreen();
+    // // screenRoute = Routes.getOnBoardScreen();
+    // }
 
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;

@@ -39,12 +39,12 @@ class AuthRepo {
 
       debugPrint('user details: ${user.toJson()}');
 
-      // await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(docId).set({
-      //   ...user.toJson(),
-      //   'name_update': '',
-      //   'doaa_update': '',
-      //   'token': token ?? '',
-      // });
+      await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(docId).set({
+        ...user.toJson(),
+        'name_update': '',
+        'doaa_update': '',
+        'token': token ?? '',
+      });
 
       await _saveUserId(docId);
       await updateUserData(user);
