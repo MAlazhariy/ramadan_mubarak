@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:ramadan_kareem/data/data_source/remote/dio/dio_client.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
@@ -29,17 +31,20 @@ class AuthRepo {
   }) async {
     try {
       final now = DateTime.now().toUtc();
+      // TODO: HANDLE DEVICE_ID
       final deviceId = await PlatformDeviceId.getDeviceId;
-      final docId = deviceId ?? '$now-$name';
+      final docId = deviceId ?? '${now.millisecondsSinceEpoch}-$name';
       final token = await FirebaseMessaging.instance.getToken();
       final user = UserDetails(id: docId, name: name, doaa: doaa, time: now, deviceId: deviceId);
 
-      await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(docId).set({
-        ...user.toJson(),
-        'name_update': '',
-        'doaa_update': '',
-        'token': token ?? '',
-      });
+      debugPrint('user details: ${user.toJson()}');
+
+      // await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(docId).set({
+      //   ...user.toJson(),
+      //   'name_update': '',
+      //   'doaa_update': '',
+      //   'token': token ?? '',
+      // });
 
       await _saveUserId(docId);
       await updateUserData(user);
@@ -54,6 +59,7 @@ class AuthRepo {
   Future<ApiResponse> _sendNotification(UserDetails user) async {
     try {
       final response = await dioClient.postFCM(user: user);
+      debugPrint('fcm response: [${response.statusCode}] ${response.data}');
       return ApiResponse.fromResponse(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.handle(e));

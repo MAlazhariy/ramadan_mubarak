@@ -8,7 +8,7 @@ enum UserStatus {
 
 
 extension GetUserStatus on String {
-  UserStatus get toUserStatus {
+  UserStatus toUserStatus () {
     if(this == UserStatus.newMember.name) {
       return UserStatus.newMember;
     } else if(this == UserStatus.approved.name) {

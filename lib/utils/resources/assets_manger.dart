@@ -18,4 +18,5 @@ class _ImageResSVG {
   final quoteIcon = "$_baseImagePath/quote_icon.svg";
   final appBar = "$_baseImagePath/appbar.svg";
   final mosque = "$_baseImagePath/mosque2.svg";
+  final death = "$_baseImagePath/death.svg";
 }

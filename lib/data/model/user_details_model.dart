@@ -24,9 +24,9 @@ class UserDetails extends User {
     status = o.status;
   }
 
-  UserDetails.fromJson(Map<String, dynamic> json, {required String id}) : super.fromJson(json, id: id) {
+  UserDetails.fromJson(Map<String, dynamic> json, {required String id}) : super.fromJson(json, userId: id) {
     deviceId = json['device_id'];
-    status = json['status'].toUserStatus;
+    status = json['status'].toString().toUserStatus();
   }
 
   @override

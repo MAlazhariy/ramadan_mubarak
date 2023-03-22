@@ -16,8 +16,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     ShareAppScreen(),
-    HomeScreen(),
-    SettingsScreen(),
+    const HomeScreen(),
+    // SettingsScreen(),
   ];
 
   @override
@@ -41,10 +41,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: const Icon(Icons.home_rounded),
             title: const Text("الرئيسية"),
           ),
-          SalomonBottomBarItem(
-            icon: const Icon(Icons.settings),
-            title: const Text("الإعدادات"),
-          ),
+          // SalomonBottomBarItem(
+          //   icon: const Icon(Icons.settings),
+          //   title: const Text("الإعدادات"),
+          // ),
         ],
       ),
     );

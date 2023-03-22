@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/helpers/clipboard_helper.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/doaa_provider.dart';
 import 'package:ramadan_kareem/providers/internet_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
@@ -36,7 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> init() async {
     Provider.of<SplashProvider>(context, listen: false).getRandomHadeeth();
-    final responseModel = await Provider.of<SplashProvider>(context, listen: false).initAppData();
+    await Provider.of<SplashProvider>(context, listen: false).initAppData();
+    if(!mounted) return;
+    final responseModel = await Provider.of<DoaaProvider>(context, listen: false).getData();
 
     if (responseModel.isSuccess) {
       _onSuccessConfig();
@@ -53,7 +56,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
       screenRoute = Routes.getDashboardScreen();
     } else if (Provider.of<SplashProvider>(context, listen: false).isFirstOpen) {
-      screenRoute = Routes.getOnBoardScreen();
+      screenRoute = Routes.getDashboardScreen();
+      // TODO: HANDLE ONBOARDING SCREEN
+      // screenRoute = Routes.getOnBoardScreen();
     } else {
       screenRoute = Routes.getLoginScreen();
     }
@@ -68,6 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted || Provider.of<InternetProvider>(context, listen: false).noInternetConnection) return;
     showErrorDialog(
       context: context,
+      title: 'حدث خطأ أثناء جلب البيانات',
       description: errorMsg,
       buttons: [
         MaterialButton(
@@ -77,6 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 init();
               });
             },
+            minWidth: double.maxFinite,
             child: const Text(
               "حاول مرة أخرى",
             )),

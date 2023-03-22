@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
+import 'package:ramadan_kareem/providers/doaa_provider.dart';
 import 'package:ramadan_kareem/providers/field_doaa_provider.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
 import 'package:ramadan_kareem/utils/resources/color_manger.dart';
@@ -49,6 +50,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (responseModel.isSuccess) {
+      if(!mounted) return;
+      // insert the user to users list in the doaa provider
+      Provider.of<DoaaProvider>(context, listen: false).insertTheNewUser();
       return _navigate();
     } else {
       if (!mounted) return;

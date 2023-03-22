@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hijri/hijri_calendar.dart';
-import 'package:ramadan_kareem/helpers/push_to.dart';
+import 'package:inview_notifier_list/inview_notifier_list.dart';
+import 'package:provider/provider.dart';
+import 'package:ramadan_kareem/providers/doaa_provider.dart';
+import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
+import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
 import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/components/description_text.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/components/doaa_text.dart';
@@ -10,7 +14,6 @@ import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 import 'package:ramadan_kareem/ztrash/shared/styles.dart';
 import 'package:ramadan_kareem/ztrash/adeya.dart';
 import 'package:ramadan_kareem/helpers/notification_ready_funcs.dart';
-import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String name = 'Test name';
   String doaa = 'Test doaa here';
   int counter = 0;
+  final controller = ScrollController();
 
   void next() {
     setState(() {
@@ -39,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
       --counter;
       // Cache.setCounter(counter);
       int? index = counter % CacheHelper.getLength()!;
-
     });
   }
 
@@ -50,9 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _scrollListener() {
+    final double maxScroll = controller.position.maxScrollExtent;
+    final double currentScroll = controller.position.pixels;
+    const double delta = 300; // the threshold value
+    if (maxScroll - currentScroll <= delta) {
+      debugPrint('getting pagination data: $maxScroll - $currentScroll = "${maxScroll - currentScroll}"');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    debugPrint('heloooooo: initState');
+
+    controller.addListener(_scrollListener);
 
     /// if it's first time set a random value to counter
     /// and save counter .. then set isFirstTime to false
@@ -65,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
         CacheHelper.setCounter(counter);
 
         // get name & doaa
-
 
         // set IsFirstTime to false
         CacheHelper.setIsFirstTime(false);
@@ -94,7 +109,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    debugPrint('heloooooo: didChangeDependencies');
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
+    controller.removeListener(_scrollListener);
     super.dispose();
   }
 
@@ -200,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       SvgPicture.asset(
-                        'assets/images/mosque2.svg',
+                        ImageRes.svg.mosque,
                         width: 100.w,
                         fit: BoxFit.fitWidth,
                         // color: Colors.blue,
@@ -234,6 +256,263 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: greyColor,
                                 ),
                                 textAlign: TextAlign.center,
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 200,
+                              child: Consumer<DoaaProvider>(
+                                builder: (context, doaaProvider, _) {
+                                  final length = doaaProvider.isLoading ? doaaProvider.users.length+1 : doaaProvider.users.length;
+
+                                  return Row(
+                                    children: [
+                                      // names
+                                      Expanded(
+                                        child: InViewNotifierList(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: length,
+                                          controller: controller,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: AppSize.s8,
+                                          ),
+                                          physics: const BouncingScrollPhysics(),
+                                          initialInViewIds: [
+                                            doaaProvider.lastIndex.toString(),
+                                          ],
+                                          isInViewPortCondition: (double deltaTop, double deltaBottom, double vpHeight) {
+                                            return (deltaTop < (0.2 * vpHeight) && deltaBottom > (0.2 * vpHeight));
+                                          },
+                                          onListEndReached: () {
+                                            debugPrint('onListEndReached');
+                                          },
+                                          builder: (context, index) {
+                                            if(doaaProvider.isLoading && index == length-1){
+                                              return Container(
+                                                alignment: Alignment.center,
+                                                margin: const EdgeInsetsDirectional.only(
+                                                  end: AppSize.s8,
+                                                ),
+                                                child: const SizedBox(
+                                                  height: 23,
+                                                  width: 23,
+                                                  child: CircularProgressIndicator.adaptive(
+                                                    strokeWidth: 2.6,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            final num = index + 1;
+                                            final user = doaaProvider.users[index];
+
+                                            final doaaWidget = Hero(
+                                              tag: '$index-doaa',
+                                              child: RichText(
+                                                textAlign: TextAlign.center,
+                                                // softWrap: false,
+                                                // overflow: TextOverflow.ellipsis,
+                                                text: TextSpan(
+                                                  text: user.doaa * num * 5,
+                                                  style: TextStyle(
+                                                    color: black1,
+                                                    height: 1.2,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15.sp,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                            final nameWidget = Hero(
+                                              tag: '$index-name',
+                                              transitionOnUserGestures: true,
+                                              child: RichText(
+                                                textAlign: TextAlign.center,
+                                                text: TextSpan(
+                                                  text: user.name,
+                                                  style: TextStyle(
+                                                    color: pinkColor,
+                                                    height: 1.1,
+                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: 15.sp,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.of(context).push(PageRouteBuilder(
+                                                    opaque: false,
+                                                    barrierDismissible: true,
+                                                    pageBuilder: (BuildContext context, _, __) {
+                                                      return AlertDialog(
+                                                        // title: Text(
+                                                        //   '${'name '}$num',
+                                                        //   style: TextStyle(
+                                                        //     fontSize: 13.sp,
+                                                        //   ),
+                                                        // ),
+                                                        content: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            /// name
+                                                            nameWidget,
+                                                            SizedBox(
+                                                              height: 6.sp,
+                                                            ),
+
+                                                            /// doaa
+                                                            doaaWidget,
+                                                            // Text(
+                                                            //   doaa * num,
+                                                            //   textAlign: TextAlign.center,
+                                                            //   style: TextStyle(
+                                                            //     color: black1,
+                                                            //     height: 1.2,
+                                                            //     fontWeight: FontWeight.w500,
+                                                            //     fontSize: 15.sp,
+                                                            //   ),
+                                                            // ),
+                                                          ],
+                                                        ),
+                                                        // actions: [
+                                                        //   SizedBox(
+                                                        //     width: double.infinity,
+                                                        //     child: Center(
+                                                        //       child: Wrap(
+                                                        //         spacing: 4.sp,
+                                                        //         children: buttons,
+                                                        //       ),
+                                                        //     ),
+                                                        //   ),
+                                                        // ],
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(12.sp),
+                                                        ),
+                                                      );
+                                                    }));
+                                                return;
+
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return Directionality(
+                                                      textDirection: TextDirection.rtl,
+                                                      child: AlertDialog(
+                                                        title: Hero(
+                                                          tag: '$index-name',
+                                                          child: Text(
+                                                            '${'name '}$num',
+                                                            style: TextStyle(
+                                                              fontSize: 13.sp,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        content: SizedBox(
+                                                          width: 65.w,
+                                                          child: SingleChildScrollView(
+                                                            physics: const BouncingScrollPhysics(),
+                                                            child: Column(
+                                                              mainAxisSize: MainAxisSize.min,
+                                                              children: [
+                                                                Hero(
+                                                                  tag: '$index-doaa',
+                                                                  child: Text(
+                                                                    'doaa test',
+                                                                    textAlign: TextAlign.center,
+                                                                    style: TextStyle(
+                                                                      color: black1,
+                                                                      height: 1.2,
+                                                                      fontWeight: FontWeight.w500,
+                                                                      fontSize: 15.sp,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        // actions: [
+                                                        //   SizedBox(
+                                                        //     width: double.infinity,
+                                                        //     child: Center(
+                                                        //       child: Wrap(
+                                                        //         spacing: 4.sp,
+                                                        //         children: buttons,
+                                                        //       ),
+                                                        //     ),
+                                                        //   ),
+                                                        // ],
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(12.sp),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: InViewNotifierWidget(
+                                                id: '$index',
+                                                builder: (context, isInView, _) {
+                                                  if (isInView) {
+                                                    doaaProvider.paginate(index);
+                                                    debugPrint('**************');
+                                                    for(var i in doaaProvider.users){
+                                                      debugPrint('- user: ${i.name} | ${i.timeStamp}');
+                                                    }
+                                                    debugPrint('**************');
+                                                    // debugPrint('index "$index" is in view');
+                                                  }
+                                                  return Container(
+                                                    width: 85.w,
+                                                    height: 100,
+                                                    margin: const EdgeInsets.symmetric(
+                                                      horizontal: AppSize.s8,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(8.sp),
+                                                      color: isInView ? Colors.blue : pinkColor.withAlpha(15),
+                                                    ),
+                                                    child: Stack(
+                                                      children: [
+                                                        // Container content goes here
+                                                        Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            /// name
+                                                            nameWidget,
+                                                            SizedBox(
+                                                              height: 6.sp,
+                                                            ),
+
+                                                            /// doaa
+                                                            Expanded(child: doaaWidget),
+                                                          ],
+                                                        ),
+                                                        if (!user.isAlive)
+                                                          PositionedDirectional(
+                                                            top: 0,
+                                                            end: -5,
+                                                            child: SvgPicture.asset(
+                                                              ImageRes.svg.death,
+                                                              height: 100,
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
 
@@ -499,5 +778,23 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+}
+
+// Custom clipper to create a diagonal path shape
+class _DiagonalPathClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height * 0.8);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false;
   }
 }

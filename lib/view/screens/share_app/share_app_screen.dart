@@ -98,7 +98,7 @@ class ShareAppScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSize.s20),
+                const SizedBox(height: AppSize.s5),
                 // text
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -114,6 +114,7 @@ class ShareAppScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
+                const SizedBox(height: AppSize.s16),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(

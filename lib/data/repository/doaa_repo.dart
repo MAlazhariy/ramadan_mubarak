@@ -17,24 +17,27 @@ class DoaaRepo {
     required this.dioClient,
   });
 
-  int? _lastDocTime() {
-    return sharedPreferences.getInt(AppLocalKeys.LAST_DOC_TIME);
-  }
-
-  Future<ApiResponse> getData({int limit = 4, bool fromBeginning = false, int? lastDocTime}) async {
+  Future<ApiResponse> getData({
+    required int limit,
+    required bool fromBeginning,
+    required int? lastDocTime,
+  }) async {
     try {
-      final lastDocT = lastDocTime?? (_lastDocTime() ?? 0);
-      final lastTime = fromBeginning ? 0 : lastDocT;
+      const defaultTimeValue = 1900391493000;
+      final lastDocT = lastDocTime?? (_lastDocTime() ?? defaultTimeValue);
+      final lastTime = fromBeginning ? defaultTimeValue : lastDocT;
+
+      debugPrint('last time: $lastTime');
 
       final data = await FirebaseFirestore.instance
           .collection(FirebaseKeys.USERS_COLLECTION)
-          .orderBy(FirebaseKeys.TIME)
-          .where(FirebaseKeys.TIME, isGreaterThan: lastTime)
+          .orderBy(FirebaseKeys.TIME, descending: true)
+          .where(FirebaseKeys.TIME, isLessThan: lastTime)
           .where(FirebaseKeys.USER_STATUS, isEqualTo: UserStatus.approved.name)
           .limit(limit)
           .get();
 
-      debugPrint('get doaa data - length: "${data.docs.length}" - limit: "$limit"');
+      debugPrint('get doaa data - response length: "${data.docs.length}" - limit: "$limit"');
 
       final response = Response(
         requestOptions: RequestOptions(path: ''),
@@ -66,5 +69,13 @@ class DoaaRepo {
     } catch (e) {
       return null;
     }
+  }
+
+  int? _lastDocTime() {
+    return sharedPreferences.getInt(AppLocalKeys.LAST_DOC_TIME);
+  }
+
+  Future<bool> updateLastDocTime(int time) async {
+    return await sharedPreferences.setInt(AppLocalKeys.LAST_DOC_TIME, time);
   }
 }

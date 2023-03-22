@@ -8,7 +8,7 @@ class User {
   late final DateTime time;
   late final bool isAlive;
 
-  int get timeStamp => time.millisecondsSinceEpoch;
+  int get timeStamp => time.millisecondsSinceEpoch.abs();
 
   User({
     required this.id,
@@ -27,8 +27,8 @@ class User {
     time = o.time;
   }
 
-  User.fromJson(Map<String, dynamic> json, {required String id}) {
-    id = id;
+  User.fromJson(Map<String, dynamic> json, {required String userId}) {
+    id = userId;
     name = json['name'];
     doaa = json['doaa'];
     time = ApiDataHelper.getDateTimeFromStamp(json['time'])??DateTime.now();
@@ -39,7 +39,7 @@ class User {
     return {
       'name': name,
       'doaa': doaa,
-      'time': time.millisecondsSinceEpoch,
+      'time': timeStamp,
       'is_alive': isAlive,
     };
   }
