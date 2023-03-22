@@ -24,8 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String name = 'Test name';
-  String doaa = 'Test doaa here';
   int counter = 0;
   final controller = ScrollController();
 
@@ -316,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 // softWrap: false,
                                                 // overflow: TextOverflow.ellipsis,
                                                 text: TextSpan(
-                                                  text: user.doaa * num * 5,
+                                                  text: user.doaa,
                                                   style: TextStyle(
                                                     color: black1,
                                                     height: 1.2,
@@ -338,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     color: pinkColor,
                                                     height: 1.1,
                                                     fontWeight: FontWeight.w800,
-                                                    fontSize: 15.sp,
+                                                    fontSize: 18.sp,
                                                   ),
                                                 ),
                                               ),
@@ -477,24 +475,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                     decoration: BoxDecoration(
                                                       borderRadius: BorderRadius.circular(8.sp),
-                                                      color: isInView ? Colors.blue : pinkColor.withAlpha(15),
+                                                      color: pinkColor.withAlpha(isInView?23:15),
                                                     ),
                                                     child: Stack(
+                                                      fit: StackFit.expand,
                                                       children: [
                                                         // Container content goes here
-                                                        Column(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            /// name
-                                                            nameWidget,
-                                                            SizedBox(
-                                                              height: 6.sp,
-                                                            ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(
+                                                            horizontal: AppPadding.p18,
+                                                            vertical: AppPadding.p25,
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            children: [
+                                                              /// name
+                                                              nameWidget,
+                                                              SizedBox(
+                                                                height: 6.sp,
+                                                              ),
 
-                                                            /// doaa
-                                                            Expanded(child: doaaWidget),
-                                                          ],
+                                                              /// doaa
+                                                              Expanded(child: doaaWidget),
+                                                            ],
+                                                          ),
                                                         ),
                                                         if (!user.isAlive)
                                                           PositionedDirectional(
@@ -519,137 +524,47 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               ),
                             ),
-
-                            /// name and doaa
-                            Container(
-                              color: pinkColor.withAlpha(15),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.sp,
-                                vertical: 20.sp,
-                              ),
-                              width: 100.w,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // previous
-                                  MaterialButton(
-                                    onPressed: () {
-                                      previous();
-                                    },
-                                    shape: const CircleBorder(),
-                                    padding: EdgeInsets.all(2.sp),
-                                    minWidth: 6.w,
-                                    color: pinkColor,
-                                    // elevation: 0,
-                                    focusElevation: 0,
-                                    highlightElevation: 0,
-                                    hoverElevation: 0,
-                                    disabledElevation: 0,
-                                    child: Icon(
-                                      Icons.navigate_before,
-                                      size: 16.sp,
-                                      color: offWhiteColor,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        /// name
-                                        Text(
-                                          name,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: pinkColor,
-                                            height: 1.1,
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 15.sp,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 6.sp,
-                                        ),
-
-                                        /// doaa
-                                        Text(
-                                          doaa,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: black1,
-                                            height: 1.2,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15.sp,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  // next
-                                  MaterialButton(
-                                    onPressed: () {
-                                      next();
-                                    },
-                                    shape: const CircleBorder(),
-                                    padding: EdgeInsets.all(2.sp),
-                                    minWidth: 6.w,
-                                    color: pinkColor,
-                                    // elevation: 0,
-                                    focusElevation: 0,
-                                    highlightElevation: 0,
-                                    hoverElevation: 0,
-                                    disabledElevation: 0,
-                                    child: Icon(
-                                      Icons.navigate_next,
-                                      size: 16.sp,
-                                      color: offWhiteColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                             // buttons
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                // horizontal: 14.sp,
-                                horizontal: 8.w,
-                                vertical: 4.sp,
-                              ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    random();
-                                  },
-                                  minWidth: 85.w,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.sp),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8.sp,
-                                  ),
-                                  // minWidth: 6.w,
-                                  color: pinkColor.withAlpha(10),
-                                  elevation: 0,
-                                  focusElevation: 0,
-                                  highlightElevation: 0,
-                                  hoverElevation: 0,
-                                  disabledElevation: 0,
-                                  child: SizedBox(
-                                    // width: 30.w,
-                                    child: Text(
-                                      'اختيار عشوائي',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: pinkColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //     // horizontal: 14.sp,
+                            //     horizontal: 8.w,
+                            //     vertical: 4.sp,
+                            //   ),
+                            //   child: Align(
+                            //     alignment: Alignment.center,
+                            //     child: MaterialButton(
+                            //       onPressed: () {
+                            //         random();
+                            //       },
+                            //       minWidth: 85.w,
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(8.sp),
+                            //       ),
+                            //       padding: EdgeInsets.symmetric(
+                            //         vertical: 8.sp,
+                            //       ),
+                            //       // minWidth: 6.w,
+                            //       color: pinkColor.withAlpha(10),
+                            //       elevation: 0,
+                            //       focusElevation: 0,
+                            //       highlightElevation: 0,
+                            //       hoverElevation: 0,
+                            //       disabledElevation: 0,
+                            //       child: SizedBox(
+                            //         // width: 30.w,
+                            //         child: Text(
+                            //           'اختيار عشوائي',
+                            //           textAlign: TextAlign.center,
+                            //           style: TextStyle(
+                            //             fontSize: 12.sp,
+                            //             color: pinkColor,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
 
                             SizedBox(
                               height: 15.sp,
