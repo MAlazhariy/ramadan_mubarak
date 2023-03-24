@@ -51,6 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (responseModel.isSuccess) {
       if(!mounted) return;
+      SnkBar.showSuccess(context, 'تم التسجيل بنجاح.\n'
+          'تم إرسال دعاءك للمراجعة');
       // insert the user to users list in the doaa provider
       Provider.of<DoaaProvider>(context, listen: false).insertTheNewUser();
       return _navigate();
