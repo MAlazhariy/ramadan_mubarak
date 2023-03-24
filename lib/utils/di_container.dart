@@ -5,11 +5,13 @@ import 'package:ramadan_kareem/data/data_source/remote/dio/dio_client.dart';
 import 'package:ramadan_kareem/data/data_source/remote/dio/logging_interceptor.dart';
 import 'package:ramadan_kareem/data/repository/auth_repo.dart';
 import 'package:ramadan_kareem/data/repository/doaa_repo.dart';
+import 'package:ramadan_kareem/data/repository/profile_repo.dart';
 import 'package:ramadan_kareem/data/repository/splash_repo.dart';
 import 'package:ramadan_kareem/providers/auth_provider.dart';
 import 'package:ramadan_kareem/providers/doaa_provider.dart';
 import 'package:ramadan_kareem/providers/field_doaa_provider.dart';
 import 'package:ramadan_kareem/providers/internet_provider.dart';
+import 'package:ramadan_kareem/providers/profile_provider.dart';
 import 'package:ramadan_kareem/providers/splash_provider.dart';
 import 'package:ramadan_kareem/utils/app_uri.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +28,7 @@ class Di {
     sl.registerLazySingleton(() => SplashRepo(sharedPreferences: sl()));
     sl.registerLazySingleton(() => AuthRepo(sharedPreferences: sl(), dioClient: sl()));
     sl.registerLazySingleton(() => DoaaRepo(sharedPreferences: sl(), dioClient: sl()));
+    sl.registerLazySingleton(() => ProfileRepo(sl()));
 
     // Providers
     sl.registerFactory(() => SplashProvider(sl()));
@@ -33,6 +36,7 @@ class Di {
     sl.registerFactory(() => AuthProvider(authRepo: sl()));
     sl.registerFactory(() => FieldDoaaProvider());
     sl.registerFactory(() => DoaaProvider(sl()));
+    sl.registerFactory(() => ProfileProvider(sl()));
 
     // External
     final sharedPreferences = await SharedPreferences.getInstance();

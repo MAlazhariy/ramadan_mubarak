@@ -49,8 +49,4 @@ class AuthProvider with ChangeNotifier {
   //
   //   return isSuccess;
   // }
-
-  String getUserId() {
-    return authRepo.getUserId();
-  }
 }

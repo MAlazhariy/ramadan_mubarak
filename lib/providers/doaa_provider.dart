@@ -5,6 +5,7 @@ import 'package:ramadan_kareem/data/model/base/response_model.dart';
 import 'package:ramadan_kareem/data/model/user_model.dart';
 import 'package:ramadan_kareem/data/repository/auth_repo.dart';
 import 'package:ramadan_kareem/data/repository/doaa_repo.dart';
+import 'package:ramadan_kareem/data/repository/profile_repo.dart';
 import 'package:ramadan_kareem/utils/di_container.dart';
 
 class DoaaProvider extends ChangeNotifier {
@@ -122,8 +123,8 @@ class DoaaProvider extends ChangeNotifier {
   /// insert the new user to the top of users
   /// to show in the home screen
   void insertTheNewUser() {
-    final authProvider = Di.sl<AuthRepo>();
-    final user = authProvider.getUserDetails();
+    final profileRepo = Di.sl<ProfileRepo>();
+    final user = profileRepo.getLocalUserDetails();
     if(user ==null){
       return;
     }

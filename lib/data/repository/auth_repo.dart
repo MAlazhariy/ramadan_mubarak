@@ -9,7 +9,9 @@ import 'package:ramadan_kareem/data/data_source/remote/dio/dio_client.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
 import 'package:ramadan_kareem/data/model/base/api_response.dart';
 import 'package:ramadan_kareem/data/model/user_details_model.dart';
+import 'package:ramadan_kareem/data/repository/profile_repo.dart';
 import 'package:ramadan_kareem/utils/app_string_keys.dart';
+import 'package:ramadan_kareem/utils/di_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepo {
@@ -47,8 +49,52 @@ class AuthRepo {
       });
 
       await _saveUserId(docId);
-      await updateUserData(user);
+      await Di.sl<ProfileRepo>().updateUserData(user);
       await _sendNotification(user);
+
+      return ApiResponse.withSuccess();
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.handle(e));
+    }
+  }
+
+  /// check is user exists in Database or not.
+  /// you should check at the first open.
+  Future<bool> checkIsUserExists() async {
+    try {
+      final deviceId = await PlatformDeviceId.getDeviceId;
+      if(deviceId == null){
+        return false;
+      }
+
+      final data = await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(deviceId).get();
+
+      if(!data.exists){
+        return false;
+      }
+
+      final user = UserDetails.fromJson(
+        data.data()!,
+        id: data.id,
+      );
+
+      await _saveUserId(deviceId);
+      await Di.sl<ProfileRepo>().updateUserData(user);
+      await _updateToken(deviceId);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<ApiResponse> _updateToken(String id) async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+
+      await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(id).update({
+        'token': token ?? '',
+      });
 
       return ApiResponse.withSuccess();
     } catch (e) {
@@ -73,30 +119,6 @@ class AuthRepo {
     } catch (e) {
       rethrow;
     }
-  }
-
-  String getUserId() {
-    return sharedPreferences.getString(AppLocalKeys.USER_ID) ?? '';
-  }
-
-  Future<void> updateUserData(UserDetails user) async {
-    try {
-      final userDataEncoded = json.encode(user);
-      await sharedPreferences.setString(AppLocalKeys.USER_DATA, userDataEncoded);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  UserDetails? getUserDetails() {
-    final userData = sharedPreferences.getString(AppLocalKeys.USER_DATA);
-    if (userData == null) {
-      return null;
-    }
-
-    final userDataDecoded = json.decode(userData);
-
-    return UserDetails.fromJson(userDataDecoded, id: userDataDecoded['id']);
   }
 
 // Future<bool> logout() async {

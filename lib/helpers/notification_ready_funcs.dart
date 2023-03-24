@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:developer';
 import 'package:adhan/adhan.dart';
@@ -13,7 +12,7 @@ import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
 void readyShowScheduledNotification(BuildContext context) async {
   Coordinates coordinates;
 
-  if(CacheHelper.isCoordinatesSaved()){
+  if (CacheHelper.isCoordinatesSaved()) {
     coordinates = Coordinates(CacheHelper.getLatitude(), CacheHelper.getLongitude());
   } else {
     Position position = await _determinePosition(context);
@@ -21,8 +20,7 @@ void readyShowScheduledNotification(BuildContext context) async {
     CacheHelper.setCoordinates(coordinates.latitude, coordinates.longitude);
   }
 
-  final calculationParameters =
-      CalculationMethod.muslim_world_league.getParameters();
+  final calculationParameters = CalculationMethod.muslim_world_league.getParameters();
   calculationParameters.madhab = Madhab.shafi;
   final DateTime now = DateTime.now();
 
@@ -34,7 +32,7 @@ void readyShowScheduledNotification(BuildContext context) async {
     if (hijriMonthInt != 9) {
       var users = [];
       String callUser = '';
-      if(users.isNotEmpty??false){
+      if (users.isNotEmpty ?? false) {
         callUser = ' يا ${users!.first.name}';
       }
 
@@ -155,8 +153,7 @@ Future<Position> _determinePosition(BuildContext context) async {
 
   if (permission == LocationPermission.deniedForever) {
     // Permissions are denied forever, handle appropriately.
-    return Future.error(
-        'Location permissions are denied forever!, we cannot request permissions.');
+    return Future.error('Location permissions are denied forever!, we cannot request permissions.');
   }
 
   // When we reach here, permissions are granted and we can

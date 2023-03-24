@@ -1,11 +1,11 @@
 import 'package:ramadan_kareem/data/model/user_model.dart';
-import 'package:ramadan_kareem/helpers/api_data_helper.dart';
+import 'package:ramadan_kareem/helpers/enums/user_role_enum.dart';
 import 'package:ramadan_kareem/helpers/enums/user_status_enum.dart';
 
 class UserDetails extends User {
-
   late final String? deviceId;
   late final UserStatus status;
+  late final UserRole role;
 
   UserDetails({
     required super.id,
@@ -27,6 +27,7 @@ class UserDetails extends User {
   UserDetails.fromJson(Map<String, dynamic> json, {required String id}) : super.fromJson(json, userId: id) {
     deviceId = json['device_id'];
     status = json['status'].toString().toUserStatus();
+    role = json['role']?.toString().toUserRole() ?? UserRole.user;
   }
 
   @override
@@ -36,6 +37,7 @@ class UserDetails extends User {
       ...super.toJson(),
       'device_id': deviceId,
       'status': status.name,
+      'role': role.name,
     };
   }
 }

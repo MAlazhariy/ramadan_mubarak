@@ -4,6 +4,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:provider/provider.dart';
 import 'package:ramadan_kareem/providers/doaa_provider.dart';
+import 'package:ramadan_kareem/providers/profile_provider.dart';
 import 'package:ramadan_kareem/utils/resources/assets_manger.dart';
 import 'package:ramadan_kareem/utils/resources/dimensions_manager.dart';
 import 'package:ramadan_kareem/ztrash/shared/cache_helper/cache_helper.dart';
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.addListener(_scrollListener);
     
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<ProfileProvider>(context, listen: false).getUserIfNotExists();
       controller.jumpTo(
         Provider.of<DoaaProvider>(context, listen: false).cachedPosition,
       );
