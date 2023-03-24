@@ -63,13 +63,13 @@ class AuthRepo {
   Future<bool> checkIsUserExists() async {
     try {
       final deviceId = await PlatformDeviceId.getDeviceId;
-      if(deviceId == null){
+      if (deviceId == null) {
         return false;
       }
 
       final data = await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(deviceId).get();
 
-      if(!data.exists){
+      if (!data.exists) {
         return false;
       }
 

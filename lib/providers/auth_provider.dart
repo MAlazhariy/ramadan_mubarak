@@ -37,6 +37,10 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
+  Future<bool> checkIsUserExists() async {
+    return await authRepo.checkIsUserExists();
+  }
+
   // Future<bool> logoutAndClearData() async {
   //   _isLoading = true;
   //   notifyListeners();

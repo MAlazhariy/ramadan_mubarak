@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> init() async {
     Provider.of<SplashProvider>(context, listen: false).getRandomHadeeth();
     await Provider.of<SplashProvider>(context, listen: false).initAppData();
-    if(!mounted) return;
+    if (!mounted) return;
     final responseModel = await Provider.of<DoaaProvider>(context, listen: false).getData();
 
     if (responseModel.isSuccess) {
@@ -56,7 +56,12 @@ class _SplashScreenState extends State<SplashScreen> {
     if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
       screenRoute = Routes.getDashboardScreen();
     } else {
-      screenRoute = Routes.getLoginScreen();
+      final isUserExists = await Provider.of<AuthProvider>(context, listen: false).checkIsUserExists();
+      if (isUserExists) {
+        screenRoute = Routes.getDashboardScreen();
+      } else {
+        screenRoute = Routes.getLoginScreen();
+      }
     }
 
     // // TODO: HANDLE ONBOARDING SCREEN
