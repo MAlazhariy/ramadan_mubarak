@@ -6,6 +6,7 @@ class UserDetails extends User {
   late final String? deviceId;
   late final UserStatus status;
   late final UserRole role;
+  late final String token;
 
   bool get isModerator => role == UserRole.admin || role == UserRole.moderator;
   bool get isAdmin => role == UserRole.admin;
@@ -19,6 +20,7 @@ class UserDetails extends User {
     required this.deviceId,
     this.status = UserStatus.newMember,
     this.role = UserRole.user,
+    this.token = '',
   });
 
   UserDetails.fromObject(
@@ -32,6 +34,7 @@ class UserDetails extends User {
     deviceId = json['device_id'];
     status = json['status'].toString().toUserStatus();
     role = json['role']?.toString().toUserRole() ?? UserRole.user;
+    token = json['token'];
   }
 
   @override
