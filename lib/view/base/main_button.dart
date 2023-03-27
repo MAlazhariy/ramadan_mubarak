@@ -13,6 +13,7 @@ class MainButton extends StatelessWidget {
     this.horizontalContentPadding = 70,
     this.verticalContentPadding = 15,
     this.fit = true,
+    this.color = kMainColor,
     this.outlined = false,
     this.strokeAlign = BorderSide.strokeAlignInside,
     this.flat = false,
@@ -22,6 +23,7 @@ class MainButton extends StatelessWidget {
   final String title;
   final double fontSize;
   final bool fit;
+  final Color color;
   final bool outlined;
   final double strokeAlign;
   final double horizontalContentPadding;
@@ -50,7 +52,7 @@ class MainButton extends StatelessWidget {
             color: !_activated
                 ? Colors.grey[400]
                 : flat && !outlined
-                    ? kMainColor
+                    ? color
                     : null,
             gradient: flat || outlined || !_activated
                 ? null
@@ -65,7 +67,7 @@ class MainButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSize.s14),
             border: outlined
                 ? Border.all(
-                    color: _activated ? kMainColor : Colors.grey.shade400,
+                    color: _activated ? color : Colors.grey.shade400,
                     width: 2,
                     strokeAlign: strokeAlign,
                   )
@@ -81,7 +83,7 @@ class MainButton extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: kBoldFontStyle.copyWith(
-                color: outlined ? kMainColor : kWhiteColor,
+                color: outlined ? color : kWhiteColor,
                 fontSize: fontSize,
               ),
             ),
