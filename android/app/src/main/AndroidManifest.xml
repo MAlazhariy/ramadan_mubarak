@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="malazhariy.ramadan_kareem">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- receive fcm onOpenedApp permission -->
+    <uses-permission android:name="com.google.firebase.messaging.permission.RECEIVE" />
 
     <!--notification x-code permissions -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -59,7 +62,8 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            tools:targetApi="honeycomb">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -71,6 +75,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- FCM notification permissions -->
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="ed3ely-ma3ak" />
 
             <!-- share app permission -->
             <!--            <intent-filter>-->
@@ -81,7 +93,7 @@
 
         </activity>
 
-        <!--       fix firebase issue -->
+        <!-- fix firebase issue -->
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="ocr" />
@@ -90,7 +102,13 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
-
+        <!-- fcm icon -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_icon" />
+        <!-- fcm icon color -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:value="@color/notification_icon_color" />
     </application>
 </manifest>
