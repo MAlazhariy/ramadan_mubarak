@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:ramadan_kareem/data/data_source/remote/dio/dio_client.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
 import 'package:ramadan_kareem/data/model/base/api_response.dart';
 import 'package:ramadan_kareem/data/model/user_details_model.dart';
@@ -11,8 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileRepo {
   final SharedPreferences sharedPreferences;
+  final DioClient dioClient;
 
-  ProfileRepo(this.sharedPreferences);
+  ProfileRepo(this.sharedPreferences, this.dioClient);
 
   Future<ApiResponse> getUserData() async {
     try {
@@ -69,6 +71,11 @@ class ProfileRepo {
         data: {
           'status': 'ok',
         },
+      );
+
+      await dioClient.postFCM(
+        title: "Pending Edit..",
+        body: "${user.name}->$name\n-----\nBefore:${user.doaa}\nAfter:$doaa",
       );
       debugPrint('getUserData response data: ${response.data}');
 
