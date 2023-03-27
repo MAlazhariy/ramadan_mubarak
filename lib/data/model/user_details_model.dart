@@ -34,7 +34,7 @@ class UserDetails extends User {
     deviceId = json['device_id'];
     status = json['status'].toString().toUserStatus();
     role = json['role']?.toString().toUserRole() ?? UserRole.user;
-    token = json['token'];
+    token = json['token']??'';
   }
 
   @override
