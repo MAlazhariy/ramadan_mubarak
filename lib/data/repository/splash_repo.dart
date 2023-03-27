@@ -29,8 +29,6 @@ class SplashRepo {
       await Hive.initFlutter();
       await Hive.openBox('box');
 
-      // init local Notifications
-      await NotificationApi.init(true);
       // init TimeZone
       tz.initializeTimeZones();
 
