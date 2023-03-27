@@ -86,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     SystemChrome.restoreSystemUIOverlays();
+    Provider.of<FieldDoaaProvider>(context, listen: false).clear();
     super.dispose();
   }
 
@@ -150,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  /// name
+                                  // name
                                   CustomTextForm(
                                     controller: nameCtrl,
                                     validator: (value) {
@@ -248,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               _navigate();
                             },
-                            child: Text(
+                            child: const Text(
                               'متابعة دون تسجيل الدخول',
                               style: kMediumFontStyle,
                             ),

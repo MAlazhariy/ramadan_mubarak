@@ -49,7 +49,7 @@ class AuthRepo {
       });
 
       await _saveUserId(docId);
-      await Di.sl<ProfileRepo>().updateUserData(user);
+      await Di.sl<ProfileRepo>().updateUserLocalData(user);
       await _sendNotification(user);
 
       return ApiResponse.withSuccess();
@@ -79,7 +79,7 @@ class AuthRepo {
       );
 
       await _saveUserId(deviceId);
-      await Di.sl<ProfileRepo>().updateUserData(user);
+      await Di.sl<ProfileRepo>().updateUserLocalData(user);
       await _updateToken(deviceId);
 
       return true;
