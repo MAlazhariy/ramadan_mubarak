@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/helpers/push_to.dart';
 import 'package:ramadan_kareem/utils/app_uri.dart';
 import 'package:ramadan_kareem/view/base/internet_consumer_builder.dart';
-import 'package:ramadan_kareem/view/more/base/more_item_builder.dart';
+import 'package:ramadan_kareem/view/screens/more/base/more_item_builder.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
 import 'package:ramadan_kareem/view/screens/settings/update_user_screen.dart';
 import 'package:sizer/sizer.dart';

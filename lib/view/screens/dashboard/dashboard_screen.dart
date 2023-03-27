@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ramadan_kareem/view/more/more_screen.dart';
+import 'package:ramadan_kareem/view/screens/more/more_screen.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
 import 'package:ramadan_kareem/view/screens/share_app/share_app_screen.dart';
