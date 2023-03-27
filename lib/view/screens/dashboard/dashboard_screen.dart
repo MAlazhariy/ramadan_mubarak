@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ramadan_kareem/view/more/more_screen.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
 import 'package:ramadan_kareem/view/screens/share_app/share_app_screen.dart';
@@ -16,8 +17,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     ShareAppScreen(),
-    const HomeScreen(),
-    // SettingsScreen(),
+    HomeScreen(),
+    MoreScreen(),
   ];
 
   @override
@@ -41,10 +42,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: const Icon(Icons.home_rounded),
             title: const Text("الرئيسية"),
           ),
-          // SalomonBottomBarItem(
-          //   icon: const Icon(Icons.settings),
-          //   title: const Text("الإعدادات"),
-          // ),
+          SalomonBottomBarItem(
+            icon: const Icon(Icons.more_horiz),
+            title: const Text("المزيد"),
+          ),
         ],
       ),
     );
