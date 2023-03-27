@@ -91,7 +91,10 @@ class DioClient {
   }
 
   Future<Response> postFCM({
-    required UserDetails user,
+    String to = "/topics/${AppUri.ADMIN_FCM_TOPIC}",
+    required String title,
+    String body = '',
+    Map<String, dynamic>? data,
   }) async {
     try {
       final dio = Dio();
@@ -109,10 +112,10 @@ class DioClient {
         AppUri.SEND_FCM,
         data:
           {
-            "to": "/topics/${AppUri.ADMIN_FCM_TOPIC}",
+            "to": to,
             "notification": {
-              "title": user.status.name,
-              "body": "${user.name}\n-----\n${user.doaa}"
+              "title": title,
+              "body": body,
             },
             "android": {
               "priority": "HIGH",
@@ -124,8 +127,7 @@ class DioClient {
             },
             "data": {
               "click_action": "FLUTTER_NOTIFICATION_CLICK",
-              "status": user.status.name,
-              "id": user.id,
+              ...?data,
             }
           },
       );
