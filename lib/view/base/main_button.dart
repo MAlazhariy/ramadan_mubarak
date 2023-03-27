@@ -52,7 +52,7 @@ class MainButton extends StatelessWidget {
                 : flat && !outlined
                     ? kMainColor
                     : null,
-            gradient: flat
+            gradient: flat || outlined || !_activated
                 ? null
                 : const LinearGradient(
                     colors: [
