@@ -30,7 +30,7 @@ class Di {
     sl.registerLazySingleton(() => SplashRepo(sharedPreferences: sl()));
     sl.registerLazySingleton(() => AuthRepo(sharedPreferences: sl(), dioClient: sl()));
     sl.registerLazySingleton(() => DoaaRepo(sharedPreferences: sl(), dioClient: sl()));
-    sl.registerLazySingleton(() => ProfileRepo(sl()));
+    sl.registerLazySingleton(() => ProfileRepo(sl(), sl()));
     sl.registerLazySingleton(() => AdminRepo(sl()));
 
     // Providers
