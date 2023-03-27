@@ -15,3 +15,11 @@ class AppLocalKeys {
   static const LAST_DOC_TIME = "last_doc_time";
 }
 
+class AppStrings {
+  static const defaultApproveFCMTitle = "مبروك، لقد تم قبول دعاءك ✨";
+  static const defaultApproveFCMBody = "دعاءك الآن يظهر لباقي المستخدمين.";
+  // static const defaultApproveFCMBody = "دعاءك الآن سيظهر لباقي المستخدمين وسيقومون بالدعاء لك كما ستقوم بالدعاء لهم أيضًا";
+  static const defaultRejectFCMTitle = "للأسف، تم رفض بيانات دعاءك 😢";
+  static const defaultRejectFCMBody = "للأسف لن يظهر دعاءك للمستخدمين حتى تقوم بتعديل بياناتك.";
+}
+
