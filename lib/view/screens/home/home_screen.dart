@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
 
                             SizedBox(
-                              height: 200,
+                              height: 230,
                               child: Consumer<DoaaProvider>(
                                 builder: (context, doaaProvider, _) {
                                   final length = doaaProvider.isLoading ? doaaProvider.users.length+1 : doaaProvider.users.length;
@@ -471,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   }
                                                   return Container(
                                                     width: 85.w,
-                                                    height: 100,
+                                                    height: 130,
                                                     margin: const EdgeInsets.symmetric(
                                                       horizontal: AppSize.s8,
                                                     ),
