@@ -10,9 +10,9 @@ import 'package:timezone/data/latest.dart' as tz;
 class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
 
-  static Future _notificationDetails() async {
+  static Future _notificationDetails({bool doaaSound = false}) async {
 
-    return const NotificationDetails(
+    return NotificationDetails(
       android: AndroidNotificationDetails(
         'maghreb-17',
         'doaa_reminder', // channel name
@@ -25,7 +25,7 @@ class NotificationApi {
         icon: 'notification_icon',
         playSound: true,
         enableVibration: true,
-        sound: RawResourceAndroidNotificationSound('notification_audio'),
+        sound: doaaSound ? RawResourceAndroidNotificationSound('notification_audio') : null,
       ),
     );
   }
@@ -65,7 +65,7 @@ class NotificationApi {
     required String body,
     String payload = '',
   }) async {
-    return _notifications.show(
+    return await _notifications.show(
       id,
       title,
       body,
@@ -89,7 +89,7 @@ class NotificationApi {
       body,
       // _scheduleDaily(date , repeatDuration),
       tz.TZDateTime.from(date, tz.local),
-      await _notificationDetails(),
+      await _notificationDetails(doaaSound: true),
       payload: payload,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
