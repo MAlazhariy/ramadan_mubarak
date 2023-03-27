@@ -29,7 +29,7 @@ Future<void> showErrorDialog({
                   horizontal: AppSize.s8,
                 ),
                 decoration: const BoxDecoration(
-                  color: kWrongAnswerColor,
+                  color: kWrongColor,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(15),
                     topLeft: Radius.circular(15),
@@ -57,7 +57,7 @@ Future<void> showErrorDialog({
                       Text(
                         title ?? 'حدث خطأ',
                         style: const TextStyle(
-                          color: kWrongAnswerColor,
+                          color: kWrongColor,
                           fontWeight: FontWeight.w900,
                           fontSize: FontSize.s18,
                         ),
