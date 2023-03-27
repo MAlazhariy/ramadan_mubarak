@@ -84,7 +84,7 @@ void readyShowScheduledNotification(BuildContext context) async {
 
     NotificationApi.showScheduledNotification(
       title: 'اقترب موعد استجابة الدعاء',
-      body: 'هيا ندعي لـ $notifiName\n$notifiDoaa',
+      body: '',
       date: scheduledDate,
       repeatDuration: Duration(seconds: 5 * (i + 1)),
       id: hijriDayInt,
