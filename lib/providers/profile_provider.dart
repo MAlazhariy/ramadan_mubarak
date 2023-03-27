@@ -42,7 +42,14 @@ class ProfileProvider extends ChangeNotifier {
         id: apiResponse.response!.data['id'],
       );
       debugPrint('user info: ${_userDetails!.toJson()}');
-      profileRepo.updateUserData(_userDetails!);
+      // update user in local data
+      profileRepo.updateUserLocalData(_userDetails!);
+      // subscribe to topics
+      if(_userDetails?.isModerator == true){
+        FirebaseMessaging.instance.subscribeToTopic(AppUri.ADMIN_FCM_TOPIC);
+      } else {
+        FirebaseMessaging.instance.unsubscribeFromTopic(AppUri.ADMIN_FCM_TOPIC);
+      }
     } else {
       debugPrint('Login failed: ${apiResponse.error?.message}');
       responseModel = ResponseModel.withError(apiResponse.error?.message);
