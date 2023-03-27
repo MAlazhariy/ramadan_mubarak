@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ramadan_kareem/utils/routes.dart';
 import 'package:ramadan_kareem/view/screens/home/home_screen.dart';
 import 'package:ramadan_kareem/helpers/push_and_finish.dart';
 import 'package:ramadan_kareem/ztrash/shared/styles.dart';
@@ -86,10 +87,7 @@ class DoneScreen extends StatelessWidget {
                 alignment: AlignmentDirectional.center,
                 child: MaterialButton(
                   onPressed: () {
-                    pushAndFinish(
-                      context,
-                      const HomeScreen(),
-                    );
+                    Navigator.pushNamedAndRemoveUntil(context, Routes.getDashboardScreen(), (route) => false);
                   },
                   padding: const EdgeInsets.all(0),
                   shape: const StadiumBorder(),
