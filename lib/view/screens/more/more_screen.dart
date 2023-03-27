@@ -5,7 +5,7 @@ import 'package:ramadan_kareem/utils/app_uri.dart';
 import 'package:ramadan_kareem/view/base/internet_consumer_builder.dart';
 import 'package:ramadan_kareem/view/screens/more/base/more_item_builder.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
-import 'package:ramadan_kareem/view/screens/settings/update_user_screen.dart';
+import 'package:ramadan_kareem/view/screens/update_user/update_user_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

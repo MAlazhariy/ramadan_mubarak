@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/helpers/notification_ready_funcs.dart';
 import 'package:ramadan_kareem/helpers/push_to.dart';
-import 'package:ramadan_kareem/view/screens/settings/update_user_screen.dart';
+import 'package:ramadan_kareem/view/screens/update_user/update_user_screen.dart';
 import 'package:ramadan_kareem/view/base/custom_dialog.dart';
 import 'package:ramadan_kareem/view/base/dialog_buttons.dart';
 import 'package:ramadan_kareem/ztrash/shared/components/constants.dart';
