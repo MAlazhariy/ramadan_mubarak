@@ -3,8 +3,8 @@ import 'package:ramadan_kareem/helpers/api_data_helper.dart';
 
 class User {
   late final String id;
-  late final String name;
-  late final String doaa;
+  late String name;
+  late String doaa;
   late final DateTime time;
   late final bool isAlive;
 

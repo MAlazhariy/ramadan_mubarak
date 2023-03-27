@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/data/data_source/remote/exception/api_error_handler.dart';
 import 'package:ramadan_kareem/data/model/base/api_response.dart';
 import 'package:ramadan_kareem/data/model/user_details_model.dart';
@@ -25,6 +26,7 @@ class ProfileRepo {
           .doc(userId)
           .get();
 
+      debugPrint('user id: $userId');
 
       final response = Response(
         requestOptions: RequestOptions(path: ''),
@@ -34,6 +36,41 @@ class ProfileRepo {
           'data': data.data(),
         },
       );
+      debugPrint('getUserData response data: ${response.data}');
+
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResponse> updateUser({
+    required String name,
+    required String doaa,
+}) async {
+    try {
+      final user = getLocalUserDetails();
+      if(user == null){
+        return ApiResponse.withError(ApiErrorHandler.handle('user not found in local'));
+      }
+
+      await FirebaseFirestore.instance
+          .collection(FirebaseKeys.USERS_COLLECTION)
+          .doc(user.id)
+      .update({
+        'name_update': name,
+        'doaa_update': doaa,
+        'pending_edit': true,
+      });
+
+      final response = Response(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: 200,
+        data: {
+          'status': 'ok',
+        },
+      );
+      debugPrint('getUserData response data: ${response.data}');
 
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -45,7 +82,7 @@ class ProfileRepo {
     return sharedPreferences.getString(AppLocalKeys.USER_ID);
   }
 
-  Future<void> updateUserData(UserDetails user) async {
+  Future<void> updateUserLocalData(UserDetails user) async {
     try {
       final userDataEncoded = json.encode(user);
       await sharedPreferences.setString(AppLocalKeys.USER_DATA, userDataEncoded);

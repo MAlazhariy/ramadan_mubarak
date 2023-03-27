@@ -1,7 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ramadan_kareem/data/model/base/response_model.dart';
 import 'package:ramadan_kareem/data/model/user_details_model.dart';
 import 'package:ramadan_kareem/data/repository/profile_repo.dart';
+import 'package:ramadan_kareem/helpers/enums/user_role_enum.dart';
+import 'package:ramadan_kareem/utils/app_uri.dart';
 
 class ProfileProvider extends ChangeNotifier {
   final ProfileRepo profileRepo;
@@ -42,6 +45,34 @@ class ProfileProvider extends ChangeNotifier {
       profileRepo.updateUserData(_userDetails!);
     } else {
       debugPrint('Login failed: ${apiResponse.error?.message}');
+      responseModel = ResponseModel.withError(apiResponse.error?.message);
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return responseModel;
+  }
+
+  Future<ResponseModel> updateUser({
+    required String name,
+    required String doaa,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    debugPrint('updateUser..');
+
+    final apiResponse = await profileRepo.updateUser(name: name, doaa: doaa);
+    late ResponseModel responseModel;
+
+    if (apiResponse.isSuccess) {
+      responseModel = ResponseModel.withSuccess();
+      _userDetails?.name = name;
+      _userDetails?.doaa = doaa;
+      debugPrint('user new info: ${_userDetails!.toJson()}');
+      profileRepo.updateUserLocalData(_userDetails!);
+    } else {
+      debugPrint('update data failed: ${apiResponse.error?.message}');
       responseModel = ResponseModel.withError(apiResponse.error?.message);
     }
 

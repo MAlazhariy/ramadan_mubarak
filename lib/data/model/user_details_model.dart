@@ -7,6 +7,9 @@ class UserDetails extends User {
   late final UserStatus status;
   late final UserRole role;
 
+  bool get isModerator => role == UserRole.admin || role == UserRole.moderator;
+  bool get isAdmin => role == UserRole.admin;
+
   UserDetails({
     required super.id,
     required super.name,
@@ -15,6 +18,7 @@ class UserDetails extends User {
     super.isAlive,
     required this.deviceId,
     this.status = UserStatus.newMember,
+    this.role = UserRole.user,
   });
 
   UserDetails.fromObject(
