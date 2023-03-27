@@ -6,7 +6,7 @@ class User {
   late String name;
   late String doaa;
   late final DateTime time;
-  late final bool isAlive;
+  late bool isAlive;
 
   int get timeStamp => time.millisecondsSinceEpoch.abs();
 
