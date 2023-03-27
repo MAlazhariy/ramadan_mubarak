@@ -317,8 +317,8 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                 name: nameCtrl.text,
                                 doaa: doaaCtrl.text,
                                 isAdmin: isAdmin,
-                                notificationBody: nBody,
                                 notificationTitle: nTitle,
+                                notificationBody: nBody,
                               ).then((response) {
                                 if (response.isSuccess) {
                                   SnkBar.showSuccess(

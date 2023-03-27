@@ -62,7 +62,7 @@ class AdminProvider extends ChangeNotifier {
     final userName = name ?? user.name;
     final userDoaa = doaa ?? user.doaa;
     final notifTitle = notificationTitle ?? AppStrings.defaultApproveFCMTitle;
-    final notifBody = notificationTitle ?? AppStrings.defaultApproveFCMBody;
+    final notifBody = notificationBody ?? AppStrings.defaultApproveFCMBody;
 
     final _user = UserDetails(
       id: user.id,
@@ -111,7 +111,7 @@ class AdminProvider extends ChangeNotifier {
     final userName = name ?? user.name;
     final userDoaa = doaa ?? user.doaa;
     final notifTitle = notificationTitle ?? AppStrings.defaultRejectFCMTitle;
-    final notifBody = notificationTitle ?? AppStrings.defaultRejectFCMBody;
+    final notifBody = notificationBody ?? AppStrings.defaultRejectFCMBody;
 
     final _user = UserDetails(
       id: user.id,

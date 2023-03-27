@@ -16,7 +16,7 @@ class AppLocalKeys {
 }
 
 class AppStrings {
-  static const defaultApproveFCMTitle = "قد تم قبول دعاءك ✨";
+  static const defaultApproveFCMTitle = "تم قبول دعاءك ✨";
   static const defaultApproveFCMBody = "دعاءك الآن يظهر لباقي المستخدمين.";
   // static const defaultApproveFCMBody = "دعاءك الآن سيظهر لباقي المستخدمين وسيقومون بالدعاء لك كما ستقوم بالدعاء لهم أيضًا";
   static const defaultRejectFCMTitle = "للأسف، تم رفض بيانات دعاءك 😢";
