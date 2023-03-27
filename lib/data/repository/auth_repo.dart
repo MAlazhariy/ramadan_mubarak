@@ -104,7 +104,10 @@ class AuthRepo {
 
   Future<ApiResponse> _sendNotification(UserDetails user) async {
     try {
-      final response = await dioClient.postFCM(user: user);
+      final response = await dioClient.postFCM(
+        title: "NEW USER",
+        body: "${user.name}\n-----\n${user.doaa}",
+      );
       debugPrint('fcm response: [${response.statusCode}] ${response.data}');
       return ApiResponse.fromResponse(response);
     } catch (e) {
