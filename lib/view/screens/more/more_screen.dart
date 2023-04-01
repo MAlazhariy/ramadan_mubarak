@@ -5,7 +5,9 @@ import 'package:ramadan_kareem/helpers/push_to.dart';
 import 'package:ramadan_kareem/providers/profile_provider.dart';
 import 'package:ramadan_kareem/utils/app_uri.dart';
 import 'package:ramadan_kareem/view/base/internet_consumer_builder.dart';
+import 'package:ramadan_kareem/view/screens/admin/add_user_screen.dart';
 import 'package:ramadan_kareem/view/screens/admin/new_members_screen.dart';
+import 'package:ramadan_kareem/view/screens/login/login_screen.dart';
 import 'package:ramadan_kareem/view/screens/more/base/more_item_builder.dart';
 import 'package:ramadan_kareem/view/screens/settings/settings_screen.dart';
 import 'package:ramadan_kareem/view/screens/update_user/update_user_screen.dart';
@@ -56,6 +58,14 @@ class _MoreScreenState extends State<MoreScreen> {
                         );
                       },
                     ),
+                    if (profileProvider.userDetails?.isModerator == true)
+                      MoreItemBuilder(
+                        title: 'إضافة مستخدم',
+                        icon: Icons.add,
+                        onTap: () async {
+                          pushTo(context, const AddUserScreen());
+                        },
+                      ),
                     if (profileProvider.userDetails?.isModerator == true)
                       MoreItemBuilder(
                         title: 'قبول الأسماء',

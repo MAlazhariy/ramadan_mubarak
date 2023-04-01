@@ -145,6 +145,28 @@ class AdminProvider extends ChangeNotifier {
     return responseModel;
   }
 
+  Future<ResponseModel> addNewUser({
+    required String name,
+    required String doaa,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final apiResponse = await adminRepo.addNewUser(name: name, doaa: doaa);
+    late ResponseModel responseModel;
+
+    if (apiResponse.isSuccess) {
+      responseModel = ResponseModel.withSuccess();
+    } else {
+      debugPrint('addNewUser failed: ${apiResponse.error?.message}');
+      responseModel = ResponseModel.withError(apiResponse.error?.message);
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return responseModel;
+  }
+
   void notify() {
     return notifyListeners();
   }
