@@ -17,6 +17,58 @@ class AdminRepo {
 
   AdminRepo(this.dioClient);
 
+  Future<ApiResponse> getEditsPending() async {
+    try {
+      final data = await FirebaseFirestore.instance
+          .collection(FirebaseKeys.USERS_COLLECTION)
+          .where(FirebaseKeys.NAME_UPDATE, isNotEqualTo: '')
+          .get();
+
+      final response = Response(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: 200,
+        data: data.docs.map((e) => e.data()).toList(),
+      );
+
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.handle(e));
+    }
+  }
+
+  Future<ApiResponse> updateUserEdits({
+    required UserDetails user,
+    required bool sendNotification,
+    required String notificationTitle,
+    required String notificationBody,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection(FirebaseKeys.USERS_COLLECTION).doc(user.id).update({
+        ...user.toJson(),
+      });
+
+      final response = Response(
+        requestOptions: RequestOptions(path: ''),
+        statusCode: 200,
+        data: {
+          'status': 'ok',
+        },
+      );
+
+      if(sendNotification){
+        dioClient.postFCM(
+          title: notificationTitle,
+          body: notificationBody,
+          to: user.token,
+        );
+      }
+
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      return ApiResponse.withError(ApiErrorHandler.handle(e));
+    }
+  }
+
   Future<ApiResponse> getNewUsers() async {
     try {
       final data = await FirebaseFirestore.instance

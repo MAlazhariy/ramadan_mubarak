@@ -6,6 +6,7 @@ import 'package:ramadan_kareem/providers/profile_provider.dart';
 import 'package:ramadan_kareem/utils/app_uri.dart';
 import 'package:ramadan_kareem/view/base/internet_consumer_builder.dart';
 import 'package:ramadan_kareem/view/screens/admin/add_user_screen.dart';
+import 'package:ramadan_kareem/view/screens/admin/edits_screen.dart';
 import 'package:ramadan_kareem/view/screens/admin/new_members_screen.dart';
 import 'package:ramadan_kareem/view/screens/login/login_screen.dart';
 import 'package:ramadan_kareem/view/screens/more/base/more_item_builder.dart';
@@ -68,8 +69,16 @@ class _MoreScreenState extends State<MoreScreen> {
                       ),
                     if (profileProvider.userDetails?.isModerator == true)
                       MoreItemBuilder(
-                        title: 'قبول الأسماء',
+                        title: 'قبول التعديلات',
                         icon: Icons.manage_accounts_outlined,
+                        onTap: () async {
+                          pushTo(context, const EditsScreen());
+                        },
+                      ),
+                    if (profileProvider.userDetails?.isModerator == true)
+                      MoreItemBuilder(
+                        title: 'قبول الأسماء',
+                        icon: Icons.checklist,
                         onTap: () async {
                           pushTo(context, const NewMembersScreen());
                         },

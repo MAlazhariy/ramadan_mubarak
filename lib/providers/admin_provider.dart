@@ -13,10 +13,139 @@ class AdminProvider extends ChangeNotifier {
 
   bool _isLoading = false;
   List<UserDetails> _newUsers = [];
+  List<UserDetails> _updatedUsers = [];
 
   List<UserDetails> get newUsers => _newUsers;
+  List<UserDetails> get updatedUsers => _updatedUsers;
 
   bool get isLoading => _isLoading;
+
+  Future<ResponseModel> getEditsPending() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final apiResponse = await adminRepo.getEditsPending();
+    late ResponseModel responseModel;
+    _updatedUsers = [];
+
+    if (!apiResponse.isSuccess) {
+      responseModel = ResponseModel.withError(apiResponse.error?.message);
+    } else {
+      final List<Map<String, dynamic>> data = apiResponse.response!.data;
+
+      for (var json in data) {
+        _updatedUsers.add(
+          UserDetails.fromJson(
+            json,
+            id: json['id'],
+          ),
+        );
+      }
+      responseModel = ResponseModel.withSuccess();
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return responseModel;
+  }
+
+  Future<ResponseModel> approveUserEdits({
+    required UserDetails user,
+    String? name,
+    String? doaa,
+    bool isAdmin = false,
+    required bool sendNotification,
+    String? notificationTitle,
+    String? notificationBody,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final userName = name ?? user.nameUpdate;
+    final userDoaa = doaa ?? user.doaaUpdate;
+    final notifTitle = notificationTitle ?? AppStrings.defaultApproveUpdateFCMTitle;
+    final notifBody = notificationBody ?? AppStrings.defaultApproveUpdateFCMBody;
+
+    final _user = UserDetails(
+      id: user.id,
+      status: UserStatus.approved,
+      time: user.time,
+      deviceId: user.deviceId,
+      name: userName,
+      doaa: userDoaa,
+      isAlive: user.isAlive,
+      role: isAdmin ? UserRole.moderator : user.role,
+      token: user.token,
+    );
+
+    final apiResponse = await adminRepo.updateUserEdits(
+      user: _user,
+      sendNotification: sendNotification,
+      notificationTitle: notifTitle,
+      notificationBody: notifBody,
+    );
+    late ResponseModel responseModel;
+    if (!apiResponse.isSuccess) {
+      responseModel = ResponseModel.withError(apiResponse.error?.message);
+    } else {
+      // remove user from new users list
+      _updatedUsers.remove(user);
+      responseModel = ResponseModel.withSuccess();
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return responseModel;
+  }
+
+  Future<ResponseModel> rejectUserEdits({
+    required UserDetails user,
+    String? name,
+    String? doaa,
+    bool isAdmin = false,
+    required bool sendNotification,
+    String? notificationTitle,
+    String? notificationBody,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final userName = name ?? user.nameUpdate;
+    final userDoaa = doaa ?? user.doaaUpdate;
+    final notifTitle = notificationTitle ?? AppStrings.defaultRejectUpdateFCMTitle;
+    final notifBody = notificationBody ?? AppStrings.defaultRejectUpdateFCMBody;
+
+    final _user = UserDetails(
+      id: user.id,
+      status: UserStatus.rejected,
+      time: user.time,
+      deviceId: user.deviceId,
+      name: userName,
+      doaa: userDoaa,
+      isAlive: user.isAlive,
+      role: isAdmin ? UserRole.moderator : user.role,
+      token: user.token,
+    );
+
+    final apiResponse = await adminRepo.updateUserEdits(
+      user: _user,
+      sendNotification: sendNotification,
+      notificationTitle: notifTitle,
+      notificationBody: notifBody,
+    );
+    late ResponseModel responseModel;
+    if (!apiResponse.isSuccess) {
+      responseModel = ResponseModel.withError(apiResponse.error?.message);
+    } else {
+      // remove user from new users list
+      _updatedUsers.remove(user);
+      responseModel = ResponseModel.withSuccess();
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return responseModel;
+  }
 
   Future<ResponseModel> getNewUsers() async {
     _isLoading = true;

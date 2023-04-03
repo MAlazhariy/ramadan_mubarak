@@ -39,18 +39,19 @@ class _UserDataScreenState extends State<UserDataScreen> {
   late bool sendNotification;
   bool isApprovedNotification = true;
   bool isAdmin = false;
+  late final isEdit;
 
   @override
   void initState() {
     sendNotification = widget.sendNotification;
+    isEdit = widget.user.doaaUpdate.isNotEmpty;
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (!mounted) return;
       setState(() {
-        nameCtrl.text = widget.user.name;
-        doaaCtrl.text = widget.user.doaa;
-        notifTitleCtrl.text = AppStrings.defaultApproveFCMTitle;
-        notifBodyCtrl.text = AppStrings.defaultApproveFCMBody;
+        nameCtrl.text = widget.user.nameUpdate.isNotEmpty ? widget.user.nameUpdate : widget.user.name;
+        doaaCtrl.text = widget.user.doaaUpdate.isNotEmpty ? widget.user.doaaUpdate : widget.user.doaa;
+        setNotificationDefTitle();
         Provider.of<FieldDoaaProvider>(context, listen: false).initDoaaLength(doaaCtrl.text);
       });
     });
@@ -62,6 +63,16 @@ class _UserDataScreenState extends State<UserDataScreen> {
   void dispose() {
     Provider.of<FieldDoaaProvider>(context, listen: false).clear();
     super.dispose();
+  }
+
+  void setNotificationDefTitle() {
+    if (isEdit) {
+      notifTitleCtrl.text = isApprovedNotification ? AppStrings.defaultApproveUpdateFCMTitle : AppStrings.defaultRejectUpdateFCMTitle;
+      notifBodyCtrl.text = isApprovedNotification ? AppStrings.defaultApproveUpdateFCMBody : AppStrings.defaultRejectUpdateFCMBody;
+    } else {
+      notifTitleCtrl.text = isApprovedNotification ? AppStrings.defaultApproveFCMTitle : AppStrings.defaultRejectFCMTitle;
+      notifBodyCtrl.text = isApprovedNotification ? AppStrings.defaultApproveFCMBody : AppStrings.defaultRejectFCMBody;
+    }
   }
 
   @override
@@ -221,13 +232,9 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                         title: 'إشعار قبول',
                                         value: isApprovedNotification,
                                         onChanged: (value) {
-                                          setState(() {
-                                            isApprovedNotification = value ?? true;
-                                            notifTitleCtrl.text =
-                                                isApprovedNotification ? AppStrings.defaultApproveFCMTitle : AppStrings.defaultRejectFCMTitle;
-                                            notifBodyCtrl.text =
-                                                isApprovedNotification ? AppStrings.defaultApproveFCMBody : AppStrings.defaultRejectFCMBody;
-                                          });
+                                          isApprovedNotification = value ?? true;
+                                          setNotificationDefTitle();
+                                          setState(() {});
                                         },
                                       ),
                                     ),
@@ -236,13 +243,9 @@ class _UserDataScreenState extends State<UserDataScreen> {
                                         title: 'إشعار رفض',
                                         value: !isApprovedNotification,
                                         onChanged: (value) {
-                                          setState(() {
-                                            isApprovedNotification = value == false;
-                                            notifTitleCtrl.text =
-                                                isApprovedNotification ? AppStrings.defaultApproveFCMTitle : AppStrings.defaultRejectFCMTitle;
-                                            notifBodyCtrl.text =
-                                                isApprovedNotification ? AppStrings.defaultApproveFCMBody : AppStrings.defaultRejectFCMBody;
-                                          });
+                                          isApprovedNotification = value == false;
+                                          setNotificationDefTitle();
+                                          setState(() {});
                                         },
                                       ),
                                     ),
@@ -290,102 +293,207 @@ class _UserDataScreenState extends State<UserDataScreen> {
 
                 const SizedBox(height: AppSize.s12),
 
-                // Save button
-                Consumer<AdminProvider>(
-                  builder: (context, adminProvider, _) {
-                    if (adminProvider.isLoading) {
-                      return const Center(child: CircularProgressIndicator.adaptive());
-                    }
+                // buttons
+                if (!isEdit)
+                  Consumer<AdminProvider>(
+                    builder: (context, adminProvider, _) {
+                      if (adminProvider.isLoading) {
+                        return const Center(child: CircularProgressIndicator.adaptive());
+                      }
 
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: MainButton(
-                            title: 'قبول',
-                            color: kCorrectColor,
-                            flat: true,
-                            fit: true,
-                            outlined: false,
-                            horizontalContentPadding: 0,
-                            onPressed: () async {
-                              final nTitle = notifTitleCtrl.text.isNotEmpty && isApprovedNotification ? notifTitleCtrl.text : null;
-                              final nBody = notifBodyCtrl.text.isNotEmpty && isApprovedNotification ? notifBodyCtrl.text : null;
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: MainButton(
+                              title: 'قبول',
+                              color: kCorrectColor,
+                              flat: true,
+                              fit: true,
+                              outlined: false,
+                              horizontalContentPadding: 0,
+                              onPressed: () async {
+                                final nTitle = notifTitleCtrl.text.isNotEmpty && isApprovedNotification ? notifTitleCtrl.text : null;
+                                final nBody = notifBodyCtrl.text.isNotEmpty && isApprovedNotification ? notifBodyCtrl.text : null;
 
-                              await adminProvider.approveNewUser(
-                                user: widget.user,
-                                sendNotification: sendNotification,
-                                name: nameCtrl.text,
-                                doaa: doaaCtrl.text,
-                                isAdmin: isAdmin,
-                                notificationTitle: nTitle,
-                                notificationBody: nBody,
-                              ).then((response) {
-                                if (response.isSuccess) {
-                                  SnkBar.showSuccess(
-                                    context,
-                                    'تم قبول ${widget.user.name}',
-                                    milliseconds: 500,
-                                  );
-                                } else {
-                                  SnkBar.showError(
-                                    context,
-                                    response.message ?? 'حدثت مشكلة',
-                                  );
-                                }
-                              });
+                                await adminProvider
+                                    .approveNewUser(
+                                  user: widget.user,
+                                  sendNotification: sendNotification,
+                                  name: nameCtrl.text,
+                                  doaa: doaaCtrl.text,
+                                  isAdmin: isAdmin,
+                                  notificationTitle: nTitle,
+                                  notificationBody: nBody,
+                                )
+                                    .then((response) {
+                                  if (response.isSuccess) {
+                                    SnkBar.showSuccess(
+                                      context,
+                                      'تم قبول ${widget.user.name}',
+                                      milliseconds: 500,
+                                    );
+                                  } else {
+                                    SnkBar.showError(
+                                      context,
+                                      response.message ?? 'حدثت مشكلة',
+                                    );
+                                  }
+                                });
 
-                              if(!mounted) return;
-                              Navigator.pop(context);
-                            },
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                              },
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: AppSize.s8),
-                        Expanded(
-                          child: MainButton(
-                            title: 'رفض',
-                            color: kWrongColor,
-                            flat: true,
-                            fit: true,
-                            outlined: true,
-                            horizontalContentPadding: 0,
-                            onPressed: () async {
-                              final nTitle = notifTitleCtrl.text.isNotEmpty && !isApprovedNotification ? notifTitleCtrl.text : null;
-                              final nBody = notifBodyCtrl.text.isNotEmpty && !isApprovedNotification ? notifBodyCtrl.text : null;
+                          const SizedBox(width: AppSize.s8),
+                          Expanded(
+                            child: MainButton(
+                              title: 'رفض',
+                              color: kWrongColor,
+                              flat: true,
+                              fit: true,
+                              outlined: true,
+                              horizontalContentPadding: 0,
+                              onPressed: () async {
+                                final nTitle = notifTitleCtrl.text.isNotEmpty && !isApprovedNotification ? notifTitleCtrl.text : null;
+                                final nBody = notifBodyCtrl.text.isNotEmpty && !isApprovedNotification ? notifBodyCtrl.text : null;
 
-                              debugPrint('user data: ${widget.user.toJson()}');
+                                debugPrint('user data: ${widget.user.toJson()}');
 
-                              await adminProvider.rejectNewUser(
-                                user: widget.user,
-                                sendNotification: sendNotification,
-                                name: nameCtrl.text,
-                                doaa: doaaCtrl.text,
-                                isAdmin: isAdmin,
-                                notificationBody: nBody,
-                                notificationTitle: nTitle,
-                              ).then((response) {
-                                if (response.isSuccess) {
-                                  SnkBar.showSuccess(
-                                    context,
-                                    'تم رفض ${widget.user.name}',
-                                    milliseconds: 500,
-                                  );
-                                } else {
-                                  SnkBar.showError(
-                                    context,
-                                    response.message ?? 'حدثت مشكلة',
-                                  );
-                                }
-                              });
+                                await adminProvider
+                                    .rejectNewUser(
+                                  user: widget.user,
+                                  sendNotification: sendNotification,
+                                  name: nameCtrl.text,
+                                  doaa: doaaCtrl.text,
+                                  isAdmin: isAdmin,
+                                  notificationBody: nBody,
+                                  notificationTitle: nTitle,
+                                )
+                                    .then((response) {
+                                  if (response.isSuccess) {
+                                    SnkBar.showSuccess(
+                                      context,
+                                      'تم رفض ${widget.user.name}',
+                                      milliseconds: 500,
+                                    );
+                                  } else {
+                                    SnkBar.showError(
+                                      context,
+                                      response.message ?? 'حدثت مشكلة',
+                                    );
+                                  }
+                                });
 
-                              if(!mounted) return;
-                              Navigator.pop(context);
-                            },
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                        ],
+                      );
+                    },
+                  ),
+                if (isEdit)
+                  Consumer<AdminProvider>(
+                    builder: (context, adminProvider, _) {
+                      if (adminProvider.isLoading) {
+                        return const Center(child: CircularProgressIndicator.adaptive());
+                      }
+
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: MainButton(
+                              title: 'تعديل',
+                              color: kCorrectColor,
+                              flat: true,
+                              fit: true,
+                              outlined: false,
+                              horizontalContentPadding: 0,
+                              onPressed: () async {
+                                final nTitle = notifTitleCtrl.text.isNotEmpty && isApprovedNotification ? notifTitleCtrl.text : null;
+                                final nBody = notifBodyCtrl.text.isNotEmpty && isApprovedNotification ? notifBodyCtrl.text : null;
+
+                                await adminProvider
+                                    .approveUserEdits(
+                                  user: widget.user,
+                                  sendNotification: sendNotification,
+                                  name: nameCtrl.text,
+                                  doaa: doaaCtrl.text,
+                                  isAdmin: isAdmin,
+                                  notificationTitle: nTitle,
+                                  notificationBody: nBody,
+                                )
+                                    .then((response) {
+                                  if (response.isSuccess) {
+                                    SnkBar.showSuccess(
+                                      context,
+                                      'تم قبول تعديل ${widget.user.name}',
+                                      milliseconds: 500,
+                                    );
+                                  } else {
+                                    SnkBar.showError(
+                                      context,
+                                      response.message ?? 'حدثت مشكلة',
+                                    );
+                                  }
+                                });
+
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: AppSize.s8),
+                          Expanded(
+                            child: MainButton(
+                              title: 'رفض',
+                              color: kWrongColor,
+                              flat: true,
+                              fit: true,
+                              outlined: true,
+                              horizontalContentPadding: 0,
+                              onPressed: () async {
+                                final nTitle = notifTitleCtrl.text.isNotEmpty && !isApprovedNotification ? notifTitleCtrl.text : null;
+                                final nBody = notifBodyCtrl.text.isNotEmpty && !isApprovedNotification ? notifBodyCtrl.text : null;
+
+                                debugPrint('user data: ${widget.user.toJson()}');
+
+                                await adminProvider
+                                    .rejectUserEdits(
+                                  user: widget.user,
+                                  sendNotification: sendNotification,
+                                  name: nameCtrl.text,
+                                  doaa: doaaCtrl.text,
+                                  isAdmin: isAdmin,
+                                  notificationBody: nBody,
+                                  notificationTitle: nTitle,
+                                )
+                                    .then((response) {
+                                  if (response.isSuccess) {
+                                    SnkBar.showSuccess(
+                                      context,
+                                      'تم رفض تعديل ${widget.user.name}',
+                                      milliseconds: 500,
+                                    );
+                                  } else {
+                                    SnkBar.showError(
+                                      context,
+                                      response.message ?? 'حدثت مشكلة',
+                                    );
+                                  }
+                                });
+
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
               ],
             ),
           );

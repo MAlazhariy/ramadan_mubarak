@@ -7,6 +7,8 @@ class UserDetails extends User {
   late final UserStatus status;
   late final UserRole role;
   late final String token;
+  late final String nameUpdate;
+  late final String doaaUpdate;
 
   bool get isModerator => role == UserRole.admin || role == UserRole.moderator;
   bool get isAdmin => role == UserRole.admin;
@@ -21,6 +23,8 @@ class UserDetails extends User {
     this.status = UserStatus.newMember,
     this.role = UserRole.user,
     this.token = '',
+    this.nameUpdate = '',
+    this.doaaUpdate = '',
   });
 
   UserDetails.fromObject(
@@ -28,6 +32,8 @@ class UserDetails extends User {
   ) : super.fromObject(o) {
     deviceId = o.deviceId;
     status = o.status;
+    nameUpdate = o.nameUpdate;
+    doaaUpdate = o.doaaUpdate;
   }
 
   UserDetails.fromJson(Map<String, dynamic> json, {required String id}) : super.fromJson(json, userId: id) {
@@ -35,6 +41,8 @@ class UserDetails extends User {
     status = json['status'].toString().toUserStatus();
     role = json['role']?.toString().toUserRole() ?? UserRole.user;
     token = json['token']??'';
+    nameUpdate = json['name_update']??'';
+    doaaUpdate = json['doaa_update']??'';
   }
 
   @override
@@ -45,6 +53,9 @@ class UserDetails extends User {
       'device_id': deviceId,
       'status': status.name,
       'role': role.name,
+      'name_update': nameUpdate,
+      'doaa_update': doaaUpdate,
+      'pending_edit': nameUpdate.isNotEmpty,
     };
   }
 }

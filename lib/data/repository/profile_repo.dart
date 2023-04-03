@@ -60,9 +60,9 @@ class ProfileRepo {
           .collection(FirebaseKeys.USERS_COLLECTION)
           .doc(user.id)
       .update({
-        'name_update': name,
-        'doaa_update': doaa,
-        'pending_edit': true,
+        FirebaseKeys.NAME_UPDATE: name,
+        FirebaseKeys.DOAA_UPDATE: doaa,
+        FirebaseKeys.PENDING_EDIT: true,
       });
 
       final response = Response(
